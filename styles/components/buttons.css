@@ -1,0 +1,336 @@
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	border: none;
+	border-radius: 10px;
+	padding: 0 22px;
+	min-height: 60px;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	position: relative;
+	overflow: hidden;
+	transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+	box-shadow:
+		0 1px 0 rgba(0, 0, 0, 0.04),
+		0 2px 6px rgba(17, 24, 39, 0.1);
+}
+
+.btn::before {
+	content: "";
+	position: absolute;
+	left: 3px;
+	right: 3px;
+	top: 3px;
+	height: 1.5px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.35);
+	pointer-events: none;
+}
+
+.btn::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	pointer-events: none;
+}
+
+.btn > span,
+.btn > strong,
+.btn > svg {
+	position: relative;
+	z-index: 1;
+}
+
+.btn:focus-visible {
+	outline: none;
+	box-shadow: var(--focus-ring), 0 1px 0 rgba(0, 0, 0, 0.04), 0 2px 6px rgba(17, 24, 39, 0.1);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+	opacity: 0.6;
+	pointer-events: none;
+	cursor: not-allowed;
+}
+
+.btn-primary,
+.btn--primary {
+	border-radius: 10px;
+	min-height: 60px;
+	background: var(--color-brand-500);
+	color: var(--color-text-inverse);
+	font-size: 18px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.22),
+		inset 0 -1px 0 rgba(67, 29, 137, 0.24),
+		0 1px 0 rgba(0, 0, 0, 0.04),
+		0 2px 6px rgba(146, 95, 255, 0.1);
+}
+
+.btn-primary::before,
+.btn--primary::before {
+	left: 2px;
+	right: 2px;
+	top: 2px;
+	height: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.34);
+	border-bottom: none;
+	border-radius: 8px 8px 0 0;
+	background: transparent;
+}
+
+.btn-primary::after,
+.btn--primary::after {
+	inset: 0;
+	border-radius: inherit;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover,
+.btn--primary:hover {
+	background: var(--color-brand-600);
+}
+
+.btn-primary:active,
+.btn--primary:active {
+	transform: translateY(1px);
+	background: var(--color-brand-700);
+}
+
+.btn-secondary,
+.btn--secondary {
+	background: #f8f3ff;
+	color: var(--color-brand-800);
+	border: 1px solid #e8deff;
+	box-shadow:
+		0 1px 0 rgba(0, 0, 0, 0.03),
+		0 2px 6px rgba(146, 95, 255, 0.08);
+}
+
+.btn-secondary:hover,
+.btn--secondary:hover {
+	background: #f0e6ff;
+}
+
+.btn-secondary:active,
+.btn--secondary:active {
+	transform: translateY(1px);
+	background: #e7d9ff;
+}
+
+.btn-outline,
+.btn--outline {
+	background: var(--color-surface);
+	color: var(--color-text-primary);
+	border: 1px solid var(--color-border-strong);
+	box-shadow:
+		0 1px 0 rgba(0, 0, 0, 0.03),
+		0 2px 6px rgba(17, 24, 39, 0.06);
+}
+
+.btn-outline:hover,
+.btn--outline:hover {
+	background: #f9fafb;
+}
+
+.btn-outline:active,
+.btn--outline:active {
+	transform: translateY(1px);
+	background: #f3f4f6;
+}
+
+.btn-danger,
+.btn--danger {
+	background: #131722;
+	color: var(--color-text-inverse);
+	font-size: 18px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.16),
+		inset 0 -1px 0 rgba(5, 8, 16, 0.55),
+		0 1px 0 rgba(0, 0, 0, 0.06),
+		0 2px 8px rgba(19, 23, 34, 0.22);
+}
+
+.btn-danger::before,
+.btn--danger::before {
+	left: 2px;
+	right: 2px;
+	top: 2px;
+	height: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	border-bottom: none;
+	border-radius: 8px 8px 0 0;
+	background: transparent;
+}
+
+.btn-danger::after,
+.btn--danger::after {
+	border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.btn-danger:hover,
+.btn--danger:hover {
+	background: #0e131d;
+}
+
+.btn-danger:active,
+.btn--danger:active {
+	transform: translateY(1px);
+	background: #090d14;
+}
+
+.btn-mint,
+.btn--mint {
+	background: #2ce2bf;
+	color: #042a22;
+	font-size: 18px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.44),
+		inset 0 -1px 0 rgba(4, 42, 34, 0.2),
+		0 1px 0 rgba(0, 0, 0, 0.03),
+		0 2px 8px rgba(31, 209, 174, 0.22);
+}
+
+.btn-mint::before,
+.btn--mint::before {
+	left: 2px;
+	right: 2px;
+	top: 2px;
+	height: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.48);
+	border-bottom: none;
+	border-radius: 8px 8px 0 0;
+	background: transparent;
+}
+
+.btn-mint::after,
+.btn--mint::after {
+	border: 1px solid rgba(4, 42, 34, 0.2);
+}
+
+.btn-mint:hover,
+.btn--mint:hover {
+	background: #24d9b6;
+}
+
+.btn-mint:active,
+.btn--mint:active {
+	transform: translateY(1px);
+	background: #1fc9a9;
+}
+
+.btn-sm,
+.btn--sm {
+	min-height: 46px;
+	padding: 0 16px;
+	border-radius: 10px;
+	font-size: 14px;
+}
+
+.btn-lg,
+.btn--lg {
+	min-height: 64px;
+	padding: 0 28px;
+	border-radius: 10px;
+	font-size: 17px;
+}
+
+.btn-block,
+.btn--block {
+	width: 100%;
+}
+
+.btn-icon,
+.btn--icon {
+	width: 46px;
+	height: 46px;
+	padding: 0;
+	border-radius: 14px;
+}
+
+.btn-group {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.btn-stack {
+	display: grid;
+	gap: 12px;
+}
+
+.btn-note {
+	margin-top: 10px;
+	font-size: 12px;
+	color: var(--color-text-muted);
+	line-height: 1.5;
+}
+
+.variant-button-demo .btn {
+	border-radius: 10px;
+	min-height: 60px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.18),
+		inset 0 -1px 0 rgba(15, 23, 42, 0.08),
+		0 1px 0 rgba(0, 0, 0, 0.03),
+		0 2px 6px rgba(17, 24, 39, 0.1);
+}
+
+.variant-button-demo .btn::before {
+	left: 2px;
+	right: 2px;
+	top: 2px;
+	height: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.32);
+	border-bottom: none;
+	border-radius: 8px 8px 0 0;
+	background: transparent;
+}
+
+.variant-button-demo .btn::after {
+	border: 1px solid rgba(15, 23, 42, 0.14);
+}
+
+.variant-button-demo .btn-outline {
+	background: #ffffff;
+	color: var(--color-text-primary);
+}
+
+.variant-button-demo .btn-outline::before {
+	border-color: rgba(255, 255, 255, 0.95);
+}
+
+.variant-button-demo .btn-secondary {
+	background: #f8f3ff;
+	color: var(--color-brand-800);
+}
+
+.variant-button-demo .btn-secondary::before {
+	border-color: rgba(255, 255, 255, 0.72);
+}
+
+.variant-button-demo .btn-danger {
+	background: #131722;
+	color: var(--color-text-inverse);
+}
+
+.variant-button-demo .btn-danger::before {
+	border-color: rgba(255, 255, 255, 0.22);
+}
+
+.variant-button-demo .btn-mint {
+	background: #2ce2bf;
+	color: #042a22;
+}
+
+.variant-button-demo .btn-mint::before {
+	border-color: rgba(255, 255, 255, 0.64);
+}
+

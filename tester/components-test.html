@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AmarHishab Components Tester</title>
+  <link rel="stylesheet" href="../styles/main.css" />
+  <style>
+    .tester-page {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--color-bg);
+      padding: var(--space-7) 0 var(--space-10);
+    }
+
+    .tester-shell {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .tester-panel {
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-6);
+    }
+
+    .tester-headline {
+      margin: 0;
+    }
+
+    .tester-subline {
+      color: var(--color-text-muted);
+      margin: var(--space-2) 0 0;
+    }
+
+    .tester-section {
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-6);
+    }
+
+    .tester-section h2 {
+      margin: 0 0 var(--space-2);
+    }
+
+    .tester-section p {
+      margin: 0 0 var(--space-4);
+      color: var(--color-text-muted);
+      font-size: 14px;
+    }
+
+    .tester-stack {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .tester-subsection {
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface-muted);
+      padding: var(--space-5);
+    }
+
+    .tester-subsection h3 {
+      margin: 0 0 var(--space-2);
+      font-size: var(--font-size-400);
+    }
+
+    .tester-subsection p {
+      margin: 0 0 var(--space-4);
+      color: var(--color-text-muted);
+      font-size: 13px;
+    }
+
+    .tester-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+    }
+
+    .tester-grid-2,
+    .tester-grid-3,
+    .tester-grid-4 {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .tester-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tester-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tester-grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .tester-mb-3 {
+      margin-bottom: var(--space-3);
+    }
+
+    .tester-mt-3 {
+      margin-top: var(--space-3);
+    }
+
+    .bar-h-42 {
+      height: 42%;
+    }
+
+    .bar-h-68 {
+      height: 68%;
+    }
+
+    .bar-h-52 {
+      height: 52%;
+    }
+
+    .bar-h-82 {
+      height: 82%;
+    }
+
+    .bar-h-61 {
+      height: 61%;
+    }
+
+    .progress-75 {
+      width: 75%;
+    }
+
+    .dot-brand {
+      background: var(--color-brand-500);
+    }
+
+    .dot-info {
+      background: var(--color-info);
+    }
+
+    .dot-warning {
+      background: var(--color-warning);
+    }
+
+    .dot-success {
+      background: var(--color-success);
+    }
+
+    .tester-sidebar-preview {
+      border-radius: 14px;
+      border: 1px solid var(--color-border);
+      background: var(--color-brand-100);
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .tester-sidebar-gallery {
+      display: grid;
+      grid-template-columns: 74px 260px;
+      gap: 18px;
+      align-items: start;
+      min-width: 360px;
+    }
+
+    .tester-sidebar-gallery .sidebar {
+      position: static;
+      top: auto;
+      height: 620px;
+    }
+
+    .tester-sidebar-caption {
+      margin-top: 10px;
+      color: var(--color-text-muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .tester-sidebar-card {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tester-bottom-nav-preview {
+      position: relative;
+      min-height: 120px;
+      border: 1px dashed var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface-muted);
+      padding: 12px;
+    }
+
+    .tester-bottom-nav-preview .mobile-bottom-nav {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: grid;
+    }
+
+    @media (max-width: 64rem) {
+      .tester-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 48rem) {
+      .tester-grid-2,
+      .tester-grid-3,
+      .tester-grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="tester-page">
+    <div class="container">
+      <div class="tester-shell">
+        <section class="tester-panel">
+          <h1 class="tester-headline">AmarHishab Component Library Tester</h1>
+          <p class="tester-subline">All reusable components from your draft in one verification page.</p>
+        </section>
+
+        <section class="tester-section">
+          <h2>Buttons</h2>
+          <p>Primary and supporting action buttons.</p>
+          <div class="tester-stack">
+            <div class="tester-subsection">
+              <h3>Variants</h3>
+              <div class="tester-inline">
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-outline">Outline</button>
+                <button class="btn btn-mint">Mint</button>
+                <button class="btn btn-danger">Danger</button>
+              </div>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Sizes and Modifiers</h3>
+              <div class="tester-inline">
+                <button class="btn btn-primary btn-sm">Small</button>
+                <button class="btn btn-primary">Default</button>
+                <button class="btn btn-primary btn-lg">Large</button>
+                <button class="btn btn-outline btn-icon" aria-label="Search">Q</button>
+              </div>
+              <div class="tester-mt-3">
+                <button class="btn btn-primary btn-block">Full Width Button</button>
+              </div>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Disabled States</h3>
+              <div class="tester-inline">
+                <button class="btn btn-primary" disabled>Disabled Primary</button>
+                <button class="btn btn-outline" aria-disabled="true">Aria Disabled</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Inputs</h2>
+          <p>Form controls for data entry, filtering, and notes.</p>
+          <div class="tester-grid-2">
+            <div class="tester-subsection">
+              <h3>Standard Input</h3>
+              <label class="field">
+                <span class="label">Amount</span>
+                <input class="input" type="text" value="500" placeholder="Enter amount" />
+                <span class="hint">Example: add income or expense amount</span>
+              </label>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Select and Search</h3>
+              <div class="field tester-mb-3">
+                <span class="label">Category</span>
+                <select class="select">
+                  <option>Bus Fare</option>
+                  <option>Food</option>
+                  <option>Internet Bill</option>
+                </select>
+              </div>
+              <div class="search-wrap">
+                <span class="search-icon">Q</span>
+                <input class="input" type="text" value="Search transaction" />
+              </div>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Textarea</h3>
+              <label class="field">
+                <span class="label">Note</span>
+                <textarea class="textarea">Paid internet bill for monthly cycle.</textarea>
+              </label>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Disabled States</h3>
+              <div class="field tester-mb-3">
+                <span class="label">Disabled Input</span>
+                <input class="input" type="text" value="Auto-filled amount" disabled />
+              </div>
+              <label class="field">
+                <span class="label">Disabled Select</span>
+                <select class="select" disabled>
+                  <option>Locked Category</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Badges and Tabs</h2>
+          <p>Status indicators and segmented controls.</p>
+          <div class="tester-grid-2">
+            <div class="tester-subsection">
+              <h3>Badge Variants</h3>
+              <div class="tester-inline">
+                <span class="badge badge-brand">New</span>
+                <span class="badge badge-success">Paid</span>
+                <span class="badge badge-warning">Pending</span>
+                <span class="badge badge-danger">Overdue</span>
+                <span class="badge badge-info">Reminder</span>
+                <span class="badge badge-neutral">Draft</span>
+              </div>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Tabs and Toggle</h3>
+              <div class="tabs tester-mb-3">
+                <button class="tab active">Overview</button>
+                <button class="tab">History</button>
+                <button class="tab">Reports</button>
+              </div>
+              <div class="toggle">
+                <span class="active">Monthly</span>
+                <span>One-time</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Cards</h2>
+          <p>Summary, quick-action, transaction, and profile cards.</p>
+          <div class="tester-stack">
+            <div class="tester-grid-4">
+              <div class="stat-card">
+                <div class="stat-top">
+                  <div class="stat-title">Current Balance</div>
+                  <span class="badge badge-brand">Updated</span>
+                </div>
+                <div class="stat-value">$8,500</div>
+                <p class="stat-sub">Net available balance after income and expense.</p>
+              </div>
+              <div class="stat-card">
+                <div class="stat-top">
+                  <div class="stat-title">Monthly Budget</div>
+                  <span class="badge badge-warning">75% Used</span>
+                </div>
+                <div class="stat-value">$6,000</div>
+                <p class="stat-sub">Remaining budget: $1,500</p>
+                <div class="progress"><span class="progress-75"></span></div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-top">
+                  <div class="stat-title">This Month Expense</div>
+                  <span class="badge badge-danger">High</span>
+                </div>
+                <div class="stat-value">$4,500</div>
+                <p class="stat-sub">Main spending category: Food and Transport.</p>
+              </div>
+              <div class="stat-card">
+                <div class="stat-top">
+                  <div class="stat-title">Reward Points</div>
+                  <span class="badge badge-success">+25 Today</span>
+                </div>
+                <div class="stat-value">320</div>
+                <p class="stat-sub">Equivalent reward value: $32</p>
+              </div>
+            </div>
+
+            <div class="tester-subsection">
+              <h3>Quick Add Chips</h3>
+              <div class="quick-grid">
+                <div class="chip">+ Bus Fare</div>
+                <div class="chip">+ Rickshaw</div>
+                <div class="chip">+ Food</div>
+                <div class="chip">+ Snacks</div>
+                <div class="chip">+ Recharge</div>
+                <div class="chip">+ Tuition Fee</div>
+              </div>
+            </div>
+
+            <div class="tester-grid-2">
+              <div class="tester-subsection">
+                <h3>Transaction List</h3>
+                <div class="stack">
+                  <div class="transaction-card">
+                    <div class="tx-left">
+                      <div class="tx-icon">BF</div>
+                      <div>
+                        <div class="tx-title">Bus Fare</div>
+                        <div class="tx-meta">Today - 9:10 AM - Transport</div>
+                      </div>
+                    </div>
+                    <div class="tx-amount">- $10<small>Expense</small></div>
+                  </div>
+                  <div class="transaction-card">
+                    <div class="tx-left">
+                      <div class="tx-icon">LU</div>
+                      <div>
+                        <div class="tx-title">Lunch</div>
+                        <div class="tx-meta">Today - 1:15 PM - Food</div>
+                      </div>
+                    </div>
+                    <div class="tx-amount">- $120<small>Expense</small></div>
+                  </div>
+                  <div class="transaction-card">
+                    <div class="tx-left">
+                      <div class="tx-icon">PM</div>
+                      <div>
+                        <div class="tx-title">Pocket Money</div>
+                        <div class="tx-meta">Yesterday - 8:00 PM - Income</div>
+                      </div>
+                    </div>
+                    <div class="tx-amount">+ $2,000<small>Income</small></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tester-subsection">
+                <h3>Mini and Profile Cards</h3>
+                <div class="stack">
+                  <div class="mini-card">
+                    <h5>Upcoming Reminder</h5>
+                    <p>Internet bill of $800 is due in 2 days. Show a call to action like Pay now.</p>
+                  </div>
+                  <div class="profile-card">
+                    <div class="avatar">AT</div>
+                    <div>
+                      <div class="tx-title">Amar User</div>
+                      <div class="tx-meta">Student - Personal Finance Tracker User</div>
+                      <div class="inline mt-2">
+                        <span class="badge badge-brand">Proactive Saver</span>
+                        <span class="badge badge-info">320 Points</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Dropdown</h2>
+          <p>Menu and option-selection behavior pattern.</p>
+          <div class="tester-subsection">
+            <div class="dropdown">
+              <button class="dropdown-toggle" aria-expanded="true">
+                Select Category
+                <span>v</span>
+              </button>
+              <div class="dropdown-menu">
+                <div class="dropdown-item active">Bus Fare</div>
+                <div class="dropdown-item">Food</div>
+                <div class="dropdown-item">Internet Bill</div>
+                <div class="dropdown-item">Recharge</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Tables</h2>
+          <p>Data tables for transactions, reminders, and reports.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Bus Fare</td>
+                  <td>Transport</td>
+                  <td>04 Apr 2026</td>
+                  <td>- $10</td>
+                  <td><span class="badge badge-neutral">Recorded</span></td>
+                </tr>
+                <tr>
+                  <td>Internet Bill</td>
+                  <td>Bill</td>
+                  <td>03 Apr 2026</td>
+                  <td>- $800</td>
+                  <td><span class="badge badge-success">Paid</span></td>
+                </tr>
+                <tr>
+                  <td>Pocket Money</td>
+                  <td>Income</td>
+                  <td>02 Apr 2026</td>
+                  <td>+ $2,000</td>
+                  <td><span class="badge badge-brand">Added</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Charts</h2>
+          <p>Visual report components for insights and analytics.</p>
+          <div class="tester-grid-2">
+            <div class="chart-card">
+              <div class="between tester-mb-3">
+                <div>
+                  <strong>Income vs Expense</strong><br />
+                  <span class="hint">Last 5 months trend</span>
+                </div>
+                <span class="badge badge-info">Monthly</span>
+              </div>
+              <div class="chart-area">
+                <div class="bar bar-h-42"><span>Jan</span></div>
+                <div class="bar bar-h-68"><span>Feb</span></div>
+                <div class="bar bar-h-52"><span>Mar</span></div>
+                <div class="bar bar-h-82"><span>Apr</span></div>
+                <div class="bar bar-h-61"><span>May</span></div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="between tester-mb-2">
+                <div>
+                  <strong>Expense Breakdown</strong><br />
+                  <span class="hint">Category distribution</span>
+                </div>
+                <span class="badge badge-brand">April</span>
+              </div>
+              <div class="donut"></div>
+              <div class="legend">
+                <div class="legend-item"><span class="legend-left"><span class="dot dot-brand"></span>Food</span><strong>32%</strong></div>
+                <div class="legend-item"><span class="legend-left"><span class="dot dot-info"></span>Transport</span><strong>22%</strong></div>
+                <div class="legend-item"><span class="legend-left"><span class="dot dot-warning"></span>Bills</span><strong>20%</strong></div>
+                <div class="legend-item"><span class="legend-left"><span class="dot dot-success"></span>Others</span><strong>26%</strong></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Modal</h2>
+          <p>Dialog structure for quick transactions.</p>
+          <div class="overlay">
+            <div class="modal-preview">
+              <div class="modal-head">
+                <div>
+                  <div class="modal-title">Add Transaction</div>
+                  <div class="hint">Enter expense or income details</div>
+                </div>
+                <button class="icon-btn" aria-label="Close">x</button>
+              </div>
+              <div class="segmented">
+                <div class="chip active">Expense</div>
+                <div class="chip">Income</div>
+              </div>
+              <div class="stack">
+                <label class="field">
+                  <span class="label">Amount</span>
+                  <input class="input" value="120" />
+                </label>
+                <label class="field">
+                  <span class="label">Category</span>
+                  <select class="select">
+                    <option>Food</option>
+                    <option>Bus Fare</option>
+                    <option>Rickshaw</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span class="label">Note</span>
+                  <textarea class="textarea">Lunch with classmates after class.</textarea>
+                </label>
+                <div class="between">
+                  <button class="btn btn-outline">Cancel</button>
+                  <button class="btn btn-primary">Save Transaction</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Navbar and Sidebar</h2>
+          <p>Primary app navigation structures.</p>
+          <div class="tester-stack">
+            <div class="navbar">
+              <div class="navbar-left">
+                <div class="navbar-meta">
+                  <h3 class="navbar-title">Dashboard</h3>
+                </div>
+              </div>
+              <div class="navbar-right">
+                <div class="navbar-search search-wrap">
+                  <span class="search-icon">Q</span>
+                  <input class="input" value="Search records" />
+                </div>
+                <button class="navbar-user" aria-label="Open profile menu">
+                  <span class="navbar-user-avatar">TT</span>
+                  <span class="navbar-user-meta">
+                    <span class="navbar-user-name">Taki Tahmid</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="tester-sidebar-preview">
+              <div class="tester-sidebar-gallery">
+                <div class="tester-sidebar-card">
+                  <aside class="sidebar sidebar--compact">
+                    <div class="brand">
+						<img class="brand-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
+                      <p>Compact Rail</p>
+                    </div>
+
+                    <div class="sidebar-section">
+                      <div class="nav-group-title">Library</div>
+                      <nav class="nav">
+                        <a class="active" href="#"><span>Home</span><span>Live</span></a>
+                        <a href="#"><span>Products</span><span>12</span></a>
+                        <a href="#"><span>Offers</span><span>+</span></a>
+                        <a href="#"><span>Assets</span><span>5</span></a>
+                      </nav>
+                    </div>
+
+                    <div class="sidebar-section">
+                      <div class="nav-group-title">Tools</div>
+                      <nav class="nav">
+                        <a href="#"><span>QR</span><span>+</span></a>
+                        <a href="#"><span>Hot Spot</span><span>3</span></a>
+                        <a href="#"><span>All Tools</span><span>32</span></a>
+                      </nav>
+                    </div>
+
+                    <div class="sidebar-footer">
+                      <div class="sidebar-footer-title">Status</div>
+                      Synced
+                    </div>
+                  </aside>
+                  <div class="tester-sidebar-caption">Compact</div>
+                </div>
+
+                <div class="tester-sidebar-card">
+                  <aside class="sidebar">
+                    <div class="brand">
+						<img class="brand-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
+                      <p>Reusable UI blocks for production pages.</p>
+                    </div>
+
+                    <div class="sidebar-section">
+                      <div class="nav-group-title">Library</div>
+                      <nav class="nav">
+                        <a class="active" href="#"><span>Home</span><span>Live</span></a>
+                        <a href="#"><span>Products</span><span>12</span></a>
+                        <a href="#"><span>Offers</span><span>+</span></a>
+                        <a href="#"><span>Assets</span><span>5</span></a>
+                      </nav>
+                    </div>
+
+                    <div class="sidebar-section">
+                      <div class="nav-group-title">Tools</div>
+                      <nav class="nav">
+                        <a href="#"><span>Standard QR</span><span>New</span></a>
+                        <a href="#"><span>Hot Spot</span><span>7</span></a>
+                        <a href="#"><span>Item Roll</span><span>2</span></a>
+                        <a href="#"><span>All Tools</span><span>32</span></a>
+                      </nav>
+                    </div>
+
+                    <div class="sidebar-section">
+                      <div class="nav-group-title">Analytics</div>
+                      <nav class="nav">
+                        <a href="#"><span>Dashboard</span><span>24</span></a>
+                        <a href="#"><span>Reports</span><span>New</span></a>
+                        <a href="#"><span>Offers</span><span>Sync</span></a>
+                      </nav>
+                    </div>
+
+                    <div class="sidebar-footer">
+                      <div class="sidebar-footer-title">Budget Health</div>
+                      Spending is slightly above target this week.
+                      <a class="sidebar-footer-link" href="#">Open Insights</a>
+                    </div>
+                  </aside>
+                  <div class="tester-sidebar-caption">Expanded</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tester-section">
+          <h2>Bottom Navigation</h2>
+          <p>Mobile quick navigation pattern.</p>
+          <div class="tester-bottom-nav-preview">
+            <nav class="mobile-bottom-nav">
+              <a class="active" href="#">Home</a>
+              <a href="#">History</a>
+              <a href="#">Quick</a>
+              <a href="#">Reports</a>
+              <a href="#">Profile</a>
+            </nav>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
