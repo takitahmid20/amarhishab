@@ -1,0 +1,275 @@
+.auth-page {
+	background:
+		linear-gradient(149deg, #f8f8fc 0%, #fafafd 25%, #fbfbfe 50%, #fdfdfe 75%, #ffffff 100%),
+		#ffffff;
+}
+
+.auth-shell {
+	min-height: 100vh;
+	min-height: 100dvh;
+	display: grid;
+	place-items: center;
+	padding: 48px 20px;
+}
+
+.auth-card {
+	width: min(100%, 448px);
+	background: var(--color-surface);
+	border: 1px solid #d5dbe8;
+	border-radius: 20px;
+	box-shadow: none;
+	padding: 32px;
+}
+
+.auth-page .btn,
+.auth-page .btn:focus-visible {
+	box-shadow: none;
+}
+
+.auth-card--signup {
+	min-height: 633px;
+}
+
+.auth-card--signin {
+	min-height: 503px;
+}
+
+.auth-card--forgot {
+	min-height: 429px;
+}
+
+.auth-card--otp {
+	min-height: 478px;
+}
+
+.auth-logo {
+	width: 153px;
+	height: auto;
+	margin-bottom: 10px;
+}
+
+.auth-header {
+	display: grid;
+	gap: 7px;
+	margin-bottom: 24px;
+}
+
+.auth-title {
+	font-size: 32px;
+	line-height: 1.09;
+	letter-spacing: -0.02em;
+	margin: 0;
+	color: #111827;
+}
+
+.auth-subtitle {
+	font-size: 15px;
+	line-height: 1.625;
+	color: #6b7280;
+	margin: 0;
+}
+
+.auth-form {
+	display: grid;
+	gap: 24px;
+}
+
+.auth-form--tight {
+	gap: 20px;
+}
+
+.auth-form .label {
+	font-size: 13px;
+	font-weight: 700;
+	color: #4b5563;
+	line-height: 1;
+	margin-bottom: 8px;
+}
+
+.auth-form .input {
+	min-height: 53px;
+	padding: 0 17px;
+	font-size: 16px;
+	line-height: 1.2;
+	border-color: #d5dbe8;
+	border-radius: 10px;
+	color: #374151;
+	background: #fff;
+	box-shadow: none;
+	transition: border-color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.auth-form .input-wrap .input {
+	padding-left: 44px;
+}
+
+.auth-form .input-icon {
+	left: 16px;
+	color: #9ca3af;
+}
+
+.auth-form .input::placeholder {
+	color: #9ca3af;
+}
+
+.auth-form .input:focus {
+	border-color: var(--color-brand-400);
+	box-shadow: 0 0 0 3px rgba(146, 95, 255, 0.14);
+}
+
+.auth-label-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+.auth-link,
+.auth-link-small {
+	font-weight: 700;
+	color: var(--color-brand-500);
+}
+
+.auth-link-small {
+	font-size: 13px;
+	line-height: 19.5px;
+	font-weight: 400;
+}
+
+.auth-link-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.auth-link-icon {
+	width: 13px;
+	height: 13px;
+	flex-shrink: 0;
+}
+
+.auth-link-inline svg,
+.auth-form .input-wrap svg {
+	stroke-width: 2;
+}
+
+.auth-help {
+	margin-top: 8px;
+	font-size: 12px;
+	line-height: 19.5px;
+	color: #6b7280;
+	max-width: 357px;
+}
+
+.auth-note {
+	font-size: 12px;
+	line-height: 19.5px;
+	color: #6b7280;
+}
+
+.auth-note--center {
+	text-align: center;
+}
+
+.auth-otp-grid {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 8px;
+}
+
+.auth-otp-input {
+	width: 64px;
+	height: 64px;
+	border: 1px solid #cbd5e1;
+	border-radius: 10px;
+	background: #fff;
+	text-align: center;
+	font-size: 24px;
+	font-weight: 600;
+	color: #111827;
+	outline: none;
+	transition: border-color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.auth-otp-input:focus {
+	border-color: var(--color-brand-400);
+	box-shadow: 0 0 0 3px rgba(146, 95, 255, 0.14);
+}
+
+.auth-submit {
+	margin-top: -2px;
+	min-height: 64px;
+	font-size: 18px;
+	letter-spacing: -0.01em;
+	font-weight: 700;
+	border-radius: 10px;
+}
+
+.auth-submit:disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.auth-footer {
+	margin: 16px 0 0;
+	font-size: 14px;
+	line-height: 21px;
+	text-align: center;
+	color: #6b7280;
+}
+
+.auth-footer--stack {
+	display: grid;
+	gap: 10px;
+}
+
+.auth-footer p {
+	margin: 0;
+	color: #6b7280;
+}
+
+.auth-footer .auth-link,
+.auth-footer .auth-link-small {
+	font-weight: 700;
+}
+
+@media (max-width: 48rem) {
+	.auth-card {
+		min-height: 0;
+		padding: 24px;
+	}
+
+	.auth-title {
+		font-size: clamp(1.65rem, 6.4vw, 2rem);
+	}
+
+	.auth-subtitle {
+		font-size: 15px;
+	}
+
+	.auth-form .input {
+		min-height: 50px;
+		font-size: 16px;
+	}
+
+	.auth-submit {
+		min-height: 58px;
+		font-size: 18px;
+	}
+
+	.auth-footer {
+		font-size: 14px;
+	}
+
+	.auth-otp-grid {
+		gap: 10px;
+	}
+
+	.auth-otp-input {
+		width: 56px;
+		height: 56px;
+		font-size: 20px;
+	}
+}

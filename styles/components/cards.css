@@ -209,6 +209,154 @@
 	color: var(--color-text-muted);
 }
 
+.cashbook-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	padding: 14px 14px 12px 22px;
+	min-height: 190px;
+	border-radius: 12px;
+	border: 1px solid var(--color-border);
+	background: linear-gradient(145deg, #ffffff 0%, #faf8ff 100%);
+	box-shadow: 0 8px 16px rgba(17, 24, 39, 0.05);
+	overflow: hidden;
+	transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.cashbook-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 10px;
+	background: linear-gradient(180deg, #a37bff 0%, #7c4bf6 100%);
+	border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.cashbook-card::after {
+	content: "";
+	position: absolute;
+	left: 10px;
+	right: 0;
+	top: 0;
+	height: 3px;
+	background: linear-gradient(90deg, rgba(124, 75, 246, 0.34) 0%, rgba(124, 75, 246, 0) 100%);
+}
+
+.cashbook-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 14px 22px rgba(17, 24, 39, 0.08);
+}
+
+.cashbook-card-head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.cashbook-main {
+	display: flex;
+	align-items: center;
+	gap: 11px;
+	min-width: 0;
+}
+
+.cashbook-badge {
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	display: grid;
+	place-items: center;
+	background: rgba(146, 95, 255, 0.12);
+	color: var(--color-brand-600);
+	flex-shrink: 0;
+}
+
+.cashbook-badge i,
+.cashbook-badge svg {
+	width: 16px;
+	height: 16px;
+	stroke-width: 2;
+}
+
+.cashbook-main h3 {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.2;
+	font-weight: 700;
+}
+
+.cashbook-main p {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: var(--color-text-muted);
+}
+
+.cashbook-health {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px 9px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #0f8f60;
+	background: #e8f8ed;
+	border: 1px solid #bfe9cf;
+}
+
+.cashbook-health--warn {
+	color: #b45309;
+	background: #fff3da;
+	border-color: #f5d79c;
+}
+
+.cashbook-card-foot {
+	margin-top: auto;
+	padding-top: 12px;
+	border-top: 1px dashed #e5e7eb;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.cashbook-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.cashbook-icon-btn {
+	width: 28px;
+	height: 28px;
+	display: grid;
+	place-items: center;
+	border-radius: 8px;
+	background: rgba(146, 95, 255, 0.08);
+	color: var(--color-brand-600);
+	border: 1px solid rgba(146, 95, 255, 0.18);
+	padding: 0;
+}
+
+.cashbook-icon-btn i,
+.cashbook-icon-btn svg {
+	width: 15px;
+	height: 15px;
+	stroke-width: 2;
+}
+
+.cashbook-icon-btn--danger {
+	background: #fee2e2;
+	border-color: #fecaca;
+	color: #dc2626;
+}
+
 @media (max-width: 64rem) {
 	.quick-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -218,6 +366,10 @@
 @media (max-width: 48rem) {
 	.quick-grid {
 		grid-template-columns: 1fr;
+	}
+
+	.cashbook-card {
+		min-height: 0;
 	}
 }
 

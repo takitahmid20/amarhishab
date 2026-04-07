@@ -48,6 +48,32 @@
 	position: relative;
 }
 
+.input-wrap {
+	position: relative;
+}
+
+.input-wrap .input,
+.input-wrap .select,
+.input-wrap .textarea {
+	padding-left: 42px;
+}
+
+.input-icon {
+	position: absolute;
+	left: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 18px;
+	height: 18px;
+	color: var(--color-text-muted);
+	pointer-events: none;
+	stroke-width: 2;
+}
+
+.input-wrap:focus-within .input-icon {
+	color: var(--color-brand-500);
+}
+
 .search-wrap .input {
 	padding-left: 42px;
 }
