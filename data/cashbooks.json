@@ -1,0 +1,33 @@
+[
+  {
+    "id": "b4",
+    "name": "B4",
+    "createdText": "Created about 1 hour ago",
+    "statusLabel": "Live"
+  },
+  {
+    "id": "b3",
+    "name": "B3",
+    "createdText": "Created about 1 hour ago",
+    "statusLabel": "Live"
+  },
+  {
+    "id": "b2",
+    "name": "B2",
+    "createdText": "Created about 1 hour ago",
+    "statusLabel": "Review",
+    "statusTone": "warn"
+  },
+  {
+    "id": "business-book",
+    "name": "Business Book",
+    "createdText": "Created about 2 hours ago",
+    "statusLabel": "Live"
+  },
+  {
+    "id": "business-book",
+    "name": "Business Book",
+    "createdText": "Created about 2 hours ago",
+    "statusLabel": "Live"
+  }
+]
