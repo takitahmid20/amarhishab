@@ -1,0 +1,164 @@
+/* ===== Base ===== */
+.borrow-lend {
+  padding: 16px;
+  font-size: 13px;
+  color: #333;
+}
+
+/* ===== Cards ===== */
+.cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  flex: 1;
+  padding: 16px;
+  border-radius: 10px;
+  background: #f8f9fc;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+}
+
+.card p {
+  font-size: 12px;
+  color: #777;
+  margin: 0;
+}
+
+.card h2 {
+  margin: 8px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.card span {
+  font-size: 11px;
+  color: #999;
+}
+
+.borrowed h2 {
+  color: #e74c3c;
+}
+
+.lent h2 {
+  color: #2ecc71;
+}
+
+/* ===== Records Section ===== */
+.records {
+  background: #f8f9fc;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+/* Header */
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.records-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Button */
+.add-btn {
+  background: linear-gradient(135deg, #7b61ff, #9b7bff);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn:hover {
+  opacity: 0.9;
+}
+
+/* ===== Record Item ===== */
+.record {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.record:last-child {
+  border-bottom: none;
+}
+
+/* Left side */
+.info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: #e0e0e0;
+  border-radius: 8px;
+}
+
+/* Name */
+.record h4 {
+  font-size: 13px;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Meta text */
+.record p {
+  font-size: 11px;
+  color: #666;
+  margin: 2px 0 0;
+}
+
+/* Labels */
+.borrowed-text {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.lent-text {
+  color: #2ecc71;
+  font-weight: 500;
+}
+
+/* Status */
+.pending {
+  background: #ffeaa7;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 10px;
+}
+
+.paid {
+  background: #b8f7d4;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 10px;
+}
+
+/* Amount */
+.amount {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.positive {
+  color: #2ecc71;
+}
+
+.negative {
+  color: #e74c3c;
+}
