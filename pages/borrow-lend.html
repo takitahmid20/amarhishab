@@ -6,6 +6,7 @@
 	<title>Borrow / Lend | AmarHishab</title>
 	<link rel="stylesheet" href="../styles/main.css" />
 	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
+	<link rel="stylesheet" href="../styles/pages/borrow-lend.css" />
 </head>
 <body data-page-title="Borrow / Lend">
 	<div class="dashboard-layout">
@@ -15,9 +16,66 @@
 			<div data-partial="../partials/sidebar.html" data-partial-class="dashboard-sidebar"></div>
 
 			<main class="dashboard-main">
-				<section class="container">
-					<h2>Start designing here</h2>
-				</section>
+				<section class="container borrow-lend">
+
+  <!-- Top Cards -->
+  <div class="cards">
+    <div class="card borrowed">
+      <p>Total Borrowed (Pending)</p>
+      <h2>৳ 500</h2>
+      <span>Money you owe</span>
+    </div>
+
+    <div class="card lent">
+      <p>Total Lent (Pending)</p>
+      <h2>৳ 0</h2>
+      <span>Money owed to you</span>
+    </div>
+  </div>
+
+  <!-- Records -->
+  <div class="records">
+    <div class="records-header">
+      <h3>All Records</h3>
+      <button class="add-btn">+ Add</button>
+    </div>
+
+    <div class="record">
+      <div class="info">
+        <div class="avatar"></div>
+        <div>
+          <h4>Karim</h4>
+          <p><span class="borrowed-text">Borrowed</span> • 2026-04-01 • <span class="pending">Pending</span></p>
+        </div>
+      </div>
+      <div class="amount negative">৳300</div>
+    </div>
+
+    <div class="record">
+      <div class="info">
+        <div class="avatar"></div>
+        <div>
+          <h4>Sarah</h4>
+          <p><span class="lent-text">Lent</span> • 2026-03-28 • <span class="paid">Paid</span></p>
+        </div>
+      </div>
+      <div class="amount positive">৳500</div>
+    </div>
+
+    <div class="record">
+      <div class="info">
+        <div class="avatar"></div>
+        <div>
+          <h4>Ahmed</h4>
+          <p><span class="borrowed-text">Borrowed</span> • 2026-03-25 • <span class="pending">Pending</span></p>
+        </div>
+      </div>
+      <div class="amount negative">৳200</div>
+    </div>
+
+  </div>
+
+</section>
 			</main>
 		</div>
 	</div>
