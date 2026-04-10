@@ -1,26 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Dashboard | AmarHishab</title>
-	<link rel="stylesheet" href="../styles/main.css" />
-	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
+
+	<link rel="stylesheet" href="dash.css">
 </head>
-<body data-page-title="Dashboard">
-	<div class="dashboard-layout">
-		<div data-partial="../partials/navbar.html" data-partial-class="dashboard-topbar"></div>
 
-		<div class="dashboard-body">
-			<div data-partial="../partials/sidebar.html" data-partial-class="dashboard-sidebar"></div>
+<body>
 
-			<main class="dashboard-main">
-				<section class="container">
-					<h2>Start designing here</h2>
-				</section>
-			</main>
+<div class="layout">
+
+	<!-- SIDEBAR -->
+	<aside class="sidebar">
+		<div>
+			<h2 class="logo">Amar<span>Hishab</span></h2>
+
+			<button class="nav active">Dashboard</button>
+			<button class="nav">Transactions</button>
+			<button class="nav">Budget</button>
+			<button class="nav">Borrow/Lend</button>
+			<button class="nav">Settings</button>
 		</div>
-	</div>
-	<script src="../js/app.js"></script>
+
+		<div class="profile">
+			<div class="avatar">AB</div>
+			<div>
+				<p>Sir Adnan</p>
+				<small>aduvai@adumail.com</small>
+			</div>
+		</div>
+	</aside>
+
+	<!-- MAIN -->
+	<main class="main">
+
+		<div class="top">
+			<h1>Dashboard Overview</h1>
+			<div>
+				<button class="icon-btn">🔍</button>
+				<button class="icon-btn">🔔</button>
+			</div>
+		</div>
+
+		<!-- CARDS -->
+		<div class="cards">
+			<div class="card">
+				<p>Total Balance</p>
+				<h2>৳ 5,430</h2>
+				<span class="green">+12.5% from last month</span>
+			</div>
+
+			<div class="card">
+				<p>Income this Month</p>
+				<h2>৳ 6,200</h2>
+			</div>
+
+			<div class="card">
+				<p>Expenses this Month</p>
+				<h2>৳ 770</h2>
+				<span class="red">-8.2% from last month</span>
+			</div>
+		</div>
+
+		<!-- CONTENT -->
+		<div class="content">
+
+			<!-- TRANSACTIONS -->
+			<div class="transactions">
+				<div class="section-head">
+					<h3>Recent Transactions</h3>
+					<button class="link-btn">View All</button>
+				</div>
+
+				<ul>
+					<li><span>Grocery Shopping</span><span class="red">-৳450</span></li>
+					<li><span>Salary Deposit</span><span class="green">+৳5000</span></li>
+					<li><span>Electric Bill</span><span class="red">-৳320</span></li>
+					<li><span>Freelance Work</span><span class="green">+৳1200</span></li>
+				</ul>
+			</div>
+
+			<!-- RIGHT SIDE -->
+			<div class="right">
+
+				<div class="quick">
+					<h3>Quick Actions</h3>
+					<div class="btn-group">
+						<button class="primary">+ Add Income</button>
+						<button class="secondary">+ Add Expense</button>
+					</div>
+				</div>
+
+				<div class="budget">
+					<h3>Budget Summary</h3>
+
+					<div class="bar">
+						<p>Food & Dining</p>
+						<div class="progress"><div style="width:80%"></div></div>
+					</div>
+
+					<div class="bar">
+						<p>Transport</p>
+						<div class="progress blue"><div style="width:60%"></div></div>
+					</div>
+
+					<div class="bar">
+						<p>Entertainment</p>
+						<div class="progress green"><div style="width:50%"></div></div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</main>
+
+</div>
+
 </body>
 </html>
