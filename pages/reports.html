@@ -31,14 +31,21 @@
 									<option>This Year</option>
 								</select>
 							</label>
-							<button class="btn btn-primary btn-sm reports-download-btn" type="button" aria-label="Download PDF report">
+							<button
+								class="btn btn-primary btn-sm reports-download-btn"
+								type="button"
+								data-modal-target="#reports-download-modal"
+								aria-haspopup="dialog"
+								aria-controls="reports-download-modal"
+								aria-label="Download PDF report"
+							>
 								<i data-lucide="file-down" aria-hidden="true"></i>
 								<span>Download PDF</span>
 							</button>
 						</div>
 					</header>
 
-					<p class="reports-note">PDF download is part of the design flow and will be connected later.</p>
+					<p class="reports-note">Download opens custom report options (cashbook and date range). PDF export action will be connected later.</p>
 
 					<section class="reports-kpi-grid" aria-label="Report KPIs">
 						<article class="reports-kpi surface">
@@ -73,12 +80,30 @@
 								<p>Last 6 months</p>
 							</header>
 							<div class="chart-area reports-bar-chart" role="img" aria-label="Monthly expense trend chart">
-								<div class="bar" style="height: 58%;"><span>Nov</span></div>
-								<div class="bar" style="height: 72%;"><span>Dec</span></div>
-								<div class="bar" style="height: 61%;"><span>Jan</span></div>
-								<div class="bar" style="height: 84%;"><span>Feb</span></div>
-								<div class="bar" style="height: 76%;"><span>Mar</span></div>
-								<div class="bar" style="height: 68%;"><span>Apr</span></div>
+								<div class="reports-bar-item">
+									<div class="reports-bar-fill" style="height: 58%;"></div>
+									<span>Nov</span>
+								</div>
+								<div class="reports-bar-item">
+									<div class="reports-bar-fill" style="height: 72%;"></div>
+									<span>Dec</span>
+								</div>
+								<div class="reports-bar-item">
+									<div class="reports-bar-fill" style="height: 61%;"></div>
+									<span>Jan</span>
+								</div>
+								<div class="reports-bar-item">
+									<div class="reports-bar-fill" style="height: 84%;"></div>
+									<span>Feb</span>
+								</div>
+								<div class="reports-bar-item">
+									<div class="reports-bar-fill" style="height: 76%;"></div>
+									<span>Mar</span>
+								</div>
+								<div class="reports-bar-item">
+									<div class="reports-bar-fill" style="height: 68%;"></div>
+									<span>Apr</span>
+								</div>
 							</div>
 						</article>
 
@@ -87,7 +112,7 @@
 								<h2>Category Breakdown</h2>
 								<p>Current month</p>
 							</header>
-							<div class="donut" role="img" aria-label="Category spending donut chart"></div>
+							<div class="donut reports-donut" role="img" aria-label="Category spending donut chart"></div>
 							<div class="legend">
 								<div class="legend-item">
 									<div class="legend-left"><span class="dot" style="background:#8257e5;"></span><span>Food & Dining</span></div>
@@ -98,8 +123,16 @@
 									<strong>21%</strong>
 								</div>
 								<div class="legend-item">
-									<div class="legend-left"><span class="dot" style="background:#10b981;"></span><span>Bills</span></div>
+									<div class="legend-left"><span class="dot" style="background:#10b981;"></span><span>Bills & Utilities</span></div>
 									<strong>18%</strong>
+								</div>
+								<div class="legend-item">
+									<div class="legend-left"><span class="dot" style="background:#f59e0b;"></span><span>Shopping</span></div>
+									<strong>14%</strong>
+								</div>
+								<div class="legend-item">
+									<div class="legend-left"><span class="dot" style="background:#ef4444;"></span><span>Other</span></div>
+									<strong>15%</strong>
 								</div>
 							</div>
 						</article>
@@ -149,10 +182,54 @@
 							</table>
 						</div>
 					</section>
+
+					<div class="overlay modal-overlay" id="reports-download-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
+						<div class="modal" role="dialog" aria-modal="true" aria-labelledby="reports-download-title">
+							<div class="modal-head">
+								<h2 class="modal-title" id="reports-download-title">Customize PDF Report</h2>
+								<button class="icon-btn" type="button" data-modal-close aria-label="Close download report modal">
+									<i data-lucide="x" aria-hidden="true"></i>
+								</button>
+							</div>
+							<form class="modal-body">
+								<label class="field">
+									<span class="label">Cashbook Scope</span>
+									<select class="select" name="cashbookScope">
+										<option value="all" selected>All Cashbooks</option>
+										<option value="b4">B4</option>
+										<option value="b3">B3</option>
+										<option value="b2">B2</option>
+										<option value="business-book">Business Book</option>
+									</select>
+								</label>
+
+								<div class="reports-modal-range">
+									<label class="field">
+										<span class="label">From Month</span>
+										<input class="input" type="month" name="fromMonth" />
+									</label>
+									<label class="field">
+										<span class="label">To Month</span>
+										<input class="input" type="month" name="toMonth" />
+									</label>
+								</div>
+
+								<p class="reports-modal-note">Report options are ready. PDF generation will be connected in a later step.</p>
+
+								<div class="modal-footer">
+									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
+									<button class="btn btn-primary btn-sm" type="button" data-modal-close>
+										<span>Generate PDF (Soon)</span>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
 				</section>
 			</main>
 		</div>
 	</div>
+	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
 </body>
 </html>
