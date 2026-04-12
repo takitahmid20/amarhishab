@@ -1,6 +1,7 @@
 (function setupBudgetProgressComponent(globalScope) {
 	const categoryState = new WeakMap();
 	const fallbackColors = ["#8257e5", "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+	const fallbackIcons = ["utensils-crossed", "car", "clapperboard", "shopping-bag", "receipt-text", "heart-pulse"];
 
 	function escapeHtml(value) {
 		return String(value)
@@ -43,6 +44,12 @@
 		}
 
 		return (safeSpent / safeLimit) * 100;
+	}
+
+	function refreshLucideIcons() {
+		if (globalScope.lucide && typeof globalScope.lucide.createIcons === "function") {
+			globalScope.lucide.createIcons();
+		}
 	}
 
 	function readJsonSource(sourceSelector) {
@@ -159,9 +166,31 @@
 		}
 	}
 
+	function getSelectedCashbookId() {
+		const filterNode = document.querySelector("[data-budget-cashbook-filter]");
+		if (!(filterNode instanceof HTMLSelectElement)) {
+			return "all";
+		}
+
+		const value = String(filterNode.value || "all").trim();
+		return value || "all";
+	}
+
+	function filterCategories(categories, selectedCashbookId) {
+		if (!Array.isArray(categories)) {
+			return [];
+		}
+
+		if (!selectedCashbookId || selectedCashbookId === "all") {
+			return categories;
+		}
+
+		return categories.filter((category) => String(category.cashbookId || "") === selectedCashbookId);
+	}
+
 	function renderBudgetCategory(category, index) {
 		const name = escapeHtml(category.name || "Untitled Category");
-		const icon = escapeHtml(category.icon || "💼");
+		const iconName = escapeHtml(category.icon || fallbackIcons[index % fallbackIcons.length]);
 		const cashbookName = escapeHtml(category.cashbookName || "Unassigned");
 		const spent = Number(category.spent) || 0;
 		const limit = Number(category.limit) || 0;
@@ -179,7 +208,7 @@
 <article class="budget-category-item" data-budget-category-id="${escapeHtml(category.id || "")}">
 	<div class="budget-category-top">
 		<div class="budget-category-label">
-			<span class="budget-category-emoji" aria-hidden="true">${icon}</span>
+			<span class="budget-category-icon" aria-hidden="true"><i data-lucide="${iconName}"></i></span>
 			<strong>${name}</strong>
 		</div>
 		<div class="budget-category-meta">
@@ -201,11 +230,24 @@
 		if (categories.length === 0) {
 			container.innerHTML = '<p class="budget-empty">No categories available yet.</p>';
 			updateBudgetSummary([]);
+			refreshLucideIcons();
 			return;
 		}
 
 		container.innerHTML = categories.map((category, index) => renderBudgetCategory(category, index)).join("\n");
 		updateBudgetSummary(categories);
+		refreshLucideIcons();
+	}
+
+	function renderContainerByFilter(container) {
+		if (!(container instanceof HTMLElement)) {
+			return;
+		}
+
+		const categories = categoryState.get(container) || [];
+		const selectedCashbookId = getSelectedCashbookId();
+		const filteredCategories = filterCategories(categories, selectedCashbookId);
+		renderBudgetCategoryList(container, filteredCategories);
 	}
 
 	async function initBudgetCategories() {
@@ -217,8 +259,22 @@
 		for (const container of containers) {
 			const categories = await resolveBudgetCategories(container);
 			categoryState.set(container, categories);
-			renderBudgetCategoryList(container, categories);
+			renderContainerByFilter(container);
 		}
+	}
+
+	function initBudgetFilterFlow() {
+		const filterNode = document.querySelector("[data-budget-cashbook-filter]");
+		if (!(filterNode instanceof HTMLSelectElement)) {
+			return;
+		}
+
+		filterNode.addEventListener("change", () => {
+			const containers = Array.from(document.querySelectorAll('[data-component="budget-category-list"]'));
+			for (const container of containers) {
+				renderContainerByFilter(container);
+			}
+		});
 	}
 
 	function createCategoryPayload(formData, colorIndex) {
@@ -237,7 +293,7 @@
 		return {
 			id: `${toSlug(categoryName) || "category"}-${Date.now()}`,
 			name: categoryName,
-			icon: "📝",
+			icon: "tag",
 			spent: 0,
 			limit: 1000,
 			cashbookId,
@@ -271,7 +327,7 @@
 
 			const nextCategories = [nextCategory, ...currentCategories];
 			categoryState.set(container, nextCategories);
-			renderBudgetCategoryList(container, nextCategories);
+			renderContainerByFilter(container);
 
 			const fallbackSelector = (container.getAttribute("data-source-fallback") || "").trim();
 			if (fallbackSelector.startsWith("#")) {
@@ -288,6 +344,7 @@
 
 	function initBudgetProgressComponent() {
 		void initBudgetCategories();
+		initBudgetFilterFlow();
 		initBudgetCreateFlow();
 	}
 
