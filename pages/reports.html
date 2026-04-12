@@ -184,14 +184,14 @@
 					</section>
 
 					<div class="overlay modal-overlay" id="reports-download-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
-						<div class="modal" role="dialog" aria-modal="true" aria-labelledby="reports-download-title">
+						<div class="modal reports-modal" role="dialog" aria-modal="true" aria-labelledby="reports-download-title">
 							<div class="modal-head">
 								<h2 class="modal-title" id="reports-download-title">Customize PDF Report</h2>
 								<button class="icon-btn" type="button" data-modal-close aria-label="Close download report modal">
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<form class="modal-body">
+							<form class="modal-body reports-modal-form">
 								<label class="field">
 									<span class="label">Cashbook Scope</span>
 									<select class="select" name="cashbookScope">
@@ -206,17 +206,17 @@
 								<div class="reports-modal-range">
 									<label class="field">
 										<span class="label">From Month</span>
-										<input class="input" type="month" name="fromMonth" />
+										<input class="input" type="month" name="fromMonth" value="2026-01" required />
 									</label>
 									<label class="field">
 										<span class="label">To Month</span>
-										<input class="input" type="month" name="toMonth" />
+										<input class="input" type="month" name="toMonth" value="2026-04" required />
 									</label>
 								</div>
 
 								<p class="reports-modal-note">Report options are ready. PDF generation will be connected in a later step.</p>
 
-								<div class="modal-footer">
+								<div class="modal-footer reports-modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
 									<button class="btn btn-primary btn-sm" type="button" data-modal-close>
 										<span>Generate PDF (Soon)</span>

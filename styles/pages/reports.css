@@ -226,7 +226,7 @@
 .reports-modal-range {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 10px;
+	gap: 12px;
 }
 
 .reports-modal-note {
@@ -234,6 +234,66 @@
 	font-size: 12px;
 	line-height: 1.35;
 	color: var(--color-text-muted);
+}
+
+.reports-modal {
+	width: min(100%, 520px);
+	padding: 22px;
+	border-radius: 14px;
+	border: 1px solid rgba(146, 95, 255, 0.24);
+	box-shadow: 0 16px 34px rgba(17, 24, 39, 0.18);
+}
+
+.reports-modal .modal-head {
+	margin-bottom: 14px;
+}
+
+.reports-modal .modal-title {
+	font-size: 20px;
+	line-height: 1.15;
+}
+
+.reports-modal-form {
+	gap: 14px;
+}
+
+.reports-modal-form .field {
+	gap: 7px;
+}
+
+.reports-modal-form .label {
+	font-size: 12px;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+}
+
+.reports-modal-form .select,
+.reports-modal-form .input {
+	min-height: 52px;
+	border-radius: 12px;
+	padding: 0 16px;
+}
+
+.reports-modal-form input[type="month"] {
+	line-height: 1.2;
+	font-size: 15px;
+	padding-block: 0;
+}
+
+.reports-modal-form input[type="month"]::-webkit-calendar-picker-indicator {
+	opacity: 0.85;
+	cursor: pointer;
+}
+
+.reports-modal-footer {
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 4px;
+}
+
+.reports-modal-footer .btn {
+	min-width: 168px;
 }
 
 @media (max-width: 64rem) {
@@ -272,5 +332,18 @@
 
 	.reports-hero-copy h1 {
 		font-size: 23px;
+	}
+
+	.reports-modal {
+		padding: 18px;
+	}
+
+	.reports-modal .modal-title {
+		font-size: 22px;
+	}
+
+	.reports-modal-footer .btn {
+		min-width: 0;
+		width: 100%;
 	}
 }
