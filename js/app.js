@@ -223,6 +223,24 @@ function toSlug(value) {
 		.replace(/^-+|-+$/g, "");
 }
 
+function escapeHtml(value) {
+	return String(value)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/\"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
+function formatNumber(value) {
+	const amount = Number(value);
+	if (!Number.isFinite(amount)) {
+		return "0";
+	}
+
+	return amount.toLocaleString("en-US");
+}
+
 function setCashbookCount(count) {
 	const countNode = document.querySelector("[data-cashbooks-active-count]");
 	if (!countNode) {
@@ -254,6 +272,108 @@ async function resolveCashbookBooks(container) {
 	}
 
 	return readJsonSource(fallbackSelector);
+}
+
+function renderCashbookEntryRows(entryListNode, entries) {
+	if (!(entryListNode instanceof HTMLElement)) {
+		return;
+	}
+
+	if (!Array.isArray(entries) || entries.length === 0) {
+		entryListNode.innerHTML = `
+			<tr>
+				<td colspan="8" style="text-align:center;color:var(--color-text-muted);">No entries found.</td>
+			</tr>
+		`.trim();
+		return;
+	}
+
+	entryListNode.innerHTML = entries
+		.map((entry) => {
+			const direction = entry.direction === "out" ? "out" : "in";
+			const amountClass = direction === "out" ? "cashbook-entry-amount--out" : "cashbook-entry-amount--in";
+
+			return `
+				<tr>
+					<td class="cell-check"><input type="checkbox" aria-label="Select entry" /></td>
+					<td>
+						<div class="cashbook-entry-date">${escapeHtml(entry.dateLabel || "--")}</div>
+						<div class="cashbook-entry-time">${escapeHtml(entry.time || "--")}</div>
+					</td>
+					<td>${escapeHtml(entry.details || "--")}</td>
+					<td>${escapeHtml(entry.category || "--")}</td>
+					<td>${escapeHtml(entry.mode || "--")}</td>
+					<td>${escapeHtml(entry.bill || "--")}</td>
+					<td class="cashbook-entry-amount ${amountClass}">${formatNumber(entry.amount)}</td>
+					<td class="cashbook-entry-balance">${formatNumber(entry.balance)}</td>
+				</tr>
+			`.trim();
+		})
+		.join("\n");
+}
+
+async function initCashbookDetailsPage() {
+	const pageNode = document.querySelector("[data-cashbook-details-page]");
+	if (!(pageNode instanceof HTMLElement)) {
+		return;
+	}
+
+	const params = new URLSearchParams(window.location.search);
+	const selectedCashbookId = params.get("cashbookId") || "";
+	const selectedCashbookName = params.get("cashbookName") || "";
+
+	const sourcePath = (pageNode.getAttribute("data-source") || "").trim();
+	const fallbackSelector = (pageNode.getAttribute("data-source-fallback") || "").trim();
+
+	const sourceResult = sourcePath.startsWith("#") ? { didLoad: true, books: readJsonSource(sourcePath) } : await readJsonFile(sourcePath);
+	const records = sourceResult.didLoad ? sourceResult.books : readJsonSource(fallbackSelector);
+
+	if (sourceResult.didLoad && fallbackSelector.startsWith("#")) {
+		writeJsonSource(fallbackSelector, records);
+	}
+
+	if (!Array.isArray(records) || records.length === 0) {
+		return;
+	}
+
+	const matchedRecord =
+		records.find((record) => String(record.cashbookId || "") === selectedCashbookId) ||
+		records.find((record) => String(record.cashbookName || "") === selectedCashbookName) ||
+		records[0];
+
+	if (!matchedRecord) {
+		return;
+	}
+
+	const cashbookName = selectedCashbookName || matchedRecord.cashbookName || "Cashbook";
+	for (const node of document.querySelectorAll("[data-cashbook-name]")) {
+		node.textContent = cashbookName;
+	}
+
+	const summary = matchedRecord.summary || {};
+	const cashInNode = document.querySelector("[data-summary-cash-in]");
+	if (cashInNode) {
+		cashInNode.textContent = formatNumber(summary.cashIn);
+	}
+
+	const cashOutNode = document.querySelector("[data-summary-cash-out]");
+	if (cashOutNode) {
+		cashOutNode.textContent = formatNumber(summary.cashOut);
+	}
+
+	const netBalanceNode = document.querySelector("[data-summary-net-balance]");
+	if (netBalanceNode) {
+		netBalanceNode.textContent = formatNumber(summary.netBalance);
+	}
+
+	const entries = Array.isArray(matchedRecord.entries) ? matchedRecord.entries : [];
+	const countLabelNode = document.querySelector("[data-entry-count-label]");
+	if (countLabelNode) {
+		countLabelNode.textContent = entries.length > 0 ? `Showing 1 - ${entries.length} of ${entries.length} entries` : "Showing 0 entries";
+	}
+
+	const entryListNode = document.querySelector("[data-entry-list]");
+	renderCashbookEntryRows(entryListNode, entries);
 }
 
 async function initCashbookCardComponents() {
@@ -376,6 +496,7 @@ async function initAppShell() {
 		syncNavbarTitle();
 		syncActiveSidebarLink();
 		await initCashbookCardComponents();
+		await initCashbookDetailsPage();
 		initModalComponents();
 		initCashbookCreateFlow();
 		await ensureLucideIcons();

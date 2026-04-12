@@ -97,3 +97,33 @@
 	opacity: 0.8;
 }
 
+.input-file {
+	width: 100%;
+	border: 1px dashed var(--color-border-strong);
+	background: var(--color-surface);
+	color: var(--color-text-secondary);
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-size: 13px;
+	line-height: 1.4;
+	outline: none;
+	transition: border-color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.input-file:focus-visible {
+	border-color: var(--color-brand-400);
+	box-shadow: 0 0 0 4px rgba(146, 95, 255, 0.12);
+}
+
+.input-file::file-selector-button {
+	margin-right: 10px;
+	border: 1px solid var(--color-border-strong);
+	border-radius: 8px;
+	background: var(--color-surface-muted);
+	color: var(--color-text-primary);
+	padding: 6px 10px;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+}
+

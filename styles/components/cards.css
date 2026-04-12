@@ -342,6 +342,7 @@
 	color: var(--color-brand-600);
 	border: 1px solid rgba(146, 95, 255, 0.18);
 	padding: 0;
+	text-decoration: none;
 }
 
 .cashbook-icon-btn i,
