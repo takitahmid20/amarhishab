@@ -1,125 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Dashboard | AmarHishab</title>
 
-	<link rel="stylesheet" href="dash.css">
+	<link rel="stylesheet" href="../styles/main.css" />
+	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
 </head>
 
-<body>
+<body data-page-title="Dashboard Overview">
+	<div class="dashboard-layout">
+		<div data-partial="../partials/navbar.html" data-partial-class="dashboard-topbar"></div>
 
-<div class="layout">
+		<div class="dashboard-body">
+			<div data-partial="../partials/sidebar.html" data-partial-class="dashboard-sidebar"></div>
 
-	<!-- SIDEBAR -->
-	<aside class="sidebar">
-		<div>
-			<h2 class="logo">Amar<span>Hishab</span></h2>
-
-			<button class="nav active">Dashboard</button>
-			<button class="nav">Transactions</button>
-			<button class="nav">Budget</button>
-			<button class="nav">Borrow/Lend</button>
-			<button class="nav">Settings</button>
-		</div>
-
-		<div class="profile">
-			<div class="avatar">AB</div>
-			<div>
-				<p>Sir Adnan</p>
-				<small>aduvai@adumail.com</small>
-			</div>
-		</div>
-	</aside>
-
-	<!-- MAIN -->
-	<main class="main">
-
-		<div class="top">
-			<h1>Dashboard Overview</h1>
-			<div>
-				<button class="icon-btn">🔍</button>
-				<button class="icon-btn">🔔</button>
-			</div>
-		</div>
-
-		<!-- CARDS -->
-		<div class="cards">
-			<div class="card">
-				<p>Total Balance</p>
-				<h2>৳ 5,430</h2>
-				<span class="green">+12.5% from last month</span>
-			</div>
-
-			<div class="card">
-				<p>Income this Month</p>
-				<h2>৳ 6,200</h2>
-			</div>
-
-			<div class="card">
-				<p>Expenses this Month</p>
-				<h2>৳ 770</h2>
-				<span class="red">-8.2% from last month</span>
-			</div>
-		</div>
-
-		<!-- CONTENT -->
-		<div class="content">
-
-			<!-- TRANSACTIONS -->
-			<div class="transactions">
-				<div class="section-head">
-					<h3>Recent Transactions</h3>
-					<button class="link-btn">View All</button>
-				</div>
-
-				<ul>
-					<li><span>Grocery Shopping</span><span class="red">-৳450</span></li>
-					<li><span>Salary Deposit</span><span class="green">+৳5000</span></li>
-					<li><span>Electric Bill</span><span class="red">-৳320</span></li>
-					<li><span>Freelance Work</span><span class="green">+৳1200</span></li>
-				</ul>
-			</div>
-
-			<!-- RIGHT SIDE -->
-			<div class="right">
-
-				<div class="quick">
-					<h3>Quick Actions</h3>
-					<div class="btn-group">
-						<button class="primary">+ Add Income</button>
-						<button class="secondary">+ Add Expense</button>
-					</div>
-				</div>
-
-				<div class="budget">
-					<h3>Budget Summary</h3>
-
-					<div class="bar">
-						<p>Food & Dining</p>
-						<div class="progress"><div style="width:80%"></div></div>
+			<main class="dashboard-main">
+				<section class="container dashboard-page">
+					<div class="dashboard-hero">
+						<div class="dashboard-hero-copy">
+							<h1>Dashboard Overview</h1>
+							<p>Track your finances and manage your budget</p>
+						</div>
+						<div class="dashboard-hero-actions">
+							<button class="btn btn-outline btn-icon" type="button" aria-label="Search">
+								<i data-lucide="search" aria-hidden="true"></i>
+							</button>
+							<button class="btn btn-outline btn-icon" type="button" aria-label="Notifications">
+								<i data-lucide="bell" aria-hidden="true"></i>
+							</button>
+						</div>
 					</div>
 
-					<div class="bar">
-						<p>Transport</p>
-						<div class="progress blue"><div style="width:60%"></div></div>
+					<div class="dashboard-summary">
+						<article class="stat-card surface">
+							<div class="stat-top">
+								<div>
+									<p class="stat-title">Total Balance</p>
+									<p class="stat-value">৳ 5,430</p>
+								</div>
+								<div class="dashboard-stat-icon">
+									<i data-lucide="dollar-sign" aria-hidden="true"></i>
+								</div>
+							</div>
+							<p class="stat-sub stat-sub-success">+12.5% from last month</p>
+						</article>
+
+						<article class="stat-card surface">
+							<div class="stat-top">
+								<div>
+									<p class="stat-title">Income this Month</p>
+									<p class="stat-value">৳ 6,200</p>
+								</div>
+								<div class="dashboard-stat-icon dashboard-stat-icon--mint">
+									<i data-lucide="trending-up" aria-hidden="true"></i>
+								</div>
+							</div>
+						</article>
+
+						<article class="stat-card surface">
+							<div class="stat-top">
+								<div>
+									<p class="stat-title">Expenses this Month</p>
+									<p class="stat-value">৳ 770</p>
+								</div>
+								<div class="dashboard-stat-icon dashboard-stat-icon--red">
+									<i data-lucide="trending-down" aria-hidden="true"></i>
+								</div>
+							</div>
+							<p class="stat-sub stat-sub-danger">-8.2% from last month</p>
+						</article>
 					</div>
 
-					<div class="bar">
-						<p>Entertainment</p>
-						<div class="progress green"><div style="width:50%"></div></div>
+					<div class="dashboard-grid">
+						<div class="dashboard-left">
+							<section class="surface dashboard-card">
+								<div class="dashboard-card-header">
+									<h3>Recent Transactions</h3>
+									<button class="btn btn-secondary btn-sm" type="button">View All</button>
+								</div>
+
+								<div class="dashboard-transaction-list">
+									<div class="transaction-card">
+										<div class="tx-left">
+											<div class="tx-icon" style="background:#fef2f2; color:#b91c1c;">
+												<i data-lucide="shopping-cart" aria-hidden="true"></i>
+											</div>
+											<div>
+												<h4 class="tx-title">Grocery Shopping</h4>
+												<p class="tx-meta">Food & Dining • 2 Mar, 2026</p>
+											</div>
+										</div>
+										<div class="tx-amount text-danger">-৳450</div>
+									</div>
+
+									<div class="transaction-card">
+										<div class="tx-left">
+											<div class="tx-icon" style="background:#ecfdf5; color:#16a34a;">
+												<i data-lucide="dollar-sign" aria-hidden="true"></i>
+											</div>
+											<div>
+												<h4 class="tx-title">Salary Deposit</h4>
+												<p class="tx-meta">Salary • 1 Mar, 2026</p>
+											</div>
+										</div>
+										<div class="tx-amount text-success">+৳5,000</div>
+									</div>
+
+									<div class="transaction-card">
+										<div class="tx-left">
+											<div class="tx-icon" style="background:#fef2f2; color:#b91c1c;">
+												<i data-lucide="plug" aria-hidden="true"></i>
+											</div>
+											<div>
+												<h4 class="tx-title">Electric Bill</h4>
+												<p class="tx-meta">Bills & Utilities • 28 Feb, 2026</p>
+											</div>
+										</div>
+										<div class="tx-amount text-danger">-৳320</div>
+									</div>
+
+									<div class="transaction-card">
+										<div class="tx-left">
+											<div class="tx-icon" style="background:#ecfdf5; color:#16a34a;">
+												<i data-lucide="briefcase" aria-hidden="true"></i>
+											</div>
+											<div>
+												<h4 class="tx-title">Freelance Work</h4>
+												<p class="tx-meta">Freelance • 25 Feb, 2026</p>
+											</div>
+										</div>
+										<div class="tx-amount text-success">+৳1,200</div>
+									</div>
+								</div>
+							</section>
+						</div>
+
+						<div class="dashboard-right">
+							<section class="surface dashboard-card quick-actions">
+								<div class="dashboard-card-header">
+									<h3>Quick Actions</h3>
+								</div>
+								<div class="action-buttons">
+									<button class="btn btn-primary" type="button">+ Add Income</button>
+									<button class="btn btn-secondary" type="button">+ Add Expense</button>
+								</div>
+							</section>
+
+							<section class="surface dashboard-card budget-summary">
+								<div class="dashboard-card-header">
+									<h3>Budget Summary</h3>
+								</div>
+								<div class="budget-item">
+									<div class="budget-item-head">
+										<p>Food & Dining</p>
+										<span>৳1200 / ৳1500</span>
+									</div>
+									<div class="budget-track">
+										<span class="budget-fill budget-fill--purple"></span>
+									</div>
+								</div>
+
+								<div class="budget-item">
+									<div class="budget-item-head">
+										<p>Transportation</p>
+										<span>৳800 / ৳1000</span>
+									</div>
+									<div class="budget-track">
+										<span class="budget-fill budget-fill--blue"></span>
+									</div>
+								</div>
+
+								<div class="budget-item">
+									<div class="budget-item-head">
+										<p>Entertainment</p>
+										<span>৳300 / ৳500</span>
+									</div>
+									<div class="budget-track">
+										<span class="budget-fill budget-fill--green"></span>
+									</div>
+								</div>
+							</section>
+						</div>
 					</div>
-
-				</div>
-
-			</div>
-
+				</section>
+			</main>
 		</div>
+	</div>
 
-	</main>
-
-</div>
-
+	<script src="../js/app.js"></script>
 </body>
 </html>
