@@ -47,72 +47,54 @@
 
 					<p class="reports-note">Download opens custom report options (cashbook and date range). PDF export action will be connected later.</p>
 
-					<section class="reports-kpi-grid" aria-label="Report KPIs">
-						<article class="reports-kpi surface">
-							<div class="reports-kpi-head">
-								<p>Total Income</p>
+					<section class="quick-grid" aria-label="Report KPIs">
+						<article class="stat-card">
+							<div class="stat-top">
+								<span class="stat-title">Total Income</span>
 								<i data-lucide="trending-up" aria-hidden="true"></i>
 							</div>
-							<strong>৳ 42,500</strong>
+							<div class="stat-value">৳ 42,500</div>
+							<div class="stat-sub">All sources</div>
 						</article>
-
-						<article class="reports-kpi surface">
-							<div class="reports-kpi-head">
-								<p>Total Expense</p>
+						<article class="stat-card">
+							<div class="stat-top">
+								<span class="stat-title">Total Expense</span>
 								<i data-lucide="trending-down" aria-hidden="true"></i>
 							</div>
-							<strong class="reports-kpi-danger">৳ 28,400</strong>
+							<div class="stat-value" style="color:var(--color-danger)">৳ 28,400</div>
+							<div class="stat-sub">All categories</div>
 						</article>
-
-						<article class="reports-kpi surface">
-							<div class="reports-kpi-head">
-								<p>Net Savings</p>
+						<article class="stat-card">
+							<div class="stat-top">
+								<span class="stat-title">Net Savings</span>
 								<i data-lucide="piggy-bank" aria-hidden="true"></i>
 							</div>
-							<strong class="reports-kpi-success">৳ 14,100</strong>
+							<div class="stat-value" style="color:var(--color-success)">৳ 14,100</div>
+							<div class="stat-sub">This period</div>
 						</article>
 					</section>
 
 					<section class="reports-insights-grid" aria-label="Report visual insights">
-						<article class="chart-card reports-chart-card">
+						<article class="chart-card">
 							<header class="reports-section-head">
 								<h2>Monthly Expense Trend</h2>
 								<p>Last 6 months</p>
 							</header>
-							<div class="chart-area reports-bar-chart" role="img" aria-label="Monthly expense trend chart">
-								<div class="reports-bar-item">
-									<div class="reports-bar-fill" style="height: 58%;"></div>
-									<span>Nov</span>
-								</div>
-								<div class="reports-bar-item">
-									<div class="reports-bar-fill" style="height: 72%;"></div>
-									<span>Dec</span>
-								</div>
-								<div class="reports-bar-item">
-									<div class="reports-bar-fill" style="height: 61%;"></div>
-									<span>Jan</span>
-								</div>
-								<div class="reports-bar-item">
-									<div class="reports-bar-fill" style="height: 84%;"></div>
-									<span>Feb</span>
-								</div>
-								<div class="reports-bar-item">
-									<div class="reports-bar-fill" style="height: 76%;"></div>
-									<span>Mar</span>
-								</div>
-								<div class="reports-bar-item">
-									<div class="reports-bar-fill" style="height: 68%;"></div>
-									<span>Apr</span>
-								</div>
+							<div class="chart-area">
+								<div class="bar" style="height: 58%"><span>Nov</span></div>
+								<div class="bar" style="height: 72%"><span>Dec</span></div>
+								<div class="bar" style="height: 61%"><span>Jan</span></div>
+								<div class="bar" style="height: 84%"><span>Feb</span></div>
+								<div class="bar" style="height: 76%"><span>Mar</span></div>
+								<div class="bar" style="height: 68%"><span>Apr</span></div>
 							</div>
 						</article>
-
-						<article class="chart-card reports-chart-card">
+						<article class="chart-card">
 							<header class="reports-section-head">
 								<h2>Category Breakdown</h2>
 								<p>Current month</p>
 							</header>
-							<div class="donut reports-donut" role="img" aria-label="Category spending donut chart"></div>
+							<div class="donut"></div>
 							<div class="legend">
 								<div class="legend-item">
 									<div class="legend-left"><span class="dot" style="background:#8257e5;"></span><span>Food & Dining</span></div>
