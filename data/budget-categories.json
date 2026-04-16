@@ -1,0 +1,62 @@
+[
+  {
+    "id": "food-dining",
+    "name": "Food & Dining",
+    "icon": "utensils-crossed",
+    "spent": 1200,
+    "limit": 1500,
+    "color": "#8257e5",
+    "cashbookId": "b4",
+    "cashbookName": "B4"
+  },
+  {
+    "id": "transportation",
+    "name": "Transportation",
+    "icon": "car",
+    "spent": 800,
+    "limit": 1000,
+    "color": "#3b82f6",
+    "cashbookId": "b3",
+    "cashbookName": "B3"
+  },
+  {
+    "id": "entertainment",
+    "name": "Entertainment",
+    "icon": "clapperboard",
+    "spent": 300,
+    "limit": 500,
+    "color": "#10b981",
+    "cashbookId": "b4",
+    "cashbookName": "B4"
+  },
+  {
+    "id": "shopping",
+    "name": "Shopping",
+    "icon": "shopping-bag",
+    "spent": 600,
+    "limit": 800,
+    "color": "#f59e0b",
+    "cashbookId": "business-book",
+    "cashbookName": "Business Book"
+  },
+  {
+    "id": "bills-utilities",
+    "name": "Bills & Utilities",
+    "icon": "receipt-text",
+    "spent": 950,
+    "limit": 1000,
+    "color": "#ef4444",
+    "cashbookId": "b2",
+    "cashbookName": "B2"
+  },
+  {
+    "id": "healthcare",
+    "name": "Healthcare",
+    "icon": "heart-pulse",
+    "spent": 200,
+    "limit": 500,
+    "color": "#8b5cf6",
+    "cashbookId": "b3",
+    "cashbookName": "B3"
+  }
+]

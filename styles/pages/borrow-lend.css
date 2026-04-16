@@ -1,0 +1,318 @@
+/* ======================================================
+   styles/pages/borrow-lend.css
+   Page-specific styles for the Borrow / Lend page.
+   Depends on: main.css, dashboard.css
+   ====================================================== */
+
+/* ── page wrapper ── */
+.bl-page {
+	padding: 20px;
+	display: grid;
+	gap: 16px;
+	align-content: start;
+}
+
+/* ── summary stat cards ── */
+.bl-stat-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 14px;
+}
+
+.bl-stat-card {
+	padding: 18px 20px;
+	border-radius: 14px;
+	border: 1px solid var(--color-border);
+	background: var(--color-surface);
+	box-shadow: var(--shadow-sm);
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.bl-stat-icon {
+	width: 42px;
+	height: 42px;
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+}
+
+.bl-stat-icon--borrowed {
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+}
+
+.bl-stat-icon--lent {
+	background: var(--color-success-soft);
+	color: var(--color-success);
+}
+
+.bl-stat-icon svg {
+	width: 20px;
+	height: 20px;
+	stroke-width: 2;
+}
+
+.bl-stat-body {
+	min-width: 0;
+	flex: 1;
+}
+
+.bl-stat-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--color-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.bl-stat-amount {
+	font-size: 28px;
+	font-weight: 800;
+	line-height: 1.1;
+	margin-top: 4px;
+}
+
+.bl-stat-amount--borrowed { color: var(--color-danger); }
+.bl-stat-amount--lent     { color: var(--color-success); }
+
+.bl-stat-sub {
+	font-size: 12px;
+	color: var(--color-text-muted);
+	margin-top: 4px;
+}
+
+/* ── records card ── */
+.bl-records-card {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 14px;
+	box-shadow: var(--shadow-sm);
+	overflow: hidden;
+}
+
+.bl-records-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 16px 18px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.bl-records-head h3 {
+	font-size: 16px;
+	font-weight: 700;
+	margin: 0;
+}
+
+.bl-records-controls {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* ── tabs ── */
+.bl-tabs {
+	display: flex;
+	gap: 4px;
+	padding: 10px 18px;
+	border-bottom: 1px solid var(--color-border);
+	background: var(--color-surface-muted);
+	overflow-x: auto;
+}
+
+.bl-tab {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 14px;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-text-muted);
+	border: 1px solid transparent;
+	background: none;
+	font-family: inherit;
+	cursor: pointer;
+	white-space: nowrap;
+	transition:
+		background var(--duration-fast) var(--easing-standard),
+		color var(--duration-fast) var(--easing-standard);
+}
+
+.bl-tab:hover {
+	background: var(--color-brand-50);
+	color: var(--color-brand-700);
+}
+
+.bl-tab.active {
+	background: var(--color-surface);
+	border-color: var(--color-border);
+	color: var(--color-text-primary);
+	box-shadow: var(--shadow-xs);
+}
+
+.bl-tab-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px;
+	height: 18px;
+	padding: 0 5px;
+	border-radius: var(--radius-pill);
+	font-size: 10px;
+	font-weight: 800;
+	background: var(--color-brand-50);
+	color: var(--color-brand-700);
+}
+
+.bl-tab.active .bl-tab-count {
+	background: var(--color-brand-500);
+	color: var(--color-text-inverse);
+}
+
+/* ── list items ── */
+.bl-list {
+	padding: 0 18px;
+}
+
+.bl-list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 14px 0;
+	border-bottom: 1px solid var(--color-border);
+	transition: background var(--duration-fast);
+}
+
+.bl-list-item:last-child {
+	border-bottom: none;
+}
+
+.bl-item-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+	flex: 1;
+}
+
+.bl-avatar {
+	width: 42px;
+	height: 42px;
+	border-radius: 11px;
+	background: var(--color-brand-100);
+	border: 1px solid var(--color-brand-200);
+	display: grid;
+	place-items: center;
+	font-size: 14px;
+	font-weight: 800;
+	color: var(--color-brand-700);
+	flex-shrink: 0;
+}
+
+.bl-item-name {
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--color-text-primary);
+}
+
+.bl-item-meta {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 3px;
+	flex-wrap: wrap;
+}
+
+.bl-item-type {
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.bl-item-type--borrowed { color: var(--color-danger); }
+.bl-item-type--lent     { color: var(--color-success); }
+
+.bl-item-date {
+	font-size: 12px;
+	color: var(--color-text-muted);
+}
+
+.meta-dot {
+	color: var(--color-border-strong);
+}
+
+.bl-item-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+	/* Amount always at the far right, actions to its left */
+	flex-direction: row-reverse;
+}
+
+.bl-item-amount {
+	font-size: 16px;
+	font-weight: 800;
+	text-align: right;
+	width: 72px; /* fixed width so every row aligns */
+	flex-shrink: 0;
+}
+
+.bl-item-amount--borrowed { color: var(--color-danger); }
+.bl-item-amount--lent     { color: var(--color-success); }
+
+/* Show action buttons only on hover (desktop) */
+.bl-item-actions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	width: 80px; /* fixed width = 2 icon-btns (36px each + 6px gap) */
+	flex-shrink: 0;
+	justify-content: flex-end;
+	opacity: 0;
+	transition: opacity var(--duration-fast);
+}
+
+.bl-list-item:hover .bl-item-actions {
+	opacity: 1;
+}
+
+/* ── modal helpers ── */
+.modal-grid-2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+/* Keep modal fully inside viewport */
+#add-record-modal .modal {
+	width: min(100%, 420px);
+	max-height: calc(100vh - 48px);
+	max-height: calc(100dvh - 48px);
+	overflow-y: auto;
+}
+
+/* ── responsive ── */
+@media (max-width: 48rem) {
+	.bl-stat-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.bl-page {
+		padding: 14px;
+	}
+
+	.bl-item-actions {
+		/* Always visible on mobile (no hover) */
+		opacity: 1;
+	}
+
+	.modal-grid-2 {
+		grid-template-columns: 1fr;
+	}
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "cashbookId": "b4",
+    "cashbookName": "B4",
+    "summary": {
+      "cashIn": 1300,
+      "cashOut": 400,
+      "netBalance": 900
+    },
+    "entries": [
+      {
+        "dateLabel": "Today",
+        "time": "08:36 PM",
+        "details": "--",
+        "category": "--",
+        "mode": "--",
+        "bill": "--",
+        "amount": 400,
+        "balance": 900,
+        "direction": "out"
+      },
+      {
+        "dateLabel": "Today",
+        "time": "08:36 PM",
+        "details": "--",
+        "category": "--",
+        "mode": "--",
+        "bill": "--",
+        "amount": 500,
+        "balance": 1300,
+        "direction": "in"
+      },
+      {
+        "dateLabel": "10 Apr, 2026",
+        "time": "08:36 PM",
+        "details": "--",
+        "category": "--",
+        "mode": "--",
+        "bill": "--",
+        "amount": 800,
+        "balance": 800,
+        "direction": "in"
+      }
+    ]
+  },
+  {
+    "cashbookId": "b3",
+    "cashbookName": "B3",
+    "summary": {
+      "cashIn": 1850,
+      "cashOut": 920,
+      "netBalance": 930
+    },
+    "entries": [
+      {
+        "dateLabel": "Today",
+        "time": "11:12 AM",
+        "details": "Office snacks",
+        "category": "Food",
+        "mode": "Cash",
+        "bill": "INV-104",
+        "amount": 120,
+        "balance": 930,
+        "direction": "out"
+      },
+      {
+        "dateLabel": "11 Apr, 2026",
+        "time": "06:20 PM",
+        "details": "Client payment",
+        "category": "Income",
+        "mode": "Bank",
+        "bill": "RCV-221",
+        "amount": 950,
+        "balance": 1050,
+        "direction": "in"
+      },
+      {
+        "dateLabel": "11 Apr, 2026",
+        "time": "09:14 AM",
+        "details": "Transport",
+        "category": "Travel",
+        "mode": "Cash",
+        "bill": "--",
+        "amount": 80,
+        "balance": 100,
+        "direction": "out"
+      }
+    ]
+  },
+  {
+    "cashbookId": "b2",
+    "cashbookName": "B2",
+    "summary": {
+      "cashIn": 940,
+      "cashOut": 510,
+      "netBalance": 430
+    },
+    "entries": [
+      {
+        "dateLabel": "Today",
+        "time": "03:06 PM",
+        "details": "Stock refill",
+        "category": "Inventory",
+        "mode": "Bank",
+        "bill": "PO-12",
+        "amount": 310,
+        "balance": 430,
+        "direction": "out"
+      },
+      {
+        "dateLabel": "10 Apr, 2026",
+        "time": "01:35 PM",
+        "details": "Retail sale",
+        "category": "Sales",
+        "mode": "Cash",
+        "bill": "SL-88",
+        "amount": 600,
+        "balance": 740,
+        "direction": "in"
+      },
+      {
+        "dateLabel": "09 Apr, 2026",
+        "time": "07:40 PM",
+        "details": "Courier",
+        "category": "Logistics",
+        "mode": "Cash",
+        "bill": "--",
+        "amount": 200,
+        "balance": 140,
+        "direction": "out"
+      }
+    ]
+  }
+]

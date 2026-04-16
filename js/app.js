@@ -223,6 +223,24 @@ function toSlug(value) {
 		.replace(/^-+|-+$/g, "");
 }
 
+function escapeHtml(value) {
+	return String(value)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/\"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+}
+
+function formatNumber(value) {
+	const amount = Number(value);
+	if (!Number.isFinite(amount)) {
+		return "0";
+	}
+
+	return amount.toLocaleString("en-US");
+}
+
 function setCashbookCount(count) {
 	const countNode = document.querySelector("[data-cashbooks-active-count]");
 	if (!countNode) {
@@ -256,6 +274,267 @@ async function resolveCashbookBooks(container) {
 	return readJsonSource(fallbackSelector);
 }
 
+function renderCashbookEntryRows(entryListNode, entries) {
+	if (!(entryListNode instanceof HTMLElement)) {
+		return;
+	}
+
+	if (!Array.isArray(entries) || entries.length === 0) {
+		entryListNode.innerHTML = `
+			<tr>
+				<td colspan="8" style="text-align:center;color:var(--color-text-muted);">No entries found.</td>
+			</tr>
+		`.trim();
+		return;
+	}
+
+	entryListNode.innerHTML = entries
+		.map((entry) => {
+			const direction = entry.direction === "out" ? "out" : "in";
+			const amountClass = direction === "out" ? "cashbook-entry-amount--out" : "cashbook-entry-amount--in";
+
+			return `
+				<tr>
+					<td class="cell-check"><input type="checkbox" aria-label="Select entry" /></td>
+					<td>
+						<div class="cashbook-entry-date">${escapeHtml(entry.dateLabel || "--")}</div>
+						<div class="cashbook-entry-time">${escapeHtml(entry.time || "--")}</div>
+					</td>
+					<td>${escapeHtml(entry.details || "--")}</td>
+					<td>${escapeHtml(entry.category || "--")}</td>
+					<td>${escapeHtml(entry.mode || "--")}</td>
+					<td>${escapeHtml(entry.bill || "--")}</td>
+					<td class="cashbook-entry-amount ${amountClass}">${formatNumber(entry.amount)}</td>
+					<td class="cashbook-entry-balance">${formatNumber(entry.balance)}</td>
+				</tr>
+			`.trim();
+		})
+		.join("\n");
+}
+
+function parseEntryDate(entry) {
+	const label = String(entry.dateLabel || "").trim();
+	if (!label) {
+		return null;
+	}
+
+	if (/^today$/i.test(label)) {
+		return new Date();
+	}
+
+	const parsed = Date.parse(label);
+	return Number.isNaN(parsed) ? null : new Date(parsed);
+}
+
+function isEntryInDuration(entry, durationKey) {
+	const entryDate = parseEntryDate(entry);
+	if (!entryDate) {
+		return durationKey === "all";
+	}
+
+	const now = new Date();
+	const entryTime = entryDate.getTime();
+	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+	const dayMs = 24 * 60 * 60 * 1000;
+
+	switch (durationKey) {
+		case "today":
+			return entryTime >= startOfToday && entryTime < startOfToday + dayMs;
+		case "7":
+			return entryTime >= startOfToday - 6 * dayMs && entryTime < startOfToday + dayMs;
+		case "30":
+			return entryTime >= startOfToday - 29 * dayMs && entryTime < startOfToday + dayMs;
+		case "month":
+			return entryDate.getFullYear() === now.getFullYear() && entryDate.getMonth() === now.getMonth();
+		default:
+			return true;
+	}
+}
+
+function getUniqueValues(entries, key) {
+	return Array.from(
+		new Set(
+			entries
+				.map((entry) => String(entry[key] || "").trim())
+				.filter((value) => value && value !== "--")
+		)
+	).sort((a, b) => a.localeCompare(b));
+}
+
+function populateSelect(select, options) {
+	if (!(select instanceof HTMLSelectElement)) {
+		return;
+	}
+
+	select.innerHTML = options
+		.map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
+		.join("\n");
+}
+
+function filterCashbookEntries(entries, filters) {
+	return entries.filter((entry) => {
+		if (filters.duration && filters.duration !== "all" && !isEntryInDuration(entry, filters.duration)) {
+			return false;
+		}
+
+		if (filters.entryType && filters.entryType !== "all") {
+			const direction = String(entry.direction || "").toLowerCase();
+			if (filters.entryType === "in" && direction !== "in") {
+				return false;
+			}
+			if (filters.entryType === "out" && direction !== "out") {
+				return false;
+			}
+		}
+
+		if (filters.category && filters.category !== "all") {
+			if (String(entry.category || "").toLowerCase() !== filters.category.toLowerCase()) {
+				return false;
+			}
+		}
+
+		if (filters.payment && filters.payment !== "all") {
+			if (String(entry.mode || "").toLowerCase() !== filters.payment.toLowerCase()) {
+				return false;
+			}
+		}
+
+		return true;
+	});
+}
+
+async function initCashbookDetailsPage() {
+	const pageNode = document.querySelector("[data-cashbook-details-page]");
+	if (!(pageNode instanceof HTMLElement)) {
+		return;
+	}
+
+	const params = new URLSearchParams(window.location.search);
+	const selectedCashbookId = params.get("cashbookId") || "";
+	const selectedCashbookName = params.get("cashbookName") || "";
+
+	const sourcePath = (pageNode.getAttribute("data-source") || "").trim();
+	const fallbackSelector = (pageNode.getAttribute("data-source-fallback") || "").trim();
+
+	const sourceResult = sourcePath.startsWith("#") ? { didLoad: true, books: readJsonSource(sourcePath) } : await readJsonFile(sourcePath);
+	const records = sourceResult.didLoad ? sourceResult.books : readJsonSource(fallbackSelector);
+
+	if (sourceResult.didLoad && fallbackSelector.startsWith("#")) {
+		writeJsonSource(fallbackSelector, records);
+	}
+
+	if (!Array.isArray(records) || records.length === 0) {
+		return;
+	}
+
+	function hasRealEntryValues(record) {
+		return Array.isArray(record.entries) && record.entries.some((entry) => {
+			const category = String(entry.category || "").trim();
+			const mode = String(entry.mode || "").trim();
+			return category && category !== "--" && mode && mode !== "--";
+		});
+	}
+
+	const matchedRecord =
+		records.find((record) => String(record.cashbookId || "") === selectedCashbookId) ||
+		records.find((record) => String(record.cashbookName || "") === selectedCashbookName) ||
+		records.find(hasRealEntryValues) ||
+		records[0];
+
+	if (!matchedRecord) {
+		return;
+	}
+
+	const cashbookName = selectedCashbookName || matchedRecord.cashbookName || "Cashbook";
+	for (const node of document.querySelectorAll("[data-cashbook-name]")) {
+		node.textContent = cashbookName;
+	}
+
+	const summary = matchedRecord.summary || {};
+	const cashInNode = document.querySelector("[data-summary-cash-in]");
+	if (cashInNode) {
+		cashInNode.textContent = formatNumber(summary.cashIn);
+	}
+
+	const cashOutNode = document.querySelector("[data-summary-cash-out]");
+	if (cashOutNode) {
+		cashOutNode.textContent = formatNumber(summary.cashOut);
+	}
+
+	const netBalanceNode = document.querySelector("[data-summary-net-balance]");
+	if (netBalanceNode) {
+		netBalanceNode.textContent = formatNumber(summary.netBalance);
+	}
+
+	const entries = Array.isArray(matchedRecord.entries) ? matchedRecord.entries : [];
+	const allEntries = records.flatMap((record) => (Array.isArray(record.entries) ? record.entries : []));
+	const filterRow = document.querySelector(".cashbook-filter-row");
+	const selects = filterRow instanceof HTMLElement ? Array.from(filterRow.querySelectorAll("select")) : [];
+	const [durationSelect, entryTypeSelect, categorySelect, paymentSelect] = selects;
+
+	const durationOptions = [
+		{ value: "all", label: "All Time" },
+		{ value: "today", label: "Today" },
+		{ value: "7", label: "Last 7 Days" },
+		{ value: "30", label: "Last 30 Days" },
+		{ value: "month", label: "This Month" }
+	];
+
+	const entryTypeOptions = [
+		{ value: "all", label: "All" },
+		{ value: "in", label: "Cash In" },
+		{ value: "out", label: "Cash Out" }
+	];
+
+	const categoryValues = getUniqueValues(entries, "category").length > 0
+		? getUniqueValues(entries, "category")
+		: getUniqueValues(allEntries, "category");
+	const categoryOptions = [
+		{ value: "all", label: "All" },
+		...categoryValues.map((value) => ({ value, label: value }))
+	];
+
+	const paymentValues = getUniqueValues(entries, "mode").length > 0
+		? getUniqueValues(entries, "mode")
+		: getUniqueValues(allEntries, "mode");
+	const paymentOptions = [
+		{ value: "all", label: "All" },
+		...paymentValues.map((value) => ({ value, label: value }))
+	];
+
+	populateSelect(durationSelect, durationOptions);
+	populateSelect(entryTypeSelect, entryTypeOptions);
+	populateSelect(categorySelect, categoryOptions);
+	populateSelect(paymentSelect, paymentOptions);
+
+	const countLabelNode = document.querySelector("[data-entry-count-label]");
+	const entryListNode = document.querySelector("[data-entry-list]");
+
+	function updateEntries() {
+		const filters = {
+			duration: durationSelect?.value || "all",
+			entryType: entryTypeSelect?.value || "all",
+			category: categorySelect?.value || "all",
+			payment: paymentSelect?.value || "all"
+		};
+
+		const filteredEntries = filterCashbookEntries(entries, filters);
+		renderCashbookEntryRows(entryListNode, filteredEntries);
+
+		if (countLabelNode) {
+			countLabelNode.textContent = filteredEntries.length > 0 ? `Showing 1 - ${filteredEntries.length} of ${filteredEntries.length} entries` : "Showing 0 entries";
+		}
+	}
+
+	for (const select of [durationSelect, entryTypeSelect, categorySelect, paymentSelect]) {
+		if (select instanceof HTMLSelectElement) {
+			select.addEventListener("change", updateEntries);
+		}
+	}
+
+	updateEntries();
+}
+
 async function initCashbookCardComponents() {
 	if (!window.AmarHishabCashbookCard || typeof window.AmarHishabCashbookCard.renderCashbookCardList !== "function") {
 		return;
@@ -280,6 +559,22 @@ function initModalComponents() {
 	}
 
 	window.AmarHishabModal.initModalComponent();
+}
+
+function initModalFromHash() {
+	const hash = window.location.hash;
+	if (!hash) {
+		return;
+	}
+
+	const modal = document.querySelector(hash);
+	if (!(modal instanceof HTMLElement) || !modal.hasAttribute("data-modal")) {
+		return;
+	}
+
+	if (window.AmarHishabModal && typeof window.AmarHishabModal.openModalBySelector === "function") {
+		window.AmarHishabModal.openModalBySelector(hash);
+	}
 }
 
 function initCashbookCreateFlow() {
@@ -376,7 +671,9 @@ async function initAppShell() {
 		syncNavbarTitle();
 		syncActiveSidebarLink();
 		await initCashbookCardComponents();
+		await initCashbookDetailsPage();
 		initModalComponents();
+		initModalFromHash();
 		initCashbookCreateFlow();
 		await ensureLucideIcons();
 	} catch (error) {
