@@ -2,6 +2,9 @@ const INLINE_PARTIALS = {
 	"navbar.html": `
 <header class="navbar app-topbar">
 	<div class="navbar-left">
+		<a class="navbar-brand-link" href="./dashboard.html" aria-label="AmarHishab dashboard">
+			<img class="navbar-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
+		</a>
 		<div class="navbar-meta">
 			<h3 class="navbar-title">Dashboard</h3>
 		</div>
@@ -22,10 +25,6 @@ const INLINE_PARTIALS = {
 `.trim(),
 	"sidebar.html": `
 <aside class="sidebar app-sidebar">
-	<div class="brand">
-		<img class="brand-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
-	</div>
-
 	<div class="sidebar-section">
 		<div class="nav-group-title">Main</div>
 		<nav class="nav">

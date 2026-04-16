@@ -20,6 +20,18 @@
 	flex: 1;
 }
 
+.navbar-brand-link {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.navbar-logo {
+	display: block;
+	height: 34px;
+	width: auto;
+}
+
 .navbar-title,
 .navbar-brand h1,
 .navbar-brand h2,
@@ -163,6 +175,10 @@
 @media (max-width: 64rem) {
 	.navbar-chip {
 		display: none;
+	}
+
+	.navbar-logo {
+		height: 30px;
 	}
 
 	.navbar-title {
