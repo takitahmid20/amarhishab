@@ -312,6 +312,97 @@ function renderCashbookEntryRows(entryListNode, entries) {
 		.join("\n");
 }
 
+function parseEntryDate(entry) {
+	const label = String(entry.dateLabel || "").trim();
+	if (!label) {
+		return null;
+	}
+
+	if (/^today$/i.test(label)) {
+		return new Date();
+	}
+
+	const parsed = Date.parse(label);
+	return Number.isNaN(parsed) ? null : new Date(parsed);
+}
+
+function isEntryInDuration(entry, durationKey) {
+	const entryDate = parseEntryDate(entry);
+	if (!entryDate) {
+		return durationKey === "all";
+	}
+
+	const now = new Date();
+	const entryTime = entryDate.getTime();
+	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+	const dayMs = 24 * 60 * 60 * 1000;
+
+	switch (durationKey) {
+		case "today":
+			return entryTime >= startOfToday && entryTime < startOfToday + dayMs;
+		case "7":
+			return entryTime >= startOfToday - 6 * dayMs && entryTime < startOfToday + dayMs;
+		case "30":
+			return entryTime >= startOfToday - 29 * dayMs && entryTime < startOfToday + dayMs;
+		case "month":
+			return entryDate.getFullYear() === now.getFullYear() && entryDate.getMonth() === now.getMonth();
+		default:
+			return true;
+	}
+}
+
+function getUniqueValues(entries, key) {
+	return Array.from(
+		new Set(
+			entries
+				.map((entry) => String(entry[key] || "").trim())
+				.filter((value) => value && value !== "--")
+		)
+	).sort((a, b) => a.localeCompare(b));
+}
+
+function populateSelect(select, options) {
+	if (!(select instanceof HTMLSelectElement)) {
+		return;
+	}
+
+	select.innerHTML = options
+		.map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
+		.join("\n");
+}
+
+function filterCashbookEntries(entries, filters) {
+	return entries.filter((entry) => {
+		if (filters.duration && filters.duration !== "all" && !isEntryInDuration(entry, filters.duration)) {
+			return false;
+		}
+
+		if (filters.entryType && filters.entryType !== "all") {
+			const direction = String(entry.direction || "").toLowerCase();
+			if (filters.entryType === "in" && direction !== "in") {
+				return false;
+			}
+			if (filters.entryType === "out" && direction !== "out") {
+				return false;
+			}
+		}
+
+		if (filters.category && filters.category !== "all") {
+			if (String(entry.category || "").toLowerCase() !== filters.category.toLowerCase()) {
+				return false;
+			}
+		}
+
+		if (filters.payment && filters.payment !== "all") {
+			if (String(entry.mode || "").toLowerCase() !== filters.payment.toLowerCase()) {
+				return false;
+			}
+		}
+
+		return true;
+	});
+}
+
 async function initCashbookDetailsPage() {
 	const pageNode = document.querySelector("[data-cashbook-details-page]");
 	if (!(pageNode instanceof HTMLElement)) {
@@ -336,9 +427,18 @@ async function initCashbookDetailsPage() {
 		return;
 	}
 
+	function hasRealEntryValues(record) {
+		return Array.isArray(record.entries) && record.entries.some((entry) => {
+			const category = String(entry.category || "").trim();
+			const mode = String(entry.mode || "").trim();
+			return category && category !== "--" && mode && mode !== "--";
+		});
+	}
+
 	const matchedRecord =
 		records.find((record) => String(record.cashbookId || "") === selectedCashbookId) ||
 		records.find((record) => String(record.cashbookName || "") === selectedCashbookName) ||
+		records.find(hasRealEntryValues) ||
 		records[0];
 
 	if (!matchedRecord) {
@@ -367,13 +467,72 @@ async function initCashbookDetailsPage() {
 	}
 
 	const entries = Array.isArray(matchedRecord.entries) ? matchedRecord.entries : [];
+	const allEntries = records.flatMap((record) => (Array.isArray(record.entries) ? record.entries : []));
+	const filterRow = document.querySelector(".cashbook-filter-row");
+	const selects = filterRow instanceof HTMLElement ? Array.from(filterRow.querySelectorAll("select")) : [];
+	const [durationSelect, entryTypeSelect, categorySelect, paymentSelect] = selects;
+
+	const durationOptions = [
+		{ value: "all", label: "All Time" },
+		{ value: "today", label: "Today" },
+		{ value: "7", label: "Last 7 Days" },
+		{ value: "30", label: "Last 30 Days" },
+		{ value: "month", label: "This Month" }
+	];
+
+	const entryTypeOptions = [
+		{ value: "all", label: "All" },
+		{ value: "in", label: "Cash In" },
+		{ value: "out", label: "Cash Out" }
+	];
+
+	const categoryValues = getUniqueValues(entries, "category").length > 0
+		? getUniqueValues(entries, "category")
+		: getUniqueValues(allEntries, "category");
+	const categoryOptions = [
+		{ value: "all", label: "All" },
+		...categoryValues.map((value) => ({ value, label: value }))
+	];
+
+	const paymentValues = getUniqueValues(entries, "mode").length > 0
+		? getUniqueValues(entries, "mode")
+		: getUniqueValues(allEntries, "mode");
+	const paymentOptions = [
+		{ value: "all", label: "All" },
+		...paymentValues.map((value) => ({ value, label: value }))
+	];
+
+	populateSelect(durationSelect, durationOptions);
+	populateSelect(entryTypeSelect, entryTypeOptions);
+	populateSelect(categorySelect, categoryOptions);
+	populateSelect(paymentSelect, paymentOptions);
+
 	const countLabelNode = document.querySelector("[data-entry-count-label]");
-	if (countLabelNode) {
-		countLabelNode.textContent = entries.length > 0 ? `Showing 1 - ${entries.length} of ${entries.length} entries` : "Showing 0 entries";
+	const entryListNode = document.querySelector("[data-entry-list]");
+
+	function updateEntries() {
+		const filters = {
+			duration: durationSelect?.value || "all",
+			entryType: entryTypeSelect?.value || "all",
+			category: categorySelect?.value || "all",
+			payment: paymentSelect?.value || "all"
+		};
+
+		const filteredEntries = filterCashbookEntries(entries, filters);
+		renderCashbookEntryRows(entryListNode, filteredEntries);
+
+		if (countLabelNode) {
+			countLabelNode.textContent = filteredEntries.length > 0 ? `Showing 1 - ${filteredEntries.length} of ${filteredEntries.length} entries` : "Showing 0 entries";
+		}
 	}
 
-	const entryListNode = document.querySelector("[data-entry-list]");
-	renderCashbookEntryRows(entryListNode, entries);
+	for (const select of [durationSelect, entryTypeSelect, categorySelect, paymentSelect]) {
+		if (select instanceof HTMLSelectElement) {
+			select.addEventListener("change", updateEntries);
+		}
+	}
+
+	updateEntries();
 }
 
 async function initCashbookCardComponents() {
@@ -400,6 +559,22 @@ function initModalComponents() {
 	}
 
 	window.AmarHishabModal.initModalComponent();
+}
+
+function initModalFromHash() {
+	const hash = window.location.hash;
+	if (!hash) {
+		return;
+	}
+
+	const modal = document.querySelector(hash);
+	if (!(modal instanceof HTMLElement) || !modal.hasAttribute("data-modal")) {
+		return;
+	}
+
+	if (window.AmarHishabModal && typeof window.AmarHishabModal.openModalBySelector === "function") {
+		window.AmarHishabModal.openModalBySelector(hash);
+	}
 }
 
 function initCashbookCreateFlow() {
@@ -498,6 +673,7 @@ async function initAppShell() {
 		await initCashbookCardComponents();
 		await initCashbookDetailsPage();
 		initModalComponents();
+		initModalFromHash();
 		initCashbookCreateFlow();
 		await ensureLucideIcons();
 	} catch (error) {
