@@ -5,9 +5,6 @@ const INLINE_PARTIALS = {
 		<a class="navbar-brand-link" href="./dashboard.html" aria-label="AmarHishab dashboard">
 			<img class="navbar-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
 		</a>
-		<div class="navbar-meta">
-			<h3 class="navbar-title">Dashboard</h3>
-		</div>
 	</div>
 	<div class="navbar-right">
 		<div class="navbar-search search-wrap">
