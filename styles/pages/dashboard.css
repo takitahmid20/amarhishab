@@ -48,12 +48,6 @@
 	gap: 24px;
 }
 
-.dashboard-topbar .navbar-left,
-.dashboard-topbar .navbar-meta,
-.dashboard-topbar .navbar-title {
-	display: none;
-}
-
 .dashboard-topbar .navbar-right {
 	margin-left: auto;
 }
