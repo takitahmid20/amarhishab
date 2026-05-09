@@ -12,9 +12,9 @@ const INLINE_PARTIALS = {
 			<input class="input" type="text" value="Search" />
 		</div>
 		<button class="navbar-user" aria-label="Open profile menu">
-			<span class="navbar-user-avatar">TT</span>
+			<span class="navbar-user-avatar" data-user-avatar>TT</span>
 			<span class="navbar-user-meta">
-				<span class="navbar-user-name">Taki Tahmid</span>
+				<span class="navbar-user-name" data-user-name>Taki Tahmid</span>
 			</span>
 		</button>
 	</div>
@@ -672,6 +672,11 @@ async function initAppShell() {
 		initModalFromHash();
 		initCashbookCreateFlow();
 		await ensureLucideIcons();
+		const user = JSON.parse(localStorage.getItem('user') || '{}');
+		if (user && user.name) {
+			document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = user.name);
+			document.querySelectorAll('[data-user-avatar]').forEach(el => el.textContent = user.name.charAt(0).toUpperCase());
+		}
 	} catch (error) {
 		console.error(error);
 	}
@@ -680,3 +685,7 @@ async function initAppShell() {
 document.addEventListener("DOMContentLoaded", () => {
 	void initAppShell();
 });
+
+
+// Show logged in user name
+

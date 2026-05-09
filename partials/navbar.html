@@ -1,19 +1,43 @@
 <header class="navbar app-topbar">
 	<div class="navbar-left">
-		<a class="navbar-brand-link" href="./dashboard.html" aria-label="AmarHishab dashboard">
-			<img class="navbar-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
+		<a
+			class="navbar-brand-link"
+			href="./dashboard.html"
+			aria-label="AmarHishab dashboard"
+		>
+			<img
+				class="navbar-logo"
+				src="../assets/logos/amarhishab-logo.png"
+				alt="AmarHishab Logo"
+			/>
 		</a>
 	</div>
+
 	<div class="navbar-right">
+
 		<div class="navbar-search search-wrap">
-			<span class="search-icon">Q</span>
-			<input class="input" type="text" value="Search" />
+			<span class="search-icon" aria-hidden="true">🔍</span>
+
+			<input
+				class="input"
+				type="search"
+				placeholder="Search"
+				aria-label="Search"
+			/>
 		</div>
-		<button class="navbar-user" aria-label="Open profile menu">
-			<span class="navbar-user-avatar">TT</span>
+
+		<button
+			class="navbar-user"
+			type="button"
+			aria-label="Open profile menu"
+			aria-expanded="false"
+		>
+			<span class="navbar-user-avatar" data-user-avatar>TT</span>
+
 			<span class="navbar-user-meta">
-				<span class="navbar-user-name">Taki Tahmid</span>
+				<span class="navbar-user-name" data-user-name>Taki Tahmid</span>
 			</span>
 		</button>
+
 	</div>
 </header>

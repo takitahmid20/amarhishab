@@ -4,35 +4,31 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Borrow / Lend | AmarHishab</title>
-
-	<!-- Main CSS -->
 	<link rel="stylesheet" href="../styles/main.css" />
-
-	<!-- Page CSS -->
 	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
 	<link rel="stylesheet" href="../styles/pages/borrow-lend.css" />
 </head>
 
 <body data-page-title="Borrow / Lend">
-
 	<div class="dashboard-layout">
-
-		<!-- Navbar -->
 		<div data-partial="../partials/navbar.html" data-partial-class="dashboard-topbar"></div>
-
 		<div class="dashboard-body">
-
-			<!-- Sidebar -->
 			<div data-partial="../partials/sidebar.html" data-partial-class="dashboard-sidebar"></div>
 
-			<!-- Main Content -->
-			<main class="dashboard-main">
+			<main class="dashboard-main bl-main">
+				<section class="container-wide bl-page">
 
-				<div class="bl-page">
+					<!-- Hero -->
+					<header class="bl-hero surface">
+						<div class="bl-hero-copy">
+							<h1>Borrow / Lend</h1>
+							<p>Track money you owe and money owed to you</p>
+						</div>
+						
+					</header>
 
-					<!-- ===== Summary Stat Cards ===== -->
+					<!-- Stat Cards -->
 					<div class="bl-stat-grid">
-
 						<div class="bl-stat-card surface">
 							<div class="bl-stat-icon bl-stat-icon--borrowed">
 								<i data-lucide="arrow-up" aria-hidden="true"></i>
@@ -43,7 +39,6 @@
 								<p class="bl-stat-sub">Money you owe · 2 pending</p>
 							</div>
 						</div>
-
 						<div class="bl-stat-card surface">
 							<div class="bl-stat-icon bl-stat-icon--lent">
 								<i data-lucide="arrow-down" aria-hidden="true"></i>
@@ -54,13 +49,10 @@
 								<p class="bl-stat-sub">Money owed to you · 1 cleared</p>
 							</div>
 						</div>
-
 					</div>
 
-					<!-- ===== Records Card ===== -->
+					<!-- Records Card -->
 					<div class="bl-records-card surface">
-
-						<!-- Header -->
 						<div class="bl-records-head">
 							<h3>All Records</h3>
 							<div class="bl-records-controls">
@@ -77,7 +69,6 @@
 							</div>
 						</div>
 
-						<!-- Tabs -->
 						<div class="bl-tabs">
 							<button class="bl-tab active" type="button" data-bl-filter="all">
 								All <span class="bl-tab-count">3</span>
@@ -93,10 +84,8 @@
 							</button>
 						</div>
 
-						<!-- List -->
 						<div class="bl-list">
 
-							<!-- Record 1 -->
 							<div class="bl-list-item" data-type="borrowed" data-status="pending">
 								<div class="bl-item-left">
 									<div class="bl-avatar">K</div>
@@ -124,7 +113,6 @@
 								</div>
 							</div>
 
-							<!-- Record 2 -->
 							<div class="bl-list-item" data-type="lent" data-status="paid">
 								<div class="bl-item-left">
 									<div class="bl-avatar">S</div>
@@ -149,7 +137,6 @@
 								</div>
 							</div>
 
-							<!-- Record 3 -->
 							<div class="bl-list-item" data-type="borrowed" data-status="pending">
 								<div class="bl-item-left">
 									<div class="bl-avatar">A</div>
@@ -177,31 +164,24 @@
 								</div>
 							</div>
 
-						</div><!-- /bl-list -->
+						</div>
+					</div>
 
-					</div><!-- /bl-records-card -->
-
-				</div><!-- /bl-page -->
-
+				</section>
 			</main>
-
 		</div>
-
 	</div>
 
-	<!-- ===== Add Record Modal ===== -->
+	<!-- Add Record Modal -->
 	<div class="overlay modal-overlay" id="add-record-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
 		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-record-title">
-
 			<div class="modal-head">
 				<h2 class="modal-title" id="add-record-title">Add Record</h2>
 				<button class="icon-btn" type="button" data-modal-close aria-label="Close modal">
 					<i data-lucide="x" aria-hidden="true"></i>
 				</button>
 			</div>
-
 			<div class="modal-body">
-
 				<div class="field">
 					<label class="label" for="bl-type">Type</label>
 					<select class="select" id="bl-type" name="type">
@@ -209,12 +189,10 @@
 						<option value="lent">Lent (They owe me)</option>
 					</select>
 				</div>
-
 				<div class="field">
 					<label class="label" for="bl-person">Person Name</label>
 					<input class="input" id="bl-person" type="text" name="person" placeholder="e.g. Rahim, Sarah..." required />
 				</div>
-
 				<div class="modal-grid-2">
 					<div class="field">
 						<label class="label" for="bl-amount">Amount (৳)</label>
@@ -225,27 +203,22 @@
 						<input class="input" id="bl-date" type="date" name="date" required />
 					</div>
 				</div>
-
 				<div class="field">
 					<label class="label" for="bl-note">
-						Note <span style="font-weight: 400; color: var(--color-text-muted)">(optional)</span>
+						Note <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
 					</label>
 					<input class="input" id="bl-note" type="text" name="note" placeholder="What is it for?" />
 				</div>
-
 			</div>
-
 			<div class="modal-footer">
 				<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
 				<button class="btn btn-primary btn-sm" type="button">Save Record</button>
 			</div>
-
 		</div>
 	</div>
 
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
 	<script src="../js/modules/borrow-lend/borrowLend.events.js"></script>
-
 </body>
 </html>
