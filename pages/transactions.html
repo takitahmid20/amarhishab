@@ -1,107 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transactions | AmarHishab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/main.css" />
-  <link rel="stylesheet" href="../styles/pages/transactions.css" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Transactions | AmarHishab</title>
+	<link rel="stylesheet" href="../styles/main.css" />
+	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
+	<link rel="stylesheet" href="../styles/pages/transactions.css" />
 </head>
 <body data-page-title="Transactions">
-  <div class="transactions-layout">
-    <div data-partial="../partials/sidebar.html" data-partial-class="transactions-sidebar"></div>
+	<div class="dashboard-layout">
+		<div data-partial="../partials/navbar.html" data-partial-class="dashboard-topbar"></div>
 
-    <main class="transactions-main">
-      <section class="container transactions-page">
-        <div class="transactions-header">
-          <div>
-            <h1>Transactions</h1>
-            <p>View and manage your transaction history</p>
-          </div>
+		<div class="dashboard-body">
+			<div data-partial="../partials/sidebar.html" data-partial-class="dashboard-sidebar"></div>
 
-          <div class="transactions-top-actions">
-            <button class="btn btn-primary" type="button">
-              <span>Add Transaction</span>
-            </button>
+			<main class="dashboard-main tx-main">
+				<section class="container-wide tx-page">
 
-            <button class="btn btn-outline btn-icon" type="button" aria-label="Search transactions">
-              <i data-lucide="search" aria-hidden="true"></i>
-            </button>
-            <button class="btn btn-outline btn-icon" type="button" aria-label="Notifications">
-              <i data-lucide="bell" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
+					<!-- Hero -->
+					<header class="tx-hero surface">
+						<div class="tx-hero-copy">
+							<h1>Transactions</h1>
+							<p>View and manage your transaction history</p>
+						</div>
+						<button class="btn btn-primary btn-sm" type="button">
+							<i data-lucide="plus" aria-hidden="true"></i>
+							<span>Add Transaction</span>
+						</button>
+					</header>
 
-        <div class="transactions-filters">
-          <button class="btn btn-secondary" type="button">
-            <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
-            <span>Filter</span>
-          </button>
-          <button class="btn btn-secondary" type="button">
-            <i data-lucide="calendar" aria-hidden="true"></i>
-            <span>Date Range</span>
-          </button>
-        </div>
+					<!-- Filters -->
+					<div class="tx-filters surface">
+						<div class="tx-filters-left">
+							<button class="btn btn-outline btn-sm" type="button">
+								<i data-lucide="sliders-horizontal" aria-hidden="true"></i>
+								<span>Filter</span>
+							</button>
+							<button class="btn btn-outline btn-sm" type="button">
+								<i data-lucide="calendar" aria-hidden="true"></i>
+								<span>Date Range</span>
+							</button>
+						</div>
+						<div class="tx-filters-right">
+							<select class="select tx-select">
+								<option>All Categories</option>
+								<option>Food & Dining</option>
+								<option>Bills & Utilities</option>
+								<option>Salary</option>
+								<option>Freelance</option>
+							</select>
+							<select class="select tx-select">
+								<option>All Types</option>
+								<option>Income</option>
+								<option>Expense</option>
+							</select>
+						</div>
+					</div>
 
-        <div class="transactions-panel">
-          <article class="transaction-item">
-            <div class="transaction-item-left">
-              <div class="tx-icon tx-icon--pink">
-                <i data-lucide="shopping-cart" aria-hidden="true"></i>
-              </div>
-              <div>
-                <h4>Grocery Shopping</h4>
-                <p>Food & Dining • 2 Mar, 2026</p>
-              </div>
-            </div>
-            <div class="transaction-amount transaction-amount--negative">-৳450</div>
-          </article>
+					<!-- Transaction List -->
+					<div class="tx-board surface">
+						<div class="tx-board-head">
+							<h2>All Transactions</h2>
+							<span class="tx-count">4 records</span>
+						</div>
 
-          <article class="transaction-item">
-            <div class="transaction-item-left">
-              <div class="tx-icon tx-icon--mint">
-                <i data-lucide="dollar-sign" aria-hidden="true"></i>
-              </div>
-              <div>
-                <h4>Salary Deposit</h4>
-                <p>Salary • 1 Mar, 2026</p>
-              </div>
-            </div>
-            <div class="transaction-amount transaction-amount--positive">+৳5,000</div>
-          </article>
+						<div class="tx-list">
 
-          <article class="transaction-item">
-            <div class="transaction-item-left">
-              <div class="tx-icon tx-icon--cream">
-                <i data-lucide="plug" aria-hidden="true"></i>
-              </div>
-              <div>
-                <h4>Electric Bill</h4>
-                <p>Bills & Utilities • 28 Feb, 2026</p>
-              </div>
-            </div>
-            <div class="transaction-amount transaction-amount--negative">-৳320</div>
-          </article>
+							<article class="tx-item">
+								<div class="tx-item-left">
+									<div class="tx-icon tx-icon--pink">
+										<i data-lucide="shopping-cart" aria-hidden="true"></i>
+									</div>
+									<div class="tx-item-info">
+										<h4 class="tx-item-title">Grocery Shopping</h4>
+										<p class="tx-item-meta">Food & Dining · 2 Mar, 2026</p>
+									</div>
+								</div>
+								<div class="tx-item-right">
+									<span class="tx-amount tx-amount--negative">-৳ 450</span>
+									<div class="tx-item-actions">
+										<button class="icon-btn" title="Edit">
+											<i data-lucide="pencil" aria-hidden="true"></i>
+										</button>
+										<button class="icon-btn icon-btn--danger" title="Delete">
+											<i data-lucide="trash-2" aria-hidden="true"></i>
+										</button>
+									</div>
+								</div>
+							</article>
 
-          <article class="transaction-item">
-            <div class="transaction-item-left">
-              <div class="tx-icon tx-icon--mint-soft">
-                <i data-lucide="briefcase" aria-hidden="true"></i>
-              </div>
-              <div>
-                <h4>Freelance Work</h4>
-                <p>Freelance • 25 Feb, 2026</p>
-              </div>
-            </div>
-            <div class="transaction-amount transaction-amount--positive">+৳1,200</div>
-          </article>
-        </div>
-      </section>
-    </main>
-  </div>
+							<article class="tx-item">
+								<div class="tx-item-left">
+									<div class="tx-icon tx-icon--mint">
+										<i data-lucide="dollar-sign" aria-hidden="true"></i>
+									</div>
+									<div class="tx-item-info">
+										<h4 class="tx-item-title">Salary Deposit</h4>
+										<p class="tx-item-meta">Salary · 1 Mar, 2026</p>
+									</div>
+								</div>
+								<div class="tx-item-right">
+									<span class="tx-amount tx-amount--positive">+৳ 5,000</span>
+									<div class="tx-item-actions">
+										<button class="icon-btn" title="Edit">
+											<i data-lucide="pencil" aria-hidden="true"></i>
+										</button>
+										<button class="icon-btn icon-btn--danger" title="Delete">
+											<i data-lucide="trash-2" aria-hidden="true"></i>
+										</button>
+									</div>
+								</div>
+							</article>
 
-  <script src="../js/app.js"></script>
+							<article class="tx-item">
+								<div class="tx-item-left">
+									<div class="tx-icon tx-icon--cream">
+										<i data-lucide="plug" aria-hidden="true"></i>
+									</div>
+									<div class="tx-item-info">
+										<h4 class="tx-item-title">Electric Bill</h4>
+										<p class="tx-item-meta">Bills & Utilities · 28 Feb, 2026</p>
+									</div>
+								</div>
+								<div class="tx-item-right">
+									<span class="tx-amount tx-amount--negative">-৳ 320</span>
+									<div class="tx-item-actions">
+										<button class="icon-btn" title="Edit">
+											<i data-lucide="pencil" aria-hidden="true"></i>
+										</button>
+										<button class="icon-btn icon-btn--danger" title="Delete">
+											<i data-lucide="trash-2" aria-hidden="true"></i>
+										</button>
+									</div>
+								</div>
+							</article>
+
+							<article class="tx-item">
+								<div class="tx-item-left">
+									<div class="tx-icon tx-icon--mint-soft">
+										<i data-lucide="briefcase" aria-hidden="true"></i>
+									</div>
+									<div class="tx-item-info">
+										<h4 class="tx-item-title">Freelance Work</h4>
+										<p class="tx-item-meta">Freelance · 25 Feb, 2026</p>
+									</div>
+								</div>
+								<div class="tx-item-right">
+									<span class="tx-amount tx-amount--positive">+৳ 1,200</span>
+									<div class="tx-item-actions">
+										<button class="icon-btn" title="Edit">
+											<i data-lucide="pencil" aria-hidden="true"></i>
+										</button>
+										<button class="icon-btn icon-btn--danger" title="Delete">
+											<i data-lucide="trash-2" aria-hidden="true"></i>
+										</button>
+									</div>
+								</div>
+							</article>
+
+						</div>
+					</div>
+
+				</section>
+			</main>
+		</div>
+	</div>
+	<script src="../js/app.js"></script>
 </body>
 </html>

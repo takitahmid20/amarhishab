@@ -8,6 +8,27 @@
 	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
 	<link rel="stylesheet" href="../styles/pages/settings.css" />
 </head>
+
+<script src="../js/core/api.js"></script>
+<script src="../js/modules/auth/auth.service.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Load user data
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user && user.name) {
+            document.querySelector('input[name="name"]').value = user.name;
+            document.querySelector('input[name="email"]').value = user.email || '';
+            document.querySelector('.settings-avatar-name').textContent = user.name;
+            document.querySelector('.settings-avatar-email').textContent = user.email || '';
+        }
+
+        // Logout
+        document.getElementById('confirm-logout-btn').addEventListener('click', async function () {
+            await logout();
+        });
+    });
+</script>
+
 <body data-page-title="Settings">
 	<div class="dashboard-layout">
 		<div data-partial="../partials/navbar.html" data-partial-class="dashboard-topbar"></div>
