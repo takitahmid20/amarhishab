@@ -154,6 +154,13 @@
 	color: var(--color-brand-700);
 }
 
+.navbar-user-avatar img {
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	display: block;
+}
+
 .navbar-user-meta {
 	display: block;
 	line-height: 1.1;

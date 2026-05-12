@@ -12,7 +12,9 @@ const INLINE_PARTIALS = {
 			<input class="input" type="text" value="Search" />
 		</div>
 		<button class="navbar-user" aria-label="Open profile menu" onclick="window.location.href='./settings.html'">
-			<span class="navbar-user-avatar" data-user-avatar></span>
+			<span class="navbar-user-avatar" data-user-avatar>
+				<img src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Sophie" alt="User avatar" />
+			</span>
 			<span class="navbar-user-meta">
 				<span class="navbar-user-name" data-user-name></span>
 			</span>
