@@ -192,6 +192,7 @@
 		const name = escapeHtml(category.name || "Untitled Category");
 		const iconName = escapeHtml(category.icon || fallbackIcons[index % fallbackIcons.length]);
 		const cashbookName = escapeHtml(category.cashbookName || "Unassigned");
+		const categoryId = escapeHtml(category.id || "");
 		const spent = Number(category.spent) || 0;
 		const limit = Number(category.limit) || 0;
 		const usage = clampPercentage(calculateCategoryUsage(spent, limit));
@@ -205,7 +206,7 @@
 		}
 
 		return `
-<article class="budget-category-item" data-budget-category-id="${escapeHtml(category.id || "")}">
+<article class="budget-category-item" data-budget-category-id="${categoryId}">
 	<div class="budget-category-top">
 		<div class="budget-category-label">
 			<span class="budget-category-icon" aria-hidden="true"><i data-lucide="${iconName}"></i></span>
@@ -213,13 +214,34 @@
 		</div>
 		<div class="budget-category-meta">
 			<p class="budget-category-amount">${formatCurrency(spent)} / ${formatCurrency(limit)} (${usage}%)</p>
-			<p class="budget-category-cashbook">${cashbookName}</p>
+			<div class="budget-category-actions">
+				<p class="budget-category-cashbook">${cashbookName}</p>
+				<button class="budget-category-delete" type="button" data-budget-delete aria-label="Delete ${name}">
+					<i data-lucide="trash-2" aria-hidden="true"></i>
+				</button>
+			</div>
 		</div>
 	</div>
 	<div class="budget-category-track">
 		<span class="${usageClassName}" style="width: ${usage}%; --category-color: ${color};"></span>
 	</div>
 </article>`.trim();
+	}
+
+	function removeCategoryById(container, categoryId) {
+		if (!(container instanceof HTMLElement) || !categoryId) {
+			return;
+		}
+
+		const categories = categoryState.get(container) || [];
+		const nextCategories = categories.filter((category) => String(category.id || "") !== categoryId);
+		categoryState.set(container, nextCategories);
+		renderContainerByFilter(container);
+
+		const fallbackSelector = (container.getAttribute("data-source-fallback") || "").trim();
+		if (fallbackSelector.startsWith("#")) {
+			writeJsonSource(fallbackSelector, nextCategories);
+		}
 	}
 
 	function renderBudgetCategoryList(container, categories) {
@@ -275,6 +297,26 @@
 				renderContainerByFilter(container);
 			}
 		});
+	}
+
+	function initBudgetDeleteFlow() {
+		const containers = Array.from(document.querySelectorAll('[data-component="budget-category-list"]'));
+		if (containers.length === 0) {
+			return;
+		}
+
+		for (const container of containers) {
+			container.addEventListener("click", (event) => {
+				const deleteButton = event.target.closest("[data-budget-delete]");
+				if (!(deleteButton instanceof HTMLElement)) {
+					return;
+				}
+
+				const categoryItem = deleteButton.closest("[data-budget-category-id]");
+				const categoryId = categoryItem?.getAttribute("data-budget-category-id") || "";
+				removeCategoryById(container, categoryId);
+			});
+		}
 	}
 
 	function createCategoryPayload(formData, colorIndex) {
@@ -345,6 +387,7 @@
 	function initBudgetProgressComponent() {
 		void initBudgetCategories();
 		initBudgetFilterFlow();
+		initBudgetDeleteFlow();
 		initBudgetCreateFlow();
 	}
 
