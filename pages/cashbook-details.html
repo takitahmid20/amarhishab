@@ -30,7 +30,7 @@
 							<div class="cashbook-details-copy">
 								<p class="cashbook-details-eyebrow">Cashbook Ledger</p>
 								<h1 data-cashbook-name>ABC</h1>
-								<p class="cashbook-details-sub">Track entries, balances, and reports from one workspace.</p>
+								<p class="cashbook-details-sub">Monitor transactions, cash movement, and running balance from one branded workspace.</p>
 							</div>
 						</div>
 
@@ -48,15 +48,15 @@
 
 					<section class="cashbook-filter-row surface" aria-label="Entry filters">
 						<label><select class="select"><option>Duration: All Time</option></select></label>
-						<label><select class="select"><option>Type: All</option></select></label>
-						<label><select class="select"><option>Payment Mode: All</option></select></label>
+						<label><select class="select"><option>Entry Type: All</option></select></label>
 						<label><select class="select"><option>Category: All</option></select></label>
+						<label><select class="select"><option>Payment Mode: All</option></select></label>
 					</section>
 
 					<section class="cashbook-search-row surface">
 						<div class="input-wrap cashbook-search-wrap">
 							<i class="input-icon" data-lucide="search" aria-hidden="true"></i>
-							<input class="input" type="text" placeholder="Search by remark or amount..." />
+							<input class="input" type="text" placeholder="Search by details, bill, category, or amount..." />
 							<span class="cashbook-search-hint">/</span>
 						</div>
 
@@ -108,24 +108,30 @@
 						</article>
 					</section>
 
-					<section class="cashbook-table-section">
-						<header class="cashbook-table-toolbar">
-							<p class="cashbook-table-count" data-entry-count-label>Showing 1 - 3 of 3 entries</p>
-							<div class="cashbook-pagination">
-								<label>
-									<select class="select">
-										<option>Page 1</option>
-									</select>
-								</label>
-								<span>of 1</span>
-								<button class="btn btn-outline btn-sm cashbook-page-btn" type="button" aria-label="Previous page">
-									<i data-lucide="chevron-left" aria-hidden="true"></i>
-								</button>
-								<button class="btn btn-outline btn-sm cashbook-page-btn" type="button" aria-label="Next page">
-									<i data-lucide="chevron-right" aria-hidden="true"></i>
-								</button>
+					<section class="cashbook-ledger surface">
+						<div class="cashbook-ledger-head">
+							<div class="cashbook-ledger-copy">
+								<h2>Ledger Entries</h2>
+								<p>Every transaction log for this cashbook.</p>
 							</div>
-						</header>
+							<div class="cashbook-table-toolbar">
+								<p class="cashbook-table-count" data-entry-count-label>Showing 1 - 3 of 3 entries</p>
+								<div class="cashbook-pagination">
+									<label>
+										<select class="select">
+											<option>Page 1</option>
+										</select>
+									</label>
+									<span>of 1</span>
+									<button class="btn btn-outline btn-sm cashbook-page-btn" type="button" aria-label="Previous page">
+										<i data-lucide="chevron-left" aria-hidden="true"></i>
+									</button>
+									<button class="btn btn-outline btn-sm cashbook-page-btn" type="button" aria-label="Next page">
+										<i data-lucide="chevron-right" aria-hidden="true"></i>
+									</button>
+								</div>
+							</div>
+						</div>
 
 						<div class="table-wrap cashbook-table-wrap">
 							<table>
@@ -148,25 +154,25 @@
 					</section>
 
 					<div class="overlay modal-overlay" id="cash-in-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
-						<div class="modal" role="dialog" aria-modal="true" aria-labelledby="cash-in-modal-title">
+						<div class="modal cashbook-entry-modal" role="dialog" aria-modal="true" aria-labelledby="cash-in-modal-title">
 							<div class="modal-head">
 								<h2 class="modal-title" id="cash-in-modal-title">Add Cash In Entry</h2>
 								<button class="icon-btn" type="button" data-modal-close aria-label="Close cash in modal">
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<div class="modal-body cashbook-entry-form">
+							<form class="modal-body cashbook-entry-form">
 								<label class="field" for="cash-in-amount">
 									<span class="label">Money Value</span>
-									<input class="input" id="cash-in-amount" type="number" min="0" step="0.01" placeholder="Enter amount" />
+									<input class="input" id="cash-in-amount" name="amount" type="number" min="0" step="0.01" placeholder="Enter amount" required />
 								</label>
 								<label class="field" for="cash-in-date">
 									<span class="label">Date</span>
-									<input class="input" id="cash-in-date" type="date" />
+									<input class="input" id="cash-in-date" name="date" type="date" required />
 								</label>
 								<label class="field" for="cash-in-category">
 									<span class="label">Category</span>
-									<select class="select" id="cash-in-category">
+									<select class="select" id="cash-in-category" name="category" required>
 										<option value="" selected>Select category</option>
 										<option>Sales</option>
 										<option>Service</option>
@@ -176,36 +182,36 @@
 								</label>
 								<label class="field" for="cash-in-attachment">
 									<span class="label">File Attach</span>
-									<input class="input-file" id="cash-in-attachment" type="file" />
+									<input class="input-file" id="cash-in-attachment" name="attachment" type="file" />
 								</label>
 								<div class="modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-primary btn-sm" type="button" data-modal-close>Save Cash In</button>
+									<button class="btn btn-primary btn-sm" type="submit" data-modal-close>Save Cash In</button>
 								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 
 					<div class="overlay modal-overlay" id="cash-out-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
-						<div class="modal" role="dialog" aria-modal="true" aria-labelledby="cash-out-modal-title">
+						<div class="modal cashbook-entry-modal" role="dialog" aria-modal="true" aria-labelledby="cash-out-modal-title">
 							<div class="modal-head">
 								<h2 class="modal-title" id="cash-out-modal-title">Add Cash Out Entry</h2>
 								<button class="icon-btn" type="button" data-modal-close aria-label="Close cash out modal">
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<div class="modal-body cashbook-entry-form">
+							<form class="modal-body cashbook-entry-form">
 								<label class="field" for="cash-out-amount">
 									<span class="label">Money Value</span>
-									<input class="input" id="cash-out-amount" type="number" min="0" step="0.01" placeholder="Enter amount" />
+									<input class="input" id="cash-out-amount" name="amount" type="number" min="0" step="0.01" placeholder="Enter amount" required />
 								</label>
 								<label class="field" for="cash-out-date">
 									<span class="label">Date</span>
-									<input class="input" id="cash-out-date" type="date" />
+									<input class="input" id="cash-out-date" name="date" type="date" required />
 								</label>
 								<label class="field" for="cash-out-category">
 									<span class="label">Category</span>
-									<select class="select" id="cash-out-category">
+									<select class="select" id="cash-out-category" name="category" required>
 										<option value="" selected>Select category</option>
 										<option>Purchase</option>
 										<option>Salary</option>
@@ -215,13 +221,13 @@
 								</label>
 								<label class="field" for="cash-out-attachment">
 									<span class="label">File Attach</span>
-									<input class="input-file" id="cash-out-attachment" type="file" />
+									<input class="input-file" id="cash-out-attachment" name="attachment" type="file" />
 								</label>
 								<div class="modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-primary btn-sm" type="button" data-modal-close>Save Cash Out</button>
+									<button class="btn btn-primary btn-sm" type="submit" data-modal-close>Save Cash Out</button>
 								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 

@@ -18,6 +18,7 @@
 	background:
 		radial-gradient(120% 140% at 100% 0%, rgba(146, 95, 255, 0.1) 0%, rgba(146, 95, 255, 0) 52%),
 		#fff;
+	box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
 }
 
 .cashbook-details-header-left {
@@ -71,7 +72,7 @@
 	font-size: 13px;
 	line-height: 1.35;
 	color: var(--color-text-muted);
-	max-width: 58ch;
+	max-width: 52ch;
 }
 
 .cashbook-details-header-right {
@@ -117,6 +118,7 @@
 	border-radius: 12px;
 	border: 1px solid var(--color-border);
 	background: #fff;
+	box-shadow: var(--shadow-xs);
 }
 
 .cashbook-filter-row {
@@ -200,6 +202,7 @@
 	display: flex;
 	align-items: center;
 	gap: 10px;
+	border: 1px solid var(--color-border);
 }
 
 .cashbook-summary-icon {
@@ -242,13 +245,49 @@
 .cashbook-summary-item strong {
 	display: block;
 	margin-top: 4px;
-	font-size: 30px;
+	font-size: 28px;
 	line-height: 1.05;
 	letter-spacing: -0.02em;
 	color: var(--color-text-primary);
 }
 
-.cashbook-table-section {
+.cashbook-ledger {
+	padding: 12px;
+	border-radius: 12px;
+	border: 1px solid rgba(146, 95, 255, 0.24);
+	box-shadow: var(--shadow-sm);
+	display: grid;
+	gap: 12px;
+	background: #fff;
+}
+
+.cashbook-ledger-head {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 2px;
+}
+
+.cashbook-ledger-copy {
+	display: grid;
+	gap: 2px;
+}
+
+.cashbook-ledger-copy h2 {
+	margin: 0;
+	font-size: 22px;
+	line-height: 1.2;
+}
+
+.cashbook-ledger-copy p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--color-text-muted);
+}
+
+.cashbook-table-section,
+.cashbook-table-toolbar {
 	display: grid;
 	gap: 10px;
 }
@@ -301,6 +340,7 @@
 
 .cashbook-table-wrap {
 	border-radius: 10px;
+	box-shadow: none;
 }
 
 .cashbook-table-wrap th,
@@ -363,9 +403,14 @@
 	gap: 10px;
 }
 
+.cashbook-entry-modal {
+	width: min(100%, 520px);
+}
+
 @media (max-width: 64rem) {
 	.cashbook-details-header,
 	.cashbook-search-row,
+	.cashbook-ledger-head,
 	.cashbook-table-toolbar {
 		flex-direction: column;
 		align-items: flex-start;
