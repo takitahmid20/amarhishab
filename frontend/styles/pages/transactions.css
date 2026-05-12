@@ -144,6 +144,13 @@
 	gap: 0;
 }
 
+.tx-empty {
+	padding: 20px 8px;
+	text-align: center;
+	font-size: 13px;
+	color: var(--color-text-muted);
+}
+
 .tx-item {
 	display: flex;
 	align-items: center;

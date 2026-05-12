@@ -24,7 +24,13 @@
 							<h1>Transactions</h1>
 							<p>View and manage your transaction history</p>
 						</div>
-						<button class="btn btn-primary btn-sm" type="button">
+						<button
+							class="btn btn-primary btn-sm"
+							type="button"
+							data-modal-target="#tx-form-modal"
+							aria-haspopup="dialog"
+							aria-controls="tx-form-modal"
+						>
 							<i data-lucide="plus" aria-hidden="true"></i>
 							<span>Add Transaction</span>
 						</button>
@@ -33,27 +39,29 @@
 					<!-- Filters -->
 					<div class="tx-filters surface">
 						<div class="tx-filters-left">
-							<button class="btn btn-outline btn-sm" type="button">
+							<button class="btn btn-outline btn-sm" type="button" data-tx-filter-trigger>
 								<i data-lucide="sliders-horizontal" aria-hidden="true"></i>
 								<span>Filter</span>
 							</button>
-							<button class="btn btn-outline btn-sm" type="button">
+							<button
+								class="btn btn-outline btn-sm"
+								type="button"
+								data-modal-target="#tx-date-modal"
+								aria-haspopup="dialog"
+								aria-controls="tx-date-modal"
+							>
 								<i data-lucide="calendar" aria-hidden="true"></i>
-								<span>Date Range</span>
+								<span data-tx-date-label>Date Range</span>
 							</button>
 						</div>
 						<div class="tx-filters-right">
-							<select class="select tx-select">
-								<option>All Categories</option>
-								<option>Food & Dining</option>
-								<option>Bills & Utilities</option>
-								<option>Salary</option>
-								<option>Freelance</option>
+							<select class="select tx-select" data-tx-category-filter>
+								<option value="all">All Categories</option>
 							</select>
-							<select class="select tx-select">
-								<option>All Types</option>
-								<option>Income</option>
-								<option>Expense</option>
+							<select class="select tx-select" data-tx-type-filter>
+								<option value="all">All Types</option>
+								<option value="income">Income</option>
+								<option value="expense">Expense</option>
 							</select>
 						</div>
 					</div>
@@ -62,10 +70,10 @@
 					<div class="tx-board surface">
 						<div class="tx-board-head">
 							<h2>All Transactions</h2>
-							<span class="tx-count">4 records</span>
+							<span class="tx-count" data-tx-count>4 records</span>
 						</div>
 
-						<div class="tx-list">
+						<div class="tx-list" data-tx-list>
 
 							<article class="tx-item">
 								<div class="tx-item-left">
@@ -166,6 +174,79 @@
 			</main>
 		</div>
 	</div>
-	<script src="../js/app.js"></script>
+
+		<div class="overlay modal-overlay" id="tx-form-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="tx-form-title">
+				<div class="modal-head">
+					<h2 class="modal-title" id="tx-form-title">Add Transaction</h2>
+					<button class="icon-btn" type="button" data-modal-close aria-label="Close transaction modal">
+						<i data-lucide="x" aria-hidden="true"></i>
+					</button>
+				</div>
+				<form class="modal-body" data-tx-form>
+					<label class="field">
+						<span class="label">Title</span>
+						<input class="input" type="text" name="title" placeholder="e.g. Grocery Shopping" required maxlength="80" autofocus />
+					</label>
+					<label class="field">
+						<span class="label">Category</span>
+						<input class="input" type="text" name="category" placeholder="e.g. Food & Dining" required maxlength="60" />
+					</label>
+					<label class="field">
+						<span class="label">Type</span>
+						<select class="select" name="type" required>
+							<option value="" disabled selected>Select type</option>
+							<option value="income">Income</option>
+							<option value="expense">Expense</option>
+						</select>
+					</label>
+					<label class="field">
+						<span class="label">Amount (৳)</span>
+						<input class="input" type="number" name="amount" min="0" step="0.01" placeholder="0" required />
+					</label>
+					<label class="field">
+						<span class="label">Date</span>
+						<input class="input" type="date" name="date" required />
+					</label>
+					<label class="field">
+						<span class="label">Note <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<input class="input" type="text" name="note" placeholder="Add a note..." />
+					</label>
+					<div class="modal-footer">
+						<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
+						<button class="btn btn-primary btn-sm" type="submit" data-tx-submit>Save Transaction</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="overlay modal-overlay" id="tx-date-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="tx-date-title">
+				<div class="modal-head">
+					<h2 class="modal-title" id="tx-date-title">Date Range</h2>
+					<button class="icon-btn" type="button" data-modal-close aria-label="Close date range modal">
+						<i data-lucide="x" aria-hidden="true"></i>
+					</button>
+				</div>
+				<form class="modal-body" data-tx-date-form>
+					<label class="field">
+						<span class="label">From</span>
+						<input class="input" type="date" name="from" />
+					</label>
+					<label class="field">
+						<span class="label">To</span>
+						<input class="input" type="date" name="to" />
+					</label>
+					<div class="modal-footer">
+						<button class="btn btn-outline btn-sm" type="button" data-tx-date-clear>Clear</button>
+						<button class="btn btn-primary btn-sm" type="submit">Apply</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script src="../js/components/modal.js"></script>
+		<script src="../js/modules/transactions/transactions.events.js"></script>
+		<script src="../js/app.js"></script>
 </body>
 </html>
