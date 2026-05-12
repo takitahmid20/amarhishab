@@ -2,19 +2,19 @@ const INLINE_PARTIALS = {
 	"navbar.html": `
 <header class="navbar app-topbar">
 	<div class="navbar-left">
-		<div class="navbar-meta">
-			<h3 class="navbar-title">Dashboard</h3>
-		</div>
+		<a class="navbar-brand-link" href="./dashboard.html" aria-label="AmarHishab dashboard">
+			<img class="navbar-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
+		</a>
 	</div>
 	<div class="navbar-right">
 		<div class="navbar-search search-wrap">
 			<span class="search-icon">Q</span>
 			<input class="input" type="text" value="Search" />
 		</div>
-		<button class="navbar-user" aria-label="Open profile menu">
-			<span class="navbar-user-avatar">TT</span>
+		<button class="navbar-user" aria-label="Open profile menu" onclick="window.location.href='./settings.html'">
+			<span class="navbar-user-avatar" data-user-avatar></span>
 			<span class="navbar-user-meta">
-				<span class="navbar-user-name">Taki Tahmid</span>
+				<span class="navbar-user-name" data-user-name></span>
 			</span>
 		</button>
 	</div>
@@ -22,10 +22,6 @@ const INLINE_PARTIALS = {
 `.trim(),
 	"sidebar.html": `
 <aside class="sidebar app-sidebar">
-	<div class="brand">
-		<img class="brand-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
-	</div>
-
 	<div class="sidebar-section">
 		<div class="nav-group-title">Main</div>
 		<nav class="nav">
@@ -676,6 +672,11 @@ async function initAppShell() {
 		initModalFromHash();
 		initCashbookCreateFlow();
 		await ensureLucideIcons();
+		const user = JSON.parse(localStorage.getItem('user') || '{}');
+		if (user && user.name) {
+			document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = user.name);
+			document.querySelectorAll('[data-user-avatar]').forEach(el => el.textContent = user.name.charAt(0).toUpperCase());
+		}
 	} catch (error) {
 		console.error(error);
 	}
@@ -684,3 +685,7 @@ async function initAppShell() {
 document.addEventListener("DOMContentLoaded", () => {
 	void initAppShell();
 });
+
+
+// Show logged in user name
+

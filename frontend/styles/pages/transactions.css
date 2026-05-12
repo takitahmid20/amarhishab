@@ -1,0 +1,289 @@
+.tx-main {
+	padding: 18px 0 28px;
+}
+
+.tx-page {
+	display: grid;
+	gap: 16px;
+}
+
+/* Hero */
+.tx-hero {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 14px 16px;
+	border-radius: 14px;
+	border: 1px solid rgba(146, 95, 255, 0.22);
+	background:
+		radial-gradient(120% 140% at 100% 0%, rgba(146, 95, 255, 0.1) 0%, rgba(146, 95, 255, 0) 52%),
+		#fff;
+}
+
+.tx-hero-copy {
+	display: grid;
+	gap: 4px;
+}
+
+.tx-hero-copy h1 {
+	margin: 0;
+	font-size: 25px;
+	font-weight: 700;
+	line-height: 1.15;
+}
+
+.tx-hero-copy p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--color-text-muted);
+}
+
+.tx-hero .btn {
+	height: 40px;
+	min-height: 40px;
+	padding-inline: 16px;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+.tx-hero .btn i,
+.tx-hero .btn svg {
+	width: 15px;
+	height: 15px;
+	stroke-width: 2;
+}
+
+/* Filters */
+.tx-filters {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 16px;
+	border-radius: 12px;
+	border: 1px solid var(--color-border);
+	background: #fff;
+	flex-wrap: wrap;
+}
+
+.tx-filters-left {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.tx-filters-right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.tx-select {
+	height: 36px;
+	min-height: 36px;
+	font-size: 13px;
+	padding-inline: 10px;
+	padding-block: 0;
+	border-radius: 8px;
+	background: #fff;
+	width: 150px;
+}
+
+.tx-filters .btn {
+	height: 36px;
+	min-height: 36px;
+	padding-inline: 14px;
+	gap: 6px;
+}
+
+.tx-filters .btn i,
+.tx-filters .btn svg {
+	width: 14px;
+	height: 14px;
+	stroke-width: 2;
+}
+
+/* Board */
+.tx-board {
+	padding: 12px;
+	border-radius: 12px;
+	border: 1px solid rgba(146, 95, 255, 0.24);
+	box-shadow: var(--shadow-sm);
+	background: #fff;
+	display: grid;
+	gap: 12px;
+}
+
+.tx-board-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 2px 6px;
+}
+
+.tx-board-head h2 {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.2;
+}
+
+.tx-count {
+	font-size: 12px;
+	color: var(--color-text-muted);
+	background: var(--color-surface-muted);
+	border: 1px solid var(--color-border);
+	padding: 3px 10px;
+	border-radius: 999px;
+}
+
+/* List */
+.tx-list {
+	display: grid;
+	gap: 0;
+}
+
+.tx-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 12px 6px;
+	border-bottom: 1px solid var(--color-border);
+	transition: background var(--duration-fast);
+}
+
+.tx-item:last-child {
+	border-bottom: none;
+}
+
+.tx-item:hover {
+	background: var(--color-surface-muted);
+	border-radius: 8px;
+}
+
+.tx-item-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+	flex: 1;
+}
+
+/* Icons */
+.tx-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 11px;
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+}
+
+.tx-icon i,
+.tx-icon svg {
+	width: 18px;
+	height: 18px;
+	stroke-width: 2;
+}
+
+.tx-icon--pink {
+	background: #fce7f3;
+	color: #db2777;
+}
+
+.tx-icon--mint {
+	background: #d1fae5;
+	color: #059669;
+}
+
+.tx-icon--cream {
+	background: #fef3c7;
+	color: #d97706;
+}
+
+.tx-icon--mint-soft {
+	background: #dbeafe;
+	color: #2563eb;
+}
+
+.tx-item-info {
+	min-width: 0;
+}
+
+.tx-item-title {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-text-primary);
+	margin: 0 0 2px;
+}
+
+.tx-item-meta {
+	font-size: 12px;
+	color: var(--color-text-muted);
+	margin: 0;
+}
+
+/* Right */
+.tx-item-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+	flex-direction: row-reverse;
+}
+
+.tx-amount {
+	font-size: 15px;
+	font-weight: 700;
+	width: 80px;
+	text-align: right;
+}
+
+.tx-amount--positive { color: var(--color-success); }
+.tx-amount--negative { color: var(--color-danger); }
+
+.tx-item-actions {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	opacity: 0;
+	transition: opacity var(--duration-fast);
+}
+
+.tx-item:hover .tx-item-actions {
+	opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 64rem) {
+	.tx-hero {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.tx-filters {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+@media (max-width: 48rem) {
+	.tx-main {
+		padding-top: 12px;
+	}
+
+	.tx-item-actions {
+		opacity: 1;
+	}
+
+	.tx-filters-right {
+		flex-wrap: wrap;
+		width: 100%;
+	}
+
+	.tx-select {
+		width: 100%;
+	}
+}

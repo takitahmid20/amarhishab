@@ -6,6 +6,21 @@
 	<title>Login | AmarHishab</title>
 	<link rel="stylesheet" href="../styles/main.css" />
 </head>
+
+<script src="../js/core/api.js"></script>
+<script src="../js/modules/auth/auth.service.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email    = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const error    = await login(email, password);
+            if (error) alert(error);
+        });
+    });
+</script>
+
 <body class="auth-page">
 	<main class="auth-shell" aria-labelledby="signin-title">
 		<section class="auth-card auth-card--signin">

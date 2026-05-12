@@ -1,15 +1,58 @@
-/* ======================================================
-   styles/pages/borrow-lend.css
-   Page-specific styles for the Borrow / Lend page.
-   Depends on: main.css, dashboard.css
-   ====================================================== */
+/* ── page layout ── */
+.bl-main {
+	padding: 18px 0 28px;
+}
 
-/* ── page wrapper ── */
 .bl-page {
-	padding: 20px;
 	display: grid;
 	gap: 16px;
 	align-content: start;
+}
+
+/* ── hero ── */
+.bl-hero {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 14px 16px;
+	border-radius: 14px;
+	border: 1px solid rgba(146, 95, 255, 0.22);
+	background:
+		radial-gradient(120% 140% at 100% 0%, rgba(146, 95, 255, 0.1) 0%, rgba(146, 95, 255, 0) 52%),
+		#fff;
+}
+
+.bl-hero-copy {
+	display: grid;
+	gap: 4px;
+}
+
+.bl-hero-copy h1 {
+	margin: 0;
+	font-size: 25px;
+	line-height: 1.15;
+}
+
+.bl-hero-copy p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--color-text-muted);
+}
+
+.bl-hero .btn {
+	height: 40px;
+	min-height: 40px;
+	padding-inline: 16px;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+.bl-hero .btn i,
+.bl-hero .btn svg {
+	width: 15px;
+	height: 15px;
+	stroke-width: 2;
 }
 
 /* ── summary stat cards ── */
@@ -87,7 +130,7 @@
 /* ── records card ── */
 .bl-records-card {
 	background: var(--color-surface);
-	border: 1px solid var(--color-border);
+	border: 1px solid rgba(146, 95, 255, 0.24);
 	border-radius: 14px;
 	box-shadow: var(--shadow-sm);
 	overflow: hidden;
@@ -103,15 +146,23 @@
 }
 
 .bl-records-head h3 {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 700;
 	margin: 0;
 }
 
-.bl-records-controls {
-	display: flex;
-	align-items: center;
-	gap: 10px;
+.bl-records-controls .btn {
+	height: 36px;
+	min-height: 36px;
+	padding-inline: 14px;
+	gap: 6px;
+}
+
+.bl-records-controls .btn i,
+.bl-records-controls .btn svg {
+	width: 14px;
+	height: 14px;
+	stroke-width: 2;
 }
 
 /* ── tabs ── */
@@ -219,6 +270,7 @@
 	font-size: 15px;
 	font-weight: 700;
 	color: var(--color-text-primary);
+	margin: 0;
 }
 
 .bl-item-meta {
@@ -242,7 +294,7 @@
 	color: var(--color-text-muted);
 }
 
-.meta-dot {
+.bl-meta-dot {
 	color: var(--color-border-strong);
 }
 
@@ -251,7 +303,6 @@
 	align-items: center;
 	gap: 10px;
 	flex-shrink: 0;
-	/* Amount always at the far right, actions to its left */
 	flex-direction: row-reverse;
 }
 
@@ -259,19 +310,18 @@
 	font-size: 16px;
 	font-weight: 800;
 	text-align: right;
-	width: 72px; /* fixed width so every row aligns */
+	width: 72px;
 	flex-shrink: 0;
 }
 
 .bl-item-amount--borrowed { color: var(--color-danger); }
 .bl-item-amount--lent     { color: var(--color-success); }
 
-/* Show action buttons only on hover (desktop) */
 .bl-item-actions {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	width: 80px; /* fixed width = 2 icon-btns (36px each + 6px gap) */
+	width: 80px;
 	flex-shrink: 0;
 	justify-content: flex-end;
 	opacity: 0;
@@ -282,14 +332,13 @@
 	opacity: 1;
 }
 
-/* ── modal helpers ── */
+/* ── modal ── */
 .modal-grid-2 {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 12px;
 }
 
-/* Keep modal fully inside viewport */
 #add-record-modal .modal {
 	width: min(100%, 420px);
 	max-height: calc(100vh - 48px);
@@ -298,17 +347,23 @@
 }
 
 /* ── responsive ── */
+@media (max-width: 64rem) {
+	.bl-hero {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
 @media (max-width: 48rem) {
+	.bl-main {
+		padding-top: 12px;
+	}
+
 	.bl-stat-grid {
 		grid-template-columns: 1fr;
 	}
 
-	.bl-page {
-		padding: 14px;
-	}
-
 	.bl-item-actions {
-		/* Always visible on mobile (no hover) */
 		opacity: 1;
 	}
 
