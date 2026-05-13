@@ -11,6 +11,9 @@ const INLINE_PARTIALS = {
 			<span class="search-icon">Q</span>
 			<input class="input" type="text" value="Search" />
 		</div>
+		<button class="btn btn-outline btn-icon navbar-notification" type="button" aria-label="Notifications">
+			<i data-lucide="bell" aria-hidden="true"></i>
+		</button>
 		<button class="navbar-user" aria-label="Open profile menu" onclick="window.location.href='./settings.html'">
 			<span class="navbar-user-avatar" data-user-avatar>
 				<img src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Sophie" alt="User avatar" />
