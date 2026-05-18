@@ -11,6 +11,40 @@ const INLINE_PARTIALS = {
 			<span class="search-icon">Q</span>
 			<input class="input" type="text" value="Search" />
 		</div>
+		<div class="navbar-notification-wrap">
+			<button class="btn btn-outline btn-icon navbar-notification" type="button" aria-label="Notifications" aria-expanded="false" data-notification-toggle>
+				<i data-lucide="bell" aria-hidden="true"></i>
+			</button>
+			<div class="navbar-notification-panel" data-notification-panel hidden aria-label="Notifications">
+				<div class="notification-panel-head">
+					<strong>Notifications</strong>
+					<span class="notification-pill">3 New</span>
+				</div>
+				<div class="notification-list">
+					<div class="notification-item">
+						<div class="notification-dot"></div>
+						<div>
+							<p class="notification-title">Budget alert</p>
+							<p class="notification-meta">Food & Dining is at 80% this month.</p>
+						</div>
+					</div>
+					<div class="notification-item">
+						<div class="notification-dot"></div>
+						<div>
+							<p class="notification-title">New income added</p>
+							<p class="notification-meta">Salary deposit of ৳ 5,000 received.</p>
+						</div>
+					</div>
+					<div class="notification-item">
+						<div class="notification-dot"></div>
+						<div>
+							<p class="notification-title">Weekly report ready</p>
+							<p class="notification-meta">View your last 7 days summary.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<button class="navbar-user" aria-label="Open profile menu" onclick="window.location.href='./settings.html'">
 			<span class="navbar-user-avatar" data-user-avatar>
 				<img src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Sophie" alt="User avatar" />
@@ -666,6 +700,7 @@ async function ensureLucideIcons() {
 async function initAppShell() {
 	try {
 		await loadPartials();
+		initNavbarNotifications();
 		syncNavbarTitle();
 		syncActiveSidebarLink();
 		await initCashbookCardComponents();
@@ -682,6 +717,59 @@ async function initAppShell() {
 	} catch (error) {
 		console.error(error);
 	}
+}
+
+function initNavbarNotifications() {
+	const toggles = Array.from(document.querySelectorAll("[data-notification-toggle]"));
+	const panels = Array.from(document.querySelectorAll("[data-notification-panel]"));
+
+	if (toggles.length === 0 || panels.length === 0) {
+		return;
+	}
+
+	const closeAll = () => {
+		panels.forEach((panel) => {
+			panel.hidden = true;
+		});
+		toggles.forEach((toggle) => {
+			toggle.setAttribute("aria-expanded", "false");
+		});
+	};
+
+	const openPanel = (toggle, panel) => {
+		panel.hidden = false;
+		toggle.setAttribute("aria-expanded", "true");
+	};
+
+	toggles.forEach((toggle) => {
+		const wrap = toggle.closest(".navbar-notification-wrap");
+		const panel = wrap ? wrap.querySelector("[data-notification-panel]") : null;
+		if (!(panel instanceof HTMLElement)) {
+			return;
+		}
+
+		toggle.addEventListener("click", (event) => {
+			event.stopPropagation();
+			const isOpen = !panel.hidden;
+			closeAll();
+			if (!isOpen) {
+				openPanel(toggle, panel);
+			}
+		});
+	});
+
+	document.addEventListener("click", (event) => {
+		const isInside = event.target.closest(".navbar-notification-wrap");
+		if (!isInside) {
+			closeAll();
+		}
+	});
+
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") {
+			closeAll();
+		}
+	});
 }
 
 document.addEventListener("DOMContentLoaded", () => {
