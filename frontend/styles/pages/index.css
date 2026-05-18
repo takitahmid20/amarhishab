@@ -45,9 +45,15 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	padding-block: 16px;
-	position: relative;
-	z-index: 2;
+	padding: 14px 18px;
+	margin: 18px auto 0;
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(16px);
+	box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+	position: sticky;
+	top: 12px;
+	z-index: 10;
 }
 
 .landing-brand {
