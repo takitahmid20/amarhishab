@@ -425,6 +425,59 @@ img { display: block; max-width: 100%; }
 }
 
 /* ═══════════════════════════════════════════
+   SHOWCASE
+   ═══════════════════════════════════════════ */
+.showcase {
+  max-width: 1200px;
+  width: min(100% - 48px, 1200px);
+  margin: 0 auto;
+  padding: 40px 0 80px;
+}
+
+.showcase-inner {
+  display: grid;
+  gap: 24px;
+}
+
+.showcase-content {
+  text-align: center;
+  display: grid;
+  gap: 8px;
+}
+
+.showcase-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7c3aed;
+}
+
+.showcase-title {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.2rem);
+  font-weight: 800;
+  color: #111827;
+}
+
+.showcase-desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.showcase-visual {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+}
+
+.showcase-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════
    BUDGET
    ═══════════════════════════════════════════ */
 .budget {
