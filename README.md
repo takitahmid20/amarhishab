@@ -12,6 +12,8 @@ Most finance tools are either too complicated (looking at you, spreadsheets) or 
 
 So I made this.
 
+**Live preview:** [aamar-hishab.netlify.app](https://aamar-hishab.netlify.app/)
+
 ---
 
 ## What it does
