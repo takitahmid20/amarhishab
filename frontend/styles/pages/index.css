@@ -148,7 +148,6 @@ img { display: block; max-width: 100%; }
   width: 100%;
   height: auto;
   border-radius: 20px;
-  background: #e5e7eb; /* shows grey box until image loads */
   min-height: 320px;
   object-fit: cover;
 }
