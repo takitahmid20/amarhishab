@@ -79,15 +79,18 @@
 
 .landing-main {
 	display: grid;
-	gap: 16px;
-	padding-bottom: 24px;
+	gap: 28px;
+	padding-bottom: 48px;
 	position: relative;
 	z-index: 1;
 }
 
 .landing-section {
 	display: grid;
-	gap: 14px;
+	gap: 18px;
+	padding: 28px;
+	border-radius: 24px;
+	background: rgba(255, 255, 255, 0.9);
 }
 
 .landing-section-head {
@@ -108,8 +111,10 @@
 .landing-stage {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(300px, 470px);
-	gap: 18px;
-	padding: 34px;
+	gap: 28px;
+	padding: 48px;
+	min-height: calc(100vh - 140px);
+	align-items: center;
 	border-radius: 24px;
 	background:
 		linear-gradient(140deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 60%),
@@ -183,12 +188,12 @@
 
 .landing-stage-visual {
 	position: relative;
-	min-height: 360px;
+	min-height: 420px;
 }
 
 .landing-visual-shell {
 	position: relative;
-	min-height: 360px;
+	min-height: 420px;
 	border-radius: 12px;
 	background:
 		linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 249, 255, 0.8) 60%),
@@ -320,7 +325,7 @@
 	grid-template-columns: minmax(0, 1fr) auto;
 	align-items: center;
 	gap: 16px;
-	padding: 16px;
+	padding: 26px;
 	border-radius: 20px;
 	background:
 		linear-gradient(120deg, rgba(15, 118, 110, 0.1), rgba(255, 255, 255, 0.9));
@@ -348,7 +353,7 @@
 .landing-trust-strip {
 	display: grid;
 	gap: 16px;
-	padding: 18px;
+	padding: 28px;
 	border-radius: 20px;
 	background:
 		linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(236, 253, 245, 0.8));
@@ -420,7 +425,7 @@
 .landing-feature-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 12px;
+	gap: 16px;
 }
 
 .landing-feature-card {
@@ -469,7 +474,7 @@
 	display: grid;
 	grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
 	gap: 16px;
-	padding: 18px;
+	padding: 28px;
 	border-radius: 20px;
 	background:
 		linear-gradient(140deg, rgba(240, 249, 255, 0.9), rgba(255, 255, 255, 0.9));
@@ -539,17 +544,17 @@
 
 .landing-pricing {
 	display: grid;
-	gap: 14px;
+	gap: 18px;
 }
 
 .landing-pricing-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 12px;
+	gap: 16px;
 }
 
 .landing-plan {
-	padding: 18px;
+	padding: 24px;
 	border-radius: 20px;
 	border: none;
 	background: rgba(255, 255, 255, 0.85);
@@ -660,6 +665,8 @@
 @media (max-width: 64rem) {
 	.landing-stage {
 		grid-template-columns: 1fr;
+		min-height: auto;
+		padding: 32px;
 	}
 
 	.landing-stage-actions {
@@ -702,7 +709,7 @@
 	}
 
 	.landing-stage {
-		padding: 14px;
+		padding: 24px;
 	}
 
 	.landing-stage-copy h1 {
@@ -711,7 +718,7 @@
 
 	.landing-stage-visual,
 	.landing-visual-shell {
-		min-height: 320px;
+		min-height: 340px;
 	}
 
 	.landing-float-card strong {
