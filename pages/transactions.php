@@ -7,7 +7,22 @@ require_login();
 $userId    = current_user()['id'];
 $books     = cashbooks_for_user($userId);
 $categories = categories_for_user($userId);
-$txns      = transactions_for_user($userId);
+
+// Filters from the query string.
+$typeParam = $_GET['type'] ?? 'all';            // all | income | expense
+$catParam  = (int) ($_GET['category'] ?? 0);
+$fromParam = $_GET['from'] ?? '';
+$toParam   = $_GET['to'] ?? '';
+
+$filters = [];
+if ($typeParam === 'income')  $filters['direction'] = 'in';
+if ($typeParam === 'expense') $filters['direction'] = 'out';
+if ($catParam > 0)            $filters['category_id'] = $catParam;
+if ($fromParam !== '')        $filters['from'] = $fromParam;
+if ($toParam !== '')          $filters['to'] = $toParam;
+
+$txns      = transactions_for_user($userId, $filters);
+$hasFilters = $filters !== [];
 $success   = flash_get('success');
 $error     = flash_get('error');
 ?>
@@ -50,12 +65,8 @@ $error     = flash_get('error');
 					</header>
 
 					<!-- Filters -->
-					<div class="tx-filters surface">
+					<form class="tx-filters surface" id="tx-filter-form" method="get">
 						<div class="tx-filters-left">
-							<button class="btn btn-outline btn-sm" type="button" data-tx-filter-trigger>
-								<i data-lucide="sliders-horizontal" aria-hidden="true"></i>
-								<span>Filter</span>
-							</button>
 							<button
 								class="btn btn-outline btn-sm"
 								type="button"
@@ -64,20 +75,28 @@ $error     = flash_get('error');
 								aria-controls="tx-date-modal"
 							>
 								<i data-lucide="calendar" aria-hidden="true"></i>
-								<span data-tx-date-label>Date Range</span>
+								<span data-tx-date-label><?= ($fromParam !== '' || $toParam !== '') ? e(($fromParam ?: '…') . ' → ' . ($toParam ?: '…')) : 'Date Range' ?></span>
 							</button>
+							<?php if ($hasFilters): ?>
+								<a class="btn btn-outline btn-sm" href="./transactions.php">
+									<i data-lucide="x" aria-hidden="true"></i><span>Clear</span>
+								</a>
+							<?php endif; ?>
 						</div>
 						<div class="tx-filters-right">
-							<select class="select tx-select" data-tx-category-filter>
-								<option value="all">All Categories</option>
+							<select class="select tx-select" name="category" onchange="this.form.submit()">
+								<option value="0">All Categories</option>
+								<?php foreach ($categories as $cat): ?>
+									<option value="<?= e($cat['id']) ?>" <?= $catParam === (int) $cat['id'] ? 'selected' : '' ?>><?= e($cat['name']) ?></option>
+								<?php endforeach; ?>
 							</select>
-							<select class="select tx-select" data-tx-type-filter>
-								<option value="all">All Types</option>
-								<option value="income">Income</option>
-								<option value="expense">Expense</option>
+							<select class="select tx-select" name="type" onchange="this.form.submit()">
+								<option value="all" <?= $typeParam === 'all' ? 'selected' : '' ?>>All Types</option>
+								<option value="income" <?= $typeParam === 'income' ? 'selected' : '' ?>>Income</option>
+								<option value="expense" <?= $typeParam === 'expense' ? 'selected' : '' ?>>Expense</option>
 							</select>
 						</div>
-					</div>
+					</form>
 
 					<?php if ($success !== ''): ?>
 						<p class="auth-success" role="status"><?= e($success) ?></p>
@@ -227,20 +246,20 @@ $error     = flash_get('error');
 						<i data-lucide="x" aria-hidden="true"></i>
 					</button>
 				</div>
-				<form class="modal-body" data-tx-date-form>
+				<div class="modal-body">
 					<label class="field">
 						<span class="label">From</span>
-						<input class="input" type="date" name="from" />
+						<input class="input" type="date" name="from" form="tx-filter-form" value="<?= e($fromParam) ?>" />
 					</label>
 					<label class="field">
 						<span class="label">To</span>
-						<input class="input" type="date" name="to" />
+						<input class="input" type="date" name="to" form="tx-filter-form" value="<?= e($toParam) ?>" />
 					</label>
 					<div class="modal-footer">
-						<button class="btn btn-outline btn-sm" type="button" data-tx-date-clear>Clear</button>
-						<button class="btn btn-primary btn-sm" type="submit">Apply</button>
+						<a class="btn btn-outline btn-sm" href="./transactions.php">Clear</a>
+						<button class="btn btn-primary btn-sm" type="submit" form="tx-filter-form">Apply</button>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 

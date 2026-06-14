@@ -46,6 +46,10 @@ function transactions_for_user(int $userId, array $filters = []): array
 		$where[] = 't.direction = ?';
 		$params[] = $filters['direction'];
 	}
+	if (!empty($filters['category_id'])) {
+		$where[] = 't.category_id = ?';
+		$params[] = (int) $filters['category_id'];
+	}
 	if (!empty($filters['from'])) {
 		$where[] = 't.occurred_at >= ?';
 		$params[] = $filters['from'] . ' 00:00:00';
