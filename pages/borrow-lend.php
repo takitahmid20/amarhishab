@@ -175,7 +175,8 @@ $error   = flash_get('error');
 					<i data-lucide="x" aria-hidden="true"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<form class="modal-body" action="../actions/borrow-lend-create.php" method="post">
+				<?= csrf_field() ?>
 				<div class="field">
 					<label class="label" for="bl-type">Type</label>
 					<select class="select" id="bl-type" name="type">
@@ -190,24 +191,24 @@ $error   = flash_get('error');
 				<div class="modal-grid-2">
 					<div class="field">
 						<label class="label" for="bl-amount">Amount (৳)</label>
-						<input class="input" id="bl-amount" type="number" name="amount" placeholder="0" min="0" required />
+						<input class="input" id="bl-amount" type="number" name="amount" placeholder="0" min="0" step="0.01" required />
 					</div>
 					<div class="field">
-						<label class="label" for="bl-date">Date</label>
-						<input class="input" id="bl-date" type="date" name="date" required />
+						<label class="label" for="bl-date">Due Date <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></label>
+						<input class="input" id="bl-date" type="date" name="date" />
 					</div>
 				</div>
 				<div class="field">
 					<label class="label" for="bl-note">
 						Note <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span>
 					</label>
-					<input class="input" id="bl-note" type="text" name="note" placeholder="What is it for?" />
+					<input class="input" id="bl-note" type="text" name="note" placeholder="What is it for?" maxlength="255" />
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-				<button class="btn btn-primary btn-sm" type="button">Save Record</button>
-			</div>
+				<div class="modal-footer">
+					<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
+					<button class="btn btn-primary btn-sm" type="submit">Save Record</button>
+				</div>
+			</form>
 		</div>
 	</div>
 
