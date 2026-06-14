@@ -4,6 +4,15 @@
  */
 
 if (session_status() === PHP_SESSION_NONE) {
+	// Harden the session cookie: not readable by JS, sent same-site,
+	// and marked Secure automatically when served over HTTPS.
+	session_set_cookie_params([
+		'lifetime' => 0,
+		'path'     => '/',
+		'httponly' => true,
+		'samesite' => 'Lax',
+		'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+	]);
 	session_start();
 }
 
