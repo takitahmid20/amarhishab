@@ -31,7 +31,7 @@
 			</form>
 
 			<p class="auth-footer">
-				<a class="auth-link auth-link-inline" href="./login.html"><i class="auth-link-icon" data-lucide="arrow-left" aria-hidden="true"></i><span>Back to Sign In</span></a>
+				<a class="auth-link auth-link-inline" href="./login.php"><i class="auth-link-icon" data-lucide="arrow-left" aria-hidden="true"></i><span>Back to Sign In</span></a>
 			</p>
 		</section>
 	</main>

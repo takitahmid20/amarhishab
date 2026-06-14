@@ -76,7 +76,7 @@
 
 			<p class="auth-footer">
 				Already have an account?
-				<a href="./login.html">Sign In</a>
+				<a href="./login.php">Sign In</a>
 			</p>
 		</section>
 	</main>

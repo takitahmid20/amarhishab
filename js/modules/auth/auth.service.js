@@ -9,7 +9,7 @@ async function signup(name, email, password, confirmPassword) {
     if (data.success) {
         localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        window.location.href = './dashboard.html';
+        window.location.href = './dashboard.php';
     } else {
         return data.message || 'Signup failed';
     }
@@ -21,7 +21,7 @@ async function login(email, password) {
     if (data.success) {
         localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        window.location.href = './dashboard.html';
+        window.location.href = './dashboard.php';
     } else {
         return data.message || 'Login failed';
     }
@@ -31,5 +31,5 @@ async function logout() {
     await apiPost('/logout', {});
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
-    window.location.href = './login.html';
+    window.location.href = './login.php';
 }

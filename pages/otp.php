@@ -36,7 +36,7 @@
 					Didn't receive a code?
 					<a class="auth-link auth-link-inline" href="#"><i class="auth-link-icon" data-lucide="refresh-cw" aria-hidden="true"></i><span>Resend</span></a>
 				</p>
-				<p><a class="auth-link auth-link-inline" href="./login.html"><i class="auth-link-icon" data-lucide="arrow-left" aria-hidden="true"></i><span>Back to Sign In</span></a></p>
+				<p><a class="auth-link auth-link-inline" href="./login.php"><i class="auth-link-icon" data-lucide="arrow-left" aria-hidden="true"></i><span>Back to Sign In</span></a></p>
 			</div>
 		</section>
 	</main>

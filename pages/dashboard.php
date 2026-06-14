@@ -70,7 +70,7 @@
 							<section class="surface dashboard-card">
 								<div class="dashboard-card-header">
 									<h3>Recent Transactions</h3>
-									<a class="btn btn-secondary btn-sm" href="./transactions.html">View All</a>
+									<a class="btn btn-secondary btn-sm" href="./transactions.php">View All</a>
 								</div>
 								<div class="dashboard-transaction-list">
 									<div class="transaction-card">

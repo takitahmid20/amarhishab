@@ -13,7 +13,7 @@
 		const safeCreatedText = escapeHtml(book.createdText || "Created recently");
 		const safeStatusLabel = escapeHtml(book.statusLabel || "Live");
 		const statusClass = book.statusTone === "warn" ? " cashbook-health--warn" : "";
-		const detailsHref = `./cashbook-details.html?cashbookId=${encodeURIComponent(book.id || "")}&cashbookName=${encodeURIComponent(book.name || "")}`;
+		const detailsHref = `./cashbook-details.php?cashbookId=${encodeURIComponent(book.id || "")}&cashbookName=${encodeURIComponent(book.name || "")}`;
 
 		return `
 <article class="cashbook-card cashbook-card--book surface" data-cashbook-id="${escapeHtml(book.id || "")}">

@@ -43,7 +43,7 @@
 				<label class="field" for="login-password">
 					<span class="auth-label-row">
 						<span class="label">Password</span>
-						<a class="auth-link-small" href="./forgot-password.html">Forgot?</a>
+						<a class="auth-link-small" href="./forgot-password.php">Forgot?</a>
 					</span>
 					<div class="input-wrap">
 						<i class="input-icon" data-lucide="lock" aria-hidden="true"></i>
@@ -58,7 +58,7 @@
 
 			<p class="auth-footer">
 				Don't have an account?
-				<a class="auth-link" href="./signup.html">Sign Up</a>
+				<a class="auth-link" href="./signup.php">Sign Up</a>
 			</p>
 		</section>
 	</main>

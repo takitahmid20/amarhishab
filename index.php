@@ -264,7 +264,7 @@
         <p class="about-tag">Why we built this</p>
         <h2 class="about-title">We believe every taka deserves a record.</h2>
         <p class="about-desc">AmarHishab started with a simple problem — students and young adults in Bangladesh had no easy way to track daily micro-expenses. Bus fare, tea, snacks, rickshaw — these small costs add up fast, but traditional tools are too slow or complicated. So we built AmarHishab: a quick-entry finance tracker that works the way you actually spend.</p>
-        <a href="./pages/signup.html" class="about-btn">
+        <a href="./pages/signup.php" class="about-btn">
           Start tracking free
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -305,8 +305,8 @@
     <a href="#budget"     class="bottom-nav-link">Budget</a>
     <a href="#about"      class="bottom-nav-link">About</a>
     <span class="bottom-nav-divider" aria-hidden="true"></span>
-    <a href="./pages/login.html"  class="bottom-nav-btn">Login</a>
-    <a href="./pages/signup.html" class="bottom-nav-btn bottom-nav-btn--fill">Get Started</a>
+    <a href="./pages/login.php"  class="bottom-nav-btn">Login</a>
+    <a href="./pages/signup.php" class="bottom-nav-btn bottom-nav-btn--fill">Get Started</a>
   </nav>
 
 </div>

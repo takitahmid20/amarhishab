@@ -24,7 +24,7 @@
 				>
 					<header class="cashbook-details-header surface">
 						<div class="cashbook-details-header-left">
-							<a class="btn btn-outline btn-sm cashbook-back-link" href="./cashbooks.html" aria-label="Back to cashbooks">
+							<a class="btn btn-outline btn-sm cashbook-back-link" href="./cashbooks.php" aria-label="Back to cashbooks">
 								<i data-lucide="arrow-left" aria-hidden="true"></i>
 							</a>
 							<div class="cashbook-details-copy">
