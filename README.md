@@ -84,10 +84,16 @@ Built for **XAMPP** (Apache + MySQL).
 
 1. Copy this folder into your XAMPP `htdocs/` (e.g. `htdocs/amarhishab`).
 2. Start Apache + MySQL from the XAMPP control panel.
-3. Create the database and import the schema (added in the database phase).
+3. Import the schema and sample data:
+   ```bash
+   mysql -u root < database/schema.sql
+   mysql -u root < database/seed.sql   # optional demo data
+   ```
 4. Copy `config/config.sample.php` to `config/config.local.php` and set your
    MySQL credentials (XAMPP default: user `root`, empty password).
 5. Open `http://localhost/amarhishab/` in a browser.
+
+Demo login (after seeding): `demo@amarhishab.test` / `password123`.
 
 ---
 
