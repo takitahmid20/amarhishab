@@ -177,28 +177,25 @@ $error   = flash_get('error');
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<form class="modal-body" data-budget-category-form>
+							<form class="modal-body" action="../actions/budget-create.php" method="post">
+								<?= csrf_field() ?>
 								<label class="field">
 									<span class="label">Category Name</span>
-									<input
-										class="input"
-										type="text"
-										name="categoryName"
-										placeholder="Enter category name"
-										required
-										maxlength="60"
-										autofocus
-									/>
+									<input class="input" type="text" name="name" placeholder="Enter category name" required maxlength="60" autofocus />
 								</label>
 
 								<label class="field">
-									<span class="label">Cashbook</span>
-									<select class="select" name="cashbookId" required>
-										<option value="" selected disabled>Select a cashbook</option>
-										<option value="b4">B4</option>
-										<option value="b3">B3</option>
-										<option value="b2">B2</option>
-										<option value="business-book">Business Book</option>
+									<span class="label">Monthly Limit (৳)</span>
+									<input class="input" type="number" name="limit" min="0" step="0.01" placeholder="e.g. 1500" required />
+								</label>
+
+								<label class="field">
+									<span class="label">Cashbook <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<select class="select" name="cashbook_id">
+										<option value="">No cashbook</option>
+										<?php foreach ($books as $book): ?>
+											<option value="<?= e($book['id']) ?>"><?= e($book['name']) ?></option>
+										<?php endforeach; ?>
 									</select>
 								</label>
 
