@@ -26,3 +26,21 @@ function require_login(string $loginPath = './login.php'): void
 		redirect($loginPath);
 	}
 }
+
+/** Log a user in: store a minimal, safe subset in the session. */
+function login_user(array $user): void
+{
+	session_regenerate_id(true);
+	$_SESSION['user'] = [
+		'id'    => (int) $user['id'],
+		'name'  => $user['name'],
+		'email' => $user['email'],
+	];
+}
+
+/** Log the current user out and clear the session. */
+function logout_user(): void
+{
+	$_SESSION = [];
+	session_destroy();
+}
