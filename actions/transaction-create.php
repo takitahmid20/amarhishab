@@ -24,7 +24,10 @@ $bill       = post('bill');
 $details    = post('details');
 $date       = post('date');
 
-$back = '../pages/cashbook-details.php?id=' . $cashbookId;
+// Where to return: transactions list if requested, else the cashbook ledger.
+$back = post('return_to') === 'transactions'
+	? '../pages/transactions.php'
+	: '../pages/cashbook-details.php?id=' . $cashbookId;
 
 // Cashbook must belong to the user.
 if (!find_cashbook($cashbookId, $userId)) {

@@ -155,21 +155,30 @@ $error     = flash_get('error');
 						<i data-lucide="x" aria-hidden="true"></i>
 					</button>
 				</div>
-				<form class="modal-body" data-tx-form>
+				<?php if (empty($books)): ?>
+					<div class="modal-body">
+						<p>You need a cashbook first. <a class="auth-link" href="./cashbooks.php">Create one</a>.</p>
+						<div class="modal-footer">
+							<button class="btn btn-outline btn-sm" type="button" data-modal-close>Close</button>
+						</div>
+					</div>
+				<?php else: ?>
+				<form class="modal-body" action="../actions/transaction-create.php" method="post">
+					<?= csrf_field() ?>
+					<input type="hidden" name="return_to" value="transactions">
 					<label class="field">
-						<span class="label">Title</span>
-						<input class="input" type="text" name="title" placeholder="e.g. Grocery Shopping" required maxlength="80" autofocus />
-					</label>
-					<label class="field">
-						<span class="label">Category</span>
-						<input class="input" type="text" name="category" placeholder="e.g. Food & Dining" required maxlength="60" />
+						<span class="label">Cashbook</span>
+						<select class="select" name="cashbook_id" required>
+							<?php foreach ($books as $book): ?>
+								<option value="<?= e($book['id']) ?>"><?= e($book['name']) ?></option>
+							<?php endforeach; ?>
+						</select>
 					</label>
 					<label class="field">
 						<span class="label">Type</span>
-						<select class="select" name="type" required>
-							<option value="" disabled selected>Select type</option>
-							<option value="income">Income</option>
-							<option value="expense">Expense</option>
+						<select class="select" name="direction" required>
+							<option value="in">Income (Cash In)</option>
+							<option value="out">Expense (Cash Out)</option>
 						</select>
 					</label>
 					<label class="field">
@@ -178,17 +187,35 @@ $error     = flash_get('error');
 					</label>
 					<label class="field">
 						<span class="label">Date</span>
-						<input class="input" type="date" name="date" required />
+						<input class="input" type="date" name="date" value="<?= date('Y-m-d') ?>" required />
 					</label>
 					<label class="field">
-						<span class="label">Note <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
-						<input class="input" type="text" name="note" placeholder="Add a note..." />
+						<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<select class="select" name="category_id">
+							<option value="">No category</option>
+							<?php foreach ($categories as $cat): ?>
+								<option value="<?= e($cat['id']) ?>"><?= e($cat['name']) ?></option>
+							<?php endforeach; ?>
+						</select>
+					</label>
+					<label class="field">
+						<span class="label">Payment Mode</span>
+						<select class="select" name="mode">
+							<option value="cash">Cash</option>
+							<option value="bank">Bank</option>
+							<option value="mobile">Mobile</option>
+						</select>
+					</label>
+					<label class="field">
+						<span class="label">Details <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<input class="input" type="text" name="details" placeholder="Add a note..." maxlength="255" />
 					</label>
 					<div class="modal-footer">
 						<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-						<button class="btn btn-primary btn-sm" type="submit" data-tx-submit>Save Transaction</button>
+						<button class="btn btn-primary btn-sm" type="submit">Save Transaction</button>
 					</div>
 				</form>
+				<?php endif; ?>
 			</div>
 		</div>
 
