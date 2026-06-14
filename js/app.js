@@ -1,86 +1,3 @@
-const INLINE_PARTIALS = {
-	"navbar.html": `
-<header class="navbar app-topbar">
-	<div class="navbar-left">
-		<a class="navbar-brand-link" href="./dashboard.html" aria-label="AmarHishab dashboard">
-			<img class="navbar-logo" src="../assets/logos/amarhishab-logo.png" alt="AmarHishab" />
-		</a>
-	</div>
-	<div class="navbar-right">
-		<div class="navbar-search search-wrap">
-			<span class="search-icon">Q</span>
-			<input class="input" type="text" value="Search" />
-		</div>
-		<div class="navbar-notification-wrap">
-			<button class="btn btn-outline btn-icon navbar-notification" type="button" aria-label="Notifications" aria-expanded="false" data-notification-toggle>
-				<i data-lucide="bell" aria-hidden="true"></i>
-			</button>
-			<div class="navbar-notification-panel" data-notification-panel hidden aria-label="Notifications">
-				<div class="notification-panel-head">
-					<strong>Notifications</strong>
-					<span class="notification-pill">3 New</span>
-				</div>
-				<div class="notification-list">
-					<div class="notification-item">
-						<div class="notification-dot"></div>
-						<div>
-							<p class="notification-title">Budget alert</p>
-							<p class="notification-meta">Food & Dining is at 80% this month.</p>
-						</div>
-					</div>
-					<div class="notification-item">
-						<div class="notification-dot"></div>
-						<div>
-							<p class="notification-title">New income added</p>
-							<p class="notification-meta">Salary deposit of ৳ 5,000 received.</p>
-						</div>
-					</div>
-					<div class="notification-item">
-						<div class="notification-dot"></div>
-						<div>
-							<p class="notification-title">Weekly report ready</p>
-							<p class="notification-meta">View your last 7 days summary.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<button class="navbar-user" aria-label="Open profile menu" onclick="window.location.href='./settings.html'">
-			<span class="navbar-user-avatar" data-user-avatar>
-				<img src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Sophie" alt="User avatar" />
-			</span>
-			<span class="navbar-user-meta">
-				<span class="navbar-user-name" data-user-name></span>
-			</span>
-		</button>
-	</div>
-</header>
-`.trim(),
-	"sidebar.html": `
-<aside class="sidebar app-sidebar">
-	<div class="sidebar-section">
-		<div class="nav-group-title">Main</div>
-		<nav class="nav">
-			<a class="active" href="./dashboard.html"><i class="nav-icon" data-lucide="home" aria-hidden="true"></i><span>Dashboard</span></a>
-			<a href="./transactions.html"><i class="nav-icon" data-lucide="arrow-left-right" aria-hidden="true"></i><span>Transactions</span></a>
-			<a href="./budget.html"><i class="nav-icon" data-lucide="wallet" aria-hidden="true"></i><span>Budget</span></a>
-			<a href="./reports.html"><i class="nav-icon" data-lucide="bar-chart-3" aria-hidden="true"></i><span>Reports</span></a>
-		</nav>
-	</div>
-
-	<div class="sidebar-section">
-		<div class="nav-group-title">Manage</div>
-		<nav class="nav">
-			<a href="./cashbooks.html"><i class="nav-icon" data-lucide="book-open" aria-hidden="true"></i><span>Cashbooks</span></a>
-			<a href="./borrow-lend.html"><i class="nav-icon" data-lucide="handshake" aria-hidden="true"></i><span>Borrow / Lend</span></a>
-			<a href="./reminders.html"><i class="nav-icon" data-lucide="bell" aria-hidden="true"></i><span>Reminders</span></a>
-			<a href="./settings.html"><i class="nav-icon" data-lucide="settings" aria-hidden="true"></i><span>Settings</span></a>
-		</nav>
-	</div>
-</aside>
-`.trim()
-};
-
 function normalizePath(pathname) {
 	if (!pathname) {
 		return "/";
@@ -93,70 +10,6 @@ function normalizePath(pathname) {
 	return pathname;
 }
 
-function getInlinePartial(partialPath) {
-	if (!partialPath) {
-		return "";
-	}
-
-	const fileName = partialPath.split("/").pop() || "";
-	return INLINE_PARTIALS[fileName] || "";
-}
-
-async function getPartialMarkup(partialPath) {
-	try {
-		const response = await fetch(partialPath);
-		if (!response.ok) {
-			throw new Error(`Failed to load partial: ${partialPath}`);
-		}
-
-		return (await response.text()).trim();
-	} catch (_error) {
-		return getInlinePartial(partialPath);
-	}
-}
-
-async function loadPartial(placeholder) {
-	const partialPath = placeholder.getAttribute("data-partial");
-
-	if (!partialPath) {
-		return;
-	}
-
-	const markup = await getPartialMarkup(partialPath);
-	if (!markup) {
-		return;
-	}
-
-	const template = document.createElement("template");
-	template.innerHTML = markup;
-
-	const node = template.content.firstElementChild;
-	if (!node) {
-		return;
-	}
-
-	const extraClasses = (placeholder.getAttribute("data-partial-class") || "")
-		.split(/\s+/)
-		.filter(Boolean);
-
-	if (extraClasses.length > 0) {
-		node.classList.add(...extraClasses);
-	}
-
-	if (placeholder.id && !node.id) {
-		node.id = placeholder.id;
-	}
-
-	placeholder.replaceWith(node);
-}
-
-async function loadPartials() {
-	const placeholders = Array.from(document.querySelectorAll("[data-partial]"));
-
-	for (const placeholder of placeholders) {
-		await loadPartial(placeholder);
-	}
-}
 
 function syncNavbarTitle() {
 	const pageTitle = document.body.getAttribute("data-page-title");
@@ -699,7 +552,6 @@ async function ensureLucideIcons() {
 
 async function initAppShell() {
 	try {
-		await loadPartials();
 		initNavbarNotifications();
 		syncNavbarTitle();
 		syncActiveSidebarLink();

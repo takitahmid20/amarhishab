@@ -10,10 +10,10 @@
 </head>
 <body data-page-title="Cashbooks">
 	<div class="dashboard-layout">
-		<div data-partial="../partials/navbar.html" data-partial-class="dashboard-topbar"></div>
+		<?php include __DIR__ . '/../partials/navbar.php'; ?>
 
 		<div class="dashboard-body">
-			<div data-partial="../partials/sidebar.html" data-partial-class="dashboard-sidebar"></div>
+			<?php include __DIR__ . '/../partials/sidebar.php'; ?>
 
 			<main class="dashboard-main cashbooks-main">
 				<section class="container-wide cashbooks-page">

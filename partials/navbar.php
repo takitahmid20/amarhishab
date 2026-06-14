@@ -1,6 +1,6 @@
-<header class="navbar app-topbar">
+<header class="navbar app-topbar dashboard-topbar">
 	<div class="navbar-left">
-		<a class="navbar-brand-link" href="../pages/dashboard.html" aria-label="AmarHishab dashboard">
+		<a class="navbar-brand-link" href="./dashboard.php" aria-label="AmarHishab dashboard">
 			<img
 				class="navbar-logo"
 				src="../assets/logos/amarhishab-logo.png"
@@ -61,7 +61,7 @@
 			type="button"
 			aria-label="Open profile menu"
 			aria-expanded="false"
-			onclick="window.location.href='../pages/settings.html'"
+			onclick="window.location.href='./settings.php'"
 		>
 			<span class="navbar-user-avatar" data-user-avatar>
 				<img src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Sophie" alt="User avatar" />
