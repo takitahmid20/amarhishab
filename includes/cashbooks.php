@@ -52,6 +52,20 @@ function update_cashbook(int $id, int $userId, string $name, ?string $descriptio
 	return $stmt->rowCount();
 }
 
+/** Transactions for a cashbook, oldest first, with category name joined. */
+function cashbook_entries(int $cashbookId): array
+{
+	$sql = 'SELECT t.id, t.direction, t.amount, t.mode, t.bill, t.details, t.occurred_at,
+				bc.name AS category_name
+			FROM transactions t
+			LEFT JOIN budget_categories bc ON bc.id = t.category_id
+			WHERE t.cashbook_id = ?
+			ORDER BY t.occurred_at ASC, t.id ASC';
+	$stmt = db()->prepare($sql);
+	$stmt->execute([$cashbookId]);
+	return $stmt->fetchAll();
+}
+
 /** Delete a cashbook owned by the user. Returns affected row count. */
 function delete_cashbook(int $id, int $userId): int
 {

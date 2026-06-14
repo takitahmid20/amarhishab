@@ -1,6 +1,37 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/cashbooks.php';
 require_login();
+
+$userId   = current_user()['id'];
+$id       = (int) ($_GET['id'] ?? 0);
+$cashbook = $id > 0 ? find_cashbook($id, $userId) : null;
+
+if (!$cashbook) {
+	flash_set('error', 'Cashbook not found.');
+	redirect('./cashbooks.php');
+}
+
+$entries = cashbook_entries($id);
+
+// Running balance (entries are oldest-first), plus totals.
+$cashIn = 0.0;
+$cashOut = 0.0;
+$balance = 0.0;
+foreach ($entries as $i => $entry) {
+	$amt = (float) $entry['amount'];
+	if ($entry['direction'] === 'in') {
+		$cashIn  += $amt;
+		$balance += $amt;
+	} else {
+		$cashOut += $amt;
+		$balance -= $amt;
+	}
+	$entries[$i]['running_balance'] = $balance;
+}
+// Display newest first.
+$entries = array_reverse($entries);
+$entryCount = count($entries);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,12 +51,7 @@ require_login();
 			<?php include __DIR__ . '/../partials/sidebar.php'; ?>
 
 			<main class="dashboard-main cashbook-details-main">
-				<section
-					class="container-wide cashbook-details-page"
-					data-cashbook-details-page
-					data-source="../data/cashbook-transactions.json"
-					data-source-fallback="#cashbook-transaction-fallback"
-				>
+				<section class="container-wide cashbook-details-page" data-cashbook-details-page>
 					<header class="cashbook-details-header surface">
 						<div class="cashbook-details-header-left">
 							<a class="btn btn-outline btn-sm cashbook-back-link" href="./cashbooks.php" aria-label="Back to cashbooks">
@@ -33,7 +59,7 @@ require_login();
 							</a>
 							<div class="cashbook-details-copy">
 								<p class="cashbook-details-eyebrow">Cashbook Ledger</p>
-								<h1 data-cashbook-name>ABC</h1>
+								<h1 data-cashbook-name><?= e($cashbook['name']) ?></h1>
 								<p class="cashbook-details-sub">Monitor transactions, cash movement, and running balance from one branded workspace.</p>
 							</div>
 						</div>
@@ -93,21 +119,21 @@ require_login();
 							<div class="cashbook-summary-icon cashbook-summary-icon--in"><i data-lucide="plus" aria-hidden="true"></i></div>
 							<div>
 								<p>Cash In</p>
-								<strong data-summary-cash-in>1,300</strong>
+								<strong data-summary-cash-in><?= e(taka($cashIn)) ?></strong>
 							</div>
 						</article>
 						<article class="cashbook-summary-item surface">
 							<div class="cashbook-summary-icon cashbook-summary-icon--out"><i data-lucide="minus" aria-hidden="true"></i></div>
 							<div>
 								<p>Cash Out</p>
-								<strong data-summary-cash-out>400</strong>
+								<strong data-summary-cash-out><?= e(taka($cashOut)) ?></strong>
 							</div>
 						</article>
 						<article class="cashbook-summary-item surface">
 							<div class="cashbook-summary-icon cashbook-summary-icon--balance"><i data-lucide="equal" aria-hidden="true"></i></div>
 							<div>
 								<p>Net Balance</p>
-								<strong data-summary-net-balance>900</strong>
+								<strong data-summary-net-balance><?= e(taka($balance)) ?></strong>
 							</div>
 						</article>
 					</section>
@@ -119,7 +145,7 @@ require_login();
 								<p>Every transaction log for this cashbook.</p>
 							</div>
 							<div class="cashbook-table-toolbar">
-								<p class="cashbook-table-count" data-entry-count-label>Showing 1 - 3 of 3 entries</p>
+								<p class="cashbook-table-count" data-entry-count-label>Showing <?= $entryCount ?> <?= $entryCount === 1 ? 'entry' : 'entries' ?></p>
 								<div class="cashbook-pagination">
 									<label>
 										<select class="select">
@@ -152,6 +178,30 @@ require_login();
 									</tr>
 								</thead>
 								<tbody data-entry-list>
+									<?php if ($entryCount === 0): ?>
+										<tr><td colspan="8" class="cashbook-empty-row">No entries yet. Add a Cash In or Cash Out to get started.</td></tr>
+									<?php else: ?>
+										<?php foreach ($entries as $entry): ?>
+											<?php
+												$isIn = $entry['direction'] === 'in';
+												$amountClass = $isIn ? 'cell-amount cell-amount--in' : 'cell-amount cell-amount--out';
+												$sign = $isIn ? '+' : '-';
+											?>
+											<tr>
+												<td class="cell-check"><input type="checkbox" aria-label="Select entry" /></td>
+												<td>
+													<?= e(date('M j, Y', strtotime($entry['occurred_at']))) ?>
+													<span class="cashbook-cell-time"><?= e(date('h:i A', strtotime($entry['occurred_at']))) ?></span>
+												</td>
+												<td><?= e($entry['details'] ?: '—') ?></td>
+												<td><?= e($entry['category_name'] ?: '—') ?></td>
+												<td><?= e(ucfirst($entry['mode'])) ?></td>
+												<td><?= e($entry['bill'] ?: '—') ?></td>
+												<td class="<?= $amountClass ?>"><?= $sign ?> <?= e(taka($entry['amount'])) ?></td>
+												<td class="cell-balance"><?= e(taka($entry['running_balance'])) ?></td>
+											</tr>
+										<?php endforeach; ?>
+									<?php endif; ?>
 								</tbody>
 							</table>
 						</div>
@@ -235,54 +285,6 @@ require_login();
 						</div>
 					</div>
 
-					<script id="cashbook-transaction-fallback" type="application/json">
-						[
-							{
-								"cashbookId": "b4",
-								"cashbookName": "B4",
-								"summary": {
-									"cashIn": 1300,
-									"cashOut": 400,
-									"netBalance": 900
-								},
-								"entries": [
-									{
-										"dateLabel": "Today",
-										"time": "08:36 PM",
-										"details": "--",
-										"category": "--",
-										"mode": "--",
-										"bill": "--",
-										"amount": 400,
-										"balance": 900,
-										"direction": "out"
-									},
-									{
-										"dateLabel": "Today",
-										"time": "08:36 PM",
-										"details": "--",
-										"category": "--",
-										"mode": "--",
-										"bill": "--",
-										"amount": 500,
-										"balance": 1300,
-										"direction": "in"
-									},
-									{
-										"dateLabel": "10 Apr, 2026",
-										"time": "08:36 PM",
-										"details": "--",
-										"category": "--",
-										"mode": "--",
-										"bill": "--",
-										"amount": 800,
-										"balance": 800,
-										"direction": "in"
-									}
-								]
-							}
-						]
-					</script>
 				</section>
 			</main>
 		</div>
