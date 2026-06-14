@@ -23,6 +23,19 @@ function redirect(string $path): void
 	exit;
 }
 
+/** Human-friendly relative time, e.g. "about 2 hours ago". */
+function time_ago(string $datetime): string
+{
+	$ts   = strtotime($datetime);
+	$diff = time() - $ts;
+
+	if ($diff < 60)        return 'just now';
+	if ($diff < 3600)      return 'about ' . (int) round($diff / 60) . ' minutes ago';
+	if ($diff < 86400)     return 'about ' . (int) round($diff / 3600) . ' hours ago';
+	if ($diff < 2592000)   return (int) round($diff / 86400) . ' days ago';
+	return date('M j, Y', $ts);
+}
+
 /** Read a trimmed POST field. */
 function post(string $key, string $default = ''): string
 {
