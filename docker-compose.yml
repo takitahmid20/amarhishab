@@ -1,0 +1,60 @@
+# AmarHishab local stack: PHP+Apache app, MySQL, phpMyAdmin.
+#
+#   docker compose up -d --build
+#
+# App         -> http://localhost:8080
+# phpMyAdmin  -> http://localhost:8081   (server: db, user: root, pass: root)
+# MySQL       -> localhost:3307          (mapped off 3306 to avoid clashing
+#                                         with a standalone MySQL on the host)
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: amarhishab
+      DB_USER: root
+      DB_PASS: root
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: amarhishab
+    volumes:
+      - db_data:/var/lib/mysql
+      # *.sql here auto-import on first boot, in alphabetical order
+      # (schema.sql before seed.sql).
+      - ./database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:

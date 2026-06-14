@@ -29,15 +29,19 @@ function db(): PDO
 	}
 
 	$cfg = app_config()['db'];
-	$dsn = sprintf(
-		'mysql:host=%s;port=%s;dbname=%s;charset=%s',
-		$cfg['host'],
-		$cfg['port'],
-		$cfg['name'],
-		$cfg['charset']
-	);
 
-	$pdo = new PDO($dsn, $cfg['user'], $cfg['pass'], [
+	// Environment variables win when set (used by Docker); otherwise fall back
+	// to the config file. pass uses !== false so an intentional empty password works.
+	$host    = getenv('DB_HOST')    ?: $cfg['host'];
+	$port    = getenv('DB_PORT')    ?: $cfg['port'];
+	$name    = getenv('DB_NAME')    ?: $cfg['name'];
+	$charset = getenv('DB_CHARSET') ?: $cfg['charset'];
+	$user    = getenv('DB_USER')    ?: $cfg['user'];
+	$pass    = getenv('DB_PASS') !== false ? getenv('DB_PASS') : $cfg['pass'];
+
+	$dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s', $host, $port, $name, $charset);
+
+	$pdo = new PDO($dsn, $user, $pass, [
 		PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 		PDO::ATTR_EMULATE_PREPARES   => false,

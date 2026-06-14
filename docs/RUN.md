@@ -56,6 +56,43 @@ Stop the server with `Ctrl+C`.
 
 ---
 
+## Option C — Docker (app + MySQL + phpMyAdmin)
+
+The cleanest way to get phpMyAdmin without XAMPP. Everything runs in containers,
+nothing installed on your machine except Docker. (Don't try to dockerize XAMPP —
+this compose stack replaces it.)
+
+Requires **Docker Desktop** running. From the project root:
+
+```bash
+docker compose up -d --build
+```
+
+| Service | URL | Notes |
+|---|---|---|
+| App | http://localhost:8080 | PHP 8.3 + Apache, project mounted live |
+| phpMyAdmin | http://localhost:8081 | server `db`, user `root`, password `root` |
+| MySQL | localhost:3307 | mapped off 3306 to avoid host clash |
+
+The database **auto-imports** `database/schema.sql` then `database/seed.sql` the
+first time the MySQL volume is created — no manual import needed.
+
+Common commands:
+
+```bash
+docker compose logs -f app     # watch app logs
+docker compose down            # stop (keeps data)
+docker compose down -v         # stop AND wipe the DB volume (re-import on next up)
+```
+
+> Changed `schema.sql` / `seed.sql`? The auto-import only runs on an empty volume.
+> Run `docker compose down -v && docker compose up -d` to re-seed.
+
+> No host config needed: the app container reads DB settings from environment
+> variables (`DB_HOST=db` etc.), which override `config/config.local.php`.
+
+---
+
 ## Check the database in phpMyAdmin
 
 phpMyAdmin ships with XAMPP.
