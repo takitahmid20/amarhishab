@@ -8,11 +8,9 @@
 
 AmarHishab (আমারহিসাব) is a personal finance app I built because I couldn't find anything simple enough for tracking daily expenses. You know how it goes — bus fare, chaa, rickshaw, snacks, tuition fees. Small amounts that disappear and at the end of the month you have no idea where the money went.
 
-Most finance tools are either too complicated (looking at you, spreadsheets) or built for businesses, not for regular people trying to track their日常 spending.
+Most finance tools are either too complicated (looking at you, spreadsheets) or built for businesses, not for regular people trying to track their daily spending.
 
 So I made this.
-
-**Live preview:** [aamar-hishab.netlify.app](https://aamar-hishab.netlify.app/)
 
 ---
 
@@ -29,15 +27,14 @@ So I made this.
 
 ## Tech stack
 
-**Frontend:**
-- Plain HTML, CSS, vanilla JavaScript
-- No framework. No build tools. Just files that work in a browser.
-- Lucide icons for the UI
+Server-rendered PHP. No framework, no build step, no REST API — pages are
+plain PHP that talk to MySQL directly and render HTML.
 
-**Backend:**
-- PHP with Laravel
-- REST API at `/api`
-- MySQL database
+- **PHP** (vanilla, server-rendered pages with shared `include` partials)
+- **MySQL** via PDO
+- **HTML + CSS** with a custom design-token system
+- **Vanilla JavaScript** for small interactions (modals, charts, scroll reveal)
+- **Lucide** icons
 
 ---
 
@@ -45,52 +42,58 @@ So I made this.
 
 ```
 amarhishab/
-├── frontend/
-│   ├── index.html              # Landing page
-│   ├── pages/                  # App pages
-│   │   ├── dashboard.html
-│   │   ├── transactions.html
-│   │   ├── cashbooks.html
-│   │   ├── cashbook-details.html
-│   │   ├── budget.html
-│   │   ├── borrow-lend.html
-│   │   ├── reminders.html
-│   │   ├── reports.html
-│   │   ├── settings.html
-│   │   ├── login.html
-│   │   ├── signup.html
-│   │   ├── forgot-password.html
-│   │   └── otp.html
-│   ├── styles/                 # CSS files
-│   ├── js/                     # JavaScript
-│   │   ├── core/               # API, state, storage, formatter, validator
-│   │   ├── components/         # Reusable UI components
-│   │   ├── modules/            # Feature modules (auth, budget, cashbooks, etc.)
-│   │   └── data/               # Mock data and seed scripts
-│   ├── partials/               # Shared HTML partials (navbar, sidebar)
-│   └── assets/                 # Images, icons, logos
-└── backend/                    # Laravel API
+├── index.php               # Landing page
+├── pages/                  # App pages (server-rendered .php)
+│   ├── dashboard.php
+│   ├── transactions.php
+│   ├── cashbooks.php
+│   ├── cashbook-details.php
+│   ├── budget.php
+│   ├── borrow-lend.php
+│   ├── reminders.php
+│   ├── reports.php
+│   ├── settings.php
+│   ├── login.php
+│   ├── signup.php
+│   ├── forgot-password.php
+│   └── otp.php
+├── partials/               # Shared PHP includes (navbar, sidebar)
+├── config/                 # DB connection + config (config.local.php is gitignored)
+├── includes/               # Helpers (escape, taka format, redirect) + session auth
+├── actions/                # Form handlers (POST endpoints)
+├── styles/                 # CSS (reset, variables, components, per-page)
+├── js/                     # Vanilla JS (modal, charts, landing interactions)
+├── data/                   # Seed / sample JSON
+└── assets/                 # Images, icons, logos
 ```
 
 ---
 
 ## Status
 
-This is a work in progress. The frontend is being built first as a static prototype. Some pages are fully functional (login, signup, dashboard shell) while others still have hardcoded data waiting to be wired up.
-
-The landing page at `frontend/index.html` has the latest design work — hero section, features showcase, cashbook preview, budget section, and a dark-themed about section.
+Work in progress, being rebuilt from a static prototype into a real
+server-rendered PHP app. The landing page (`index.php`) and shared shell
+(navbar / sidebar via PHP includes) are in place; pages are being wired to
+MySQL one feature at a time.
 
 ---
 
 ## Running it
 
-For the frontend, just open any `.html` file in a browser. No server needed for the static pages.
+Built for **XAMPP** (Apache + MySQL).
 
-For the backend API:
-```bash
-cd backend
-php artisan serve
-```
+1. Copy this folder into your XAMPP `htdocs/` (e.g. `htdocs/amarhishab`).
+2. Start Apache + MySQL from the XAMPP control panel.
+3. Import the schema and sample data:
+   ```bash
+   mysql -u root < database/schema.sql
+   mysql -u root < database/seed.sql   # optional demo data
+   ```
+4. Copy `config/config.sample.php` to `config/config.local.php` and set your
+   MySQL credentials (XAMPP default: user `root`, empty password).
+5. Open `http://localhost/amarhishab/` in a browser.
+
+Demo login (after seeding): `demo@amarhishab.test` / `password123`.
 
 ---
 

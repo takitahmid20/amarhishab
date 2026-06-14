@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AmarHishab | Smart Finance For Students &amp; Young Adults</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/pages/index.css">
+
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">
+        <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+        Smart Student Finance
+      </p>
+      <h1 class="hero-title">
+        Manage Your Daily<br>
+        <span class="grad">Expenses</span> Without<br>
+        The Hassle.
+      </h1>
+      <p class="hero-desc">AmarHishab helps students and young adults track everyday spending instantly — bus fare, snacks, tuition fees, bills, and more.</p>
+      <div class="hero-actions">
+        <a href="./pages/signup.php" class="hero-btn hero-btn--primary">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Get Started Free
+        </a>
+        <a href="./pages/login.php" class="hero-btn hero-btn--outline">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Sign In
+        </a>
+      </div>
+      <div class="hero-chips">
+        <span>⚡ 5 sec expense entry</span>
+        <span>📒 Multi cashbook</span>
+        <span>🎯 Budget tracking</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="./assets/hero.png" alt="AmarHishab app preview" class="hero-img" />
+    </div>
+  </section>
+
+  <!-- ═══════ TICKER ═══════ -->
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker">
+      <span class="ticker-item">Multi Cashbook <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Instant Entry <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Budget Tracking <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Reminder Alerts <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Team Ready <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Export Anytime <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Running Balance <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Multi Cashbook <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Instant Entry <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Budget Tracking <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Reminder Alerts <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Team Ready <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Export Anytime <span class="ticker-sep">✦</span></span>
+      <span class="ticker-item">Running Balance <span class="ticker-sep">✦</span></span>
+    </div>
+  </div>
+
+  <!-- ═══════ FEATURES ═══════ -->
+  <section class="section" id="features">
+    <div class="section-head reveal">
+      <p class="eyebrow">Everything You Need</p>
+      <h2 class="section-title">Built for daily cash <span class="grad">tracking.</span></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <span class="feature-icon" style="background:rgba(124,58,237,0.10);color:#7c3aed;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h4"/></svg>
+        </span>
+        <h3>Multi Cashbook</h3>
+        <p>Separate books for personal, tuition, freelance — no mixing.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <span class="feature-icon" style="background:rgba(16,185,129,0.10);color:#047857;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </span>
+        <h3>Instant Entry</h3>
+        <p>Add income or expense in seconds. No long forms.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <span class="feature-icon" style="background:rgba(245,158,11,0.10);color:#a16207;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </span>
+        <h3>Clear Ledger</h3>
+        <p>Running balance, searchable records, export anytime.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <span class="feature-icon" style="background:rgba(139,92,246,0.10);color:#6d28d9;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </span>
+        <h3>Budget Tracking</h3>
+        <p>Set category limits and avoid overspend.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <span class="feature-icon" style="background:rgba(239,68,68,0.10);color:#b91c1c;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </span>
+        <h3>Reminder Alerts</h3>
+        <p>Never miss bill payments or due dates.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <span class="feature-icon" style="background:rgba(14,165,233,0.10);color:#0369a1;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <h3>Team Ready</h3>
+        <p>Share daily status with owners and partners.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ SHOWCASE ═══════ -->
+  <div class="showcase-wrap">
+    <div class="showcase-panel reveal">
+      <div class="showcase-content">
+        <p class="sc-eyebrow">See It In Action</p>
+        <h2 class="sc-title">The same AmarHishab experience — across all your devices.</h2>
+        <p class="sc-desc">Track expenses on your phone. Review reports on your laptop. Your data syncs everywhere.</p>
+        <div class="sc-feats">
+          <div class="sc-feat"><span class="sc-feat-check">✓</span>Real-time sync across all devices</div>
+          <div class="sc-feat"><span class="sc-feat-check">✓</span>Works offline, syncs when connected</div>
+          <div class="sc-feat"><span class="sc-feat-check">✓</span>Export to PDF or spreadsheet</div>
+        </div>
+      </div>
+      <div class="showcase-visual">
+        <img src="./assets/banner.png" alt="AmarHishab on laptop and phone" class="showcase-img" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ CASHBOOKS ═══════ -->
+  <section class="section" id="cashbooks">
+    <div class="section-head reveal">
+      <p class="eyebrow">Organize Your Money Better</p>
+      <h2 class="section-title">Multiple cashbooks, <span class="grad">one clear view.</span></h2>
+    </div>
+    <div class="cashbooks-grid">
+      <div class="cashbook-card reveal">
+        <div class="cashbook-card-top">
+          <span class="cashbook-icon" style="background:rgba(124,58,237,0.10);color:#7c3aed;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4"/><path d="M3 12v4a1 1 0 0 0 1 1h13a2 2 0 0 0 0-4H4"/><path d="M17 8v8"/><circle cx="17" cy="16" r="3"/></svg>
+          </span>
+          <span class="cashbook-tag">Personal</span>
+        </div>
+        <strong class="cashbook-amount">৳ 4,530</strong>
+        <p class="cashbook-desc">Daily spending, snacks, bus fare, and personal tracking.</p>
+        <div class="cashbook-bar-wrap"><div class="cashbook-bar" style="width:0;background:linear-gradient(90deg,#7c3aed,#a855f7)" data-width="65%"></div></div>
+        <div class="cashbook-summary">
+          <span><span class="cashbook-dot" style="background:#16a34a"></span>৳ 2,400 in</span>
+          <span><span class="cashbook-dot" style="background:#dc2626"></span>৳ 870 out</span>
+        </div>
+      </div>
+      <div class="cashbook-card cashbook-card--featured reveal reveal-delay-1">
+        <div class="cashbook-card-top">
+          <span class="cashbook-icon" style="background:rgba(16,185,129,0.10);color:#047857;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </span>
+          <span class="cashbook-tag cashbook-tag--hot">Tuition</span>
+        </div>
+        <strong class="cashbook-amount">৳ 12,000</strong>
+        <p class="cashbook-desc">Semester fees, academic expenses, and education costs.</p>
+        <div class="cashbook-bar-wrap"><div class="cashbook-bar" style="width:0;background:linear-gradient(90deg,#7c3aed,#6d28d9)" data-width="86%"></div></div>
+        <div class="cashbook-summary">
+          <span><span class="cashbook-dot" style="background:#16a34a"></span>৳ 14,000 in</span>
+          <span><span class="cashbook-dot" style="background:#dc2626"></span>৳ 2,000 out</span>
+        </div>
+      </div>
+      <div class="cashbook-card reveal reveal-delay-2">
+        <div class="cashbook-card-top">
+          <span class="cashbook-icon" style="background:rgba(245,158,11,0.10);color:#a16207;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </span>
+          <span class="cashbook-tag">Freelance</span>
+        </div>
+        <strong class="cashbook-amount">৳ 8,200</strong>
+        <p class="cashbook-desc">Project income, client payments, and business costs.</p>
+        <div class="cashbook-bar-wrap"><div class="cashbook-bar" style="width:0;background:linear-gradient(90deg,#f59e0b,#d97706)" data-width="87%"></div></div>
+        <div class="cashbook-summary">
+          <span><span class="cashbook-dot" style="background:#16a34a"></span>৳ 9,500 in</span>
+          <span><span class="cashbook-dot" style="background:#dc2626"></span>৳ 1,300 out</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ BUDGET ═══════ -->
+  <section class="section" id="budget">
+    <div class="section-head reveal">
+      <p class="eyebrow">Control Your Spending</p>
+      <h2 class="section-title">Know where every <span class="grad">taka goes.</span></h2>
+    </div>
+    <div class="budget-layout">
+      <div class="budget-stats-col">
+        <div class="budget-stat reveal">
+          <span class="budget-stat-icon" style="background:rgba(124,58,237,0.10);color:#7c3aed;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <div><div class="budget-stat-label">Total Budget</div><div class="budget-stat-value">৳ 5,300</div></div>
+        </div>
+        <div class="budget-stat reveal reveal-delay-1">
+          <span class="budget-stat-icon" style="background:rgba(239,68,68,0.10);color:#dc2626;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M7 7l10 10"/></svg>
+          </span>
+          <div><div class="budget-stat-label">Spent</div><div class="budget-stat-value budget-stat-value--danger">৳ 4,050</div></div>
+        </div>
+        <div class="budget-stat reveal reveal-delay-2">
+          <span class="budget-stat-icon" style="background:rgba(22,163,74,0.10);color:#16a34a;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </span>
+          <div><div class="budget-stat-label">Remaining</div><div class="budget-stat-value budget-stat-value--success">৳ 1,250</div></div>
+        </div>
+      </div>
+      <div class="budget-cats-card reveal reveal-right">
+        <div class="budget-cats-title">Category Breakdown</div>
+        <div class="bcat">
+          <div class="bcat-head"><span class="bcat-name">🍜 Food &amp; Dining</span><span class="bcat-amt">৳ 1,200 / ৳ 1,500</span></div>
+          <div class="bcat-track"><div class="bcat-fill" style="width:0;background:#7c3aed" data-width="80%"></div></div>
+        </div>
+        <div class="bcat">
+          <div class="bcat-head"><span class="bcat-name">🚌 Transportation</span><span class="bcat-amt">৳ 800 / ৳ 1,000</span></div>
+          <div class="bcat-track"><div class="bcat-fill" style="width:0;background:#3b82f6" data-width="80%"></div></div>
+        </div>
+        <div class="bcat">
+          <div class="bcat-head"><span class="bcat-name">💡 Bills &amp; Utilities</span><span class="bcat-amt">৳ 950 / ৳ 1,000</span></div>
+          <div class="bcat-track"><div class="bcat-fill" style="width:0;background:#dc2626" data-width="95%"></div></div>
+        </div>
+        <div class="bcat">
+          <div class="bcat-head"><span class="bcat-name">🛍 Shopping</span><span class="bcat-amt">৳ 600 / ৳ 800</span></div>
+          <div class="bcat-track"><div class="bcat-fill" style="width:0;background:#f59e0b" data-width="75%"></div></div>
+        </div>
+        <div class="bcat">
+          <div class="bcat-head"><span class="bcat-name">🎬 Entertainment</span><span class="bcat-amt">৳ 300 / ৳ 500</span></div>
+          <div class="bcat-track"><div class="bcat-fill" style="width:0;background:#10b981" data-width="60%"></div></div>
+        </div>
+        <div class="bcat">
+          <div class="bcat-head"><span class="bcat-name">🏥 Healthcare</span><span class="bcat-amt">৳ 200 / ৳ 500</span></div>
+          <div class="bcat-track"><div class="bcat-fill" style="width:0;background:#8b5cf6" data-width="40%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ ABOUT ═══════ -->
+  <section class="about-wrap" id="about">
+    <div class="about-inner reveal">
+      <div class="about-visual">
+        <div class="about-badge">Since 2025</div>
+        <div class="about-numbers">
+          <div class="about-number"><strong>10K+</strong><span>Active users</span></div>
+          <div class="about-number"><strong>50K+</strong><span>Entries tracked</span></div>
+          <div class="about-number"><strong>৳ 2Cr+</strong><span>Money managed</span></div>
+        </div>
+      </div>
+      <div class="about-content">
+        <p class="about-tag">Why we built this</p>
+        <h2 class="about-title">We believe every taka deserves a record.</h2>
+        <p class="about-desc">AmarHishab started with a simple problem — students and young adults in Bangladesh had no easy way to track daily micro-expenses. Bus fare, tea, snacks, rickshaw — these small costs add up fast, but traditional tools are too slow or complicated. So we built AmarHishab: a quick-entry finance tracker that works the way you actually spend.</p>
+        <a href="./pages/signup.php" class="about-btn">
+          Start tracking free
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <img src="./assets/logos/amarhishab-logo.png" alt="AmarHishab" class="footer-logo-img" />
+        <div class="footer-links">
+          <a href="#hero">Home</a>
+          <a href="#features">Features</a>
+          <a href="#cashbooks">Cashbooks</a>
+          <a href="#budget">Budget</a>
+          <a href="#about">About</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Twitter"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a>
+        </div>
+        <p class="footer-copy">© 2026 AmarHishab. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════ BOTTOM FLOATING NAV ═══════ -->
+  <nav class="bottom-nav" aria-label="Page navigation">
+    <a href="#hero"       class="bottom-nav-link active">Home</a>
+    <a href="#features"   class="bottom-nav-link">Features</a>
+    <a href="#cashbooks"  class="bottom-nav-link">Cashbooks</a>
+    <a href="#budget"     class="bottom-nav-link">Budget</a>
+    <a href="#about"      class="bottom-nav-link">About</a>
+    <span class="bottom-nav-divider" aria-hidden="true"></span>
+    <a href="./pages/login.php"  class="bottom-nav-btn">Login</a>
+    <a href="./pages/signup.php" class="bottom-nav-btn bottom-nav-btn--fill">Get Started</a>
+  </nav>
+
+</div>
+<script src="./js/index.js"></script>
+</body>
+</html>
