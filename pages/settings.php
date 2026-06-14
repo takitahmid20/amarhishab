@@ -222,10 +222,11 @@ $error   = flash_get('error');
 									<i data-lucide="triangle-alert" aria-hidden="true"></i>
 								</div>
 								<p class="settings-confirm-text">Are you sure you want to reset all data? This action <strong>cannot be undone</strong>.</p>
-								<div class="modal-footer">
+								<form action="../actions/reset-data.php" method="post" class="modal-footer">
+									<?= csrf_field() ?>
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-sm settings-btn-danger-solid" type="button">Yes, Reset Everything</button>
-								</div>
+									<button class="btn btn-sm settings-btn-danger-solid" type="submit">Yes, Reset Everything</button>
+								</form>
 							</div>
 						</div>
 					</div>
