@@ -211,7 +211,55 @@ $error   = flash_get('error');
 			</main>
 		</div>
 	</div>
+		<div class="overlay modal-overlay" id="edit-budget-category-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-budget-category-title">
+				<div class="modal-head">
+					<h2 class="modal-title" id="edit-budget-category-title">Edit Budget Category</h2>
+					<button class="icon-btn" type="button" data-modal-close aria-label="Close edit budget category modal">
+						<i data-lucide="x" aria-hidden="true"></i>
+					</button>
+				</div>
+				<form class="modal-body" action="../actions/budget-update.php" method="post">
+					<?= csrf_field() ?>
+					<input type="hidden" name="id" data-cat-field="id" value="">
+					<label class="field">
+						<span class="label">Category Name</span>
+						<input class="input" type="text" name="name" data-cat-field="name" required maxlength="60" />
+					</label>
+					<label class="field">
+						<span class="label">Monthly Limit (৳)</span>
+						<input class="input" type="number" name="limit" data-cat-field="limit" min="0" step="0.01" required />
+					</label>
+					<label class="field">
+						<span class="label">Cashbook <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<select class="select" name="cashbook_id" data-cat-field="cashbook">
+							<option value="">No cashbook</option>
+							<?php foreach ($books as $book): ?>
+								<option value="<?= e($book['id']) ?>"><?= e($book['name']) ?></option>
+							<?php endforeach; ?>
+						</select>
+					</label>
+					<div class="modal-footer">
+						<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
+						<button class="btn btn-primary btn-sm" type="submit">Save Changes</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
+	<script>
+		// Fill the edit modal from the clicked category's data-cat-* attributes.
+		document.querySelectorAll('[data-cat-id]').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				var form = document.querySelector('#edit-budget-category-modal form');
+				form.querySelector('[data-cat-field="id"]').value       = btn.getAttribute('data-cat-id');
+				form.querySelector('[data-cat-field="name"]').value     = btn.getAttribute('data-cat-name');
+				form.querySelector('[data-cat-field="limit"]').value    = btn.getAttribute('data-cat-limit');
+				form.querySelector('[data-cat-field="cashbook"]').value = btn.getAttribute('data-cat-cashbook') || '';
+			});
+		});
+	</script>
 </body>
 </html>
