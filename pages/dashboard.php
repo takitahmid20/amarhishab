@@ -28,6 +28,7 @@ foreach ($monthTx as $t) {
 // Recent transactions + budget summary.
 $recent = array_slice(transactions_for_user($userId), 0, 5);
 $summaryCats = array_slice(budget_categories_with_spent($userId), 0, 4);
+$categories  = categories_for_user($userId);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -187,29 +188,38 @@ $summaryCats = array_slice(budget_categories_with_spent($userId), 0, 4);
 					<i data-lucide="x" aria-hidden="true"></i>
 				</button>
 			</div>
-			<form class="modal-body">
+			<form class="modal-body" action="../actions/transaction-create.php" method="post">
+				<?= csrf_field() ?>
+				<input type="hidden" name="direction" value="in">
+				<input type="hidden" name="return_to" value="dashboard">
+				<label class="field">
+					<span class="label">Cashbook</span>
+					<select class="select" name="cashbook_id" required>
+						<?php foreach ($books as $b): ?>
+							<option value="<?= e($b['id']) ?>"><?= e($b['name']) ?></option>
+						<?php endforeach; ?>
+					</select>
+				</label>
 				<label class="field">
 					<span class="label">Amount (৳)</span>
 					<input class="input" type="number" name="amount" min="0" step="0.01" placeholder="Enter amount" required />
 				</label>
 				<label class="field">
-					<span class="label">Category</span>
-					<select class="select" name="category" required>
-						<option value="" selected disabled>Select category</option>
-						<option>Salary</option>
-						<option>Freelance</option>
-						<option>Investment</option>
-						<option>Sales</option>
-						<option>Other Income</option>
+					<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+					<select class="select" name="category_id">
+						<option value="">No category</option>
+						<?php foreach ($categories as $cat): ?>
+							<option value="<?= e($cat['id']) ?>"><?= e($cat['name']) ?></option>
+						<?php endforeach; ?>
 					</select>
 				</label>
 				<label class="field">
 					<span class="label">Date</span>
-					<input class="input" type="date" name="date" required />
+					<input class="input" type="date" name="date" value="<?= date('Y-m-d') ?>" required />
 				</label>
 				<label class="field">
-					<span class="label">Note <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
-					<input class="input" type="text" name="note" placeholder="Add a note..." />
+					<span class="label">Details <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+					<input class="input" type="text" name="details" placeholder="Add a note..." maxlength="255" />
 				</label>
 				<div class="modal-footer">
 					<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
@@ -228,29 +238,38 @@ $summaryCats = array_slice(budget_categories_with_spent($userId), 0, 4);
 					<i data-lucide="x" aria-hidden="true"></i>
 				</button>
 			</div>
-			<form class="modal-body">
+			<form class="modal-body" action="../actions/transaction-create.php" method="post">
+				<?= csrf_field() ?>
+				<input type="hidden" name="direction" value="out">
+				<input type="hidden" name="return_to" value="dashboard">
+				<label class="field">
+					<span class="label">Cashbook</span>
+					<select class="select" name="cashbook_id" required>
+						<?php foreach ($books as $b): ?>
+							<option value="<?= e($b['id']) ?>"><?= e($b['name']) ?></option>
+						<?php endforeach; ?>
+					</select>
+				</label>
 				<label class="field">
 					<span class="label">Amount (৳)</span>
 					<input class="input" type="number" name="amount" min="0" step="0.01" placeholder="Enter amount" required />
 				</label>
 				<label class="field">
-					<span class="label">Category</span>
-					<select class="select" name="category" required>
-						<option value="" selected disabled>Select category</option>
-						<option>Food & Dining</option>
-						<option>Transportation</option>
-						<option>Bills & Utilities</option>
-						<option>Shopping</option>
-						<option>Other Expense</option>
+					<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+					<select class="select" name="category_id">
+						<option value="">No category</option>
+						<?php foreach ($categories as $cat): ?>
+							<option value="<?= e($cat['id']) ?>"><?= e($cat['name']) ?></option>
+						<?php endforeach; ?>
 					</select>
 				</label>
 				<label class="field">
 					<span class="label">Date</span>
-					<input class="input" type="date" name="date" required />
+					<input class="input" type="date" name="date" value="<?= date('Y-m-d') ?>" required />
 				</label>
 				<label class="field">
-					<span class="label">Note <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
-					<input class="input" type="text" name="note" placeholder="Add a note..." />
+					<span class="label">Details <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+					<input class="input" type="text" name="details" placeholder="Add a note..." maxlength="255" />
 				</label>
 				<div class="modal-footer">
 					<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>

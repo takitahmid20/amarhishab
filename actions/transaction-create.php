@@ -24,10 +24,15 @@ $bill       = post('bill');
 $details    = post('details');
 $date       = post('date');
 
-// Where to return: transactions list if requested, else the cashbook ledger.
-$back = post('return_to') === 'transactions'
-	? '../pages/transactions.php'
-	: '../pages/cashbook-details.php?id=' . $cashbookId;
+// Where to return after saving.
+$returnTo = post('return_to');
+if ($returnTo === 'transactions') {
+	$back = '../pages/transactions.php';
+} elseif ($returnTo === 'dashboard') {
+	$back = '../pages/dashboard.php';
+} else {
+	$back = '../pages/cashbook-details.php?id=' . $cashbookId;
+}
 
 // Cashbook must belong to the user.
 if (!find_cashbook($cashbookId, $userId)) {
