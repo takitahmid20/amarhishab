@@ -149,35 +149,27 @@ $summaryCats = array_slice(budget_categories_with_spent($userId), 0, 4);
 						<div class="dashboard-card-header">
 							<h3>Budget Summary</h3>
 						</div>
-							<div class="budget-item">
-									<div class="budget-item-head">
-										<p>Food & Dining</p>
-										<span>৳1200 / ৳1500</span>
-									</div>
-									<div class="budget-track">
-										<span class="budget-fill budget-fill--purple"></span>
-									</div>
-								</div>
-
-								<div class="budget-item">
-									<div class="budget-item-head">
-										<p>Transportation</p>
-										<span>৳800 / ৳1000</span>
-									</div>
-									<div class="budget-track">
-										<span class="budget-fill budget-fill--blue"></span>
-									</div>
-								</div>
-
-								<div class="budget-item">
-									<div class="budget-item-head">
-										<p>Entertainment</p>
-										<span>৳300 / ৳500</span>
-									</div>
-									<div class="budget-track">
-										<span class="budget-fill budget-fill--green"></span>
-									</div>
-								</div>
+							<?php if (empty($summaryCats)): ?>
+									<p class="dashboard-empty">No budget categories yet.</p>
+								<?php else: ?>
+									<?php $fillColors = ['budget-fill--purple', 'budget-fill--blue', 'budget-fill--green', 'budget-fill--purple']; ?>
+									<?php foreach ($summaryCats as $i => $cat): ?>
+										<?php
+											$spent = (float) $cat['spent'];
+											$limit = (float) $cat['limit_amount'];
+											$pct   = $limit > 0 ? (int) round(min(100, $spent / $limit * 100)) : 0;
+										?>
+										<div class="budget-item">
+											<div class="budget-item-head">
+												<p><?= e($cat['name']) ?></p>
+												<span><?= e(taka($spent)) ?> / <?= e(taka($limit)) ?></span>
+											</div>
+											<div class="budget-track">
+												<span class="budget-fill <?= $fillColors[$i % count($fillColors)] ?>" style="width: <?= $pct ?>%"></span>
+											</div>
+										</div>
+									<?php endforeach; ?>
+								<?php endif; ?>
 							</section>
 						</div>
 					</div>
