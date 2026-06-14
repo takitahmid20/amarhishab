@@ -104,57 +104,29 @@ $summaryCats = array_slice(budget_categories_with_spent($userId), 0, 4);
 									<a class="btn btn-secondary btn-sm" href="./transactions.php">View All</a>
 								</div>
 								<div class="dashboard-transaction-list">
-									<div class="transaction-card">
-										<div class="tx-left">
-											<div class="tx-icon" style="background:#fef2f2; color:#b91c1c;">
-												<i data-lucide="shopping-cart" aria-hidden="true"></i>
+									<?php if (empty($recent)): ?>
+										<p class="dashboard-empty">No transactions yet.</p>
+									<?php else: ?>
+										<?php foreach ($recent as $t): ?>
+											<?php
+												$isIn  = $t['direction'] === 'in';
+												$title = $t['details'] ?: ($t['bill'] ?: ($isIn ? 'Cash In' : 'Cash Out'));
+												$meta  = trim(($t['category_name'] ? $t['category_name'] . ' • ' : '') . $t['cashbook_name'] . ' • ' . date('j M, Y', strtotime($t['occurred_at'])));
+											?>
+											<div class="transaction-card">
+												<div class="tx-left">
+													<div class="tx-icon" style="background:<?= $isIn ? '#ecfdf5' : '#fef2f2' ?>; color:<?= $isIn ? '#16a34a' : '#b91c1c' ?>;">
+														<i data-lucide="<?= $isIn ? 'arrow-down-left' : 'arrow-up-right' ?>" aria-hidden="true"></i>
+													</div>
+													<div>
+														<h4 class="tx-title"><?= e($title) ?></h4>
+														<p class="tx-meta"><?= e($meta) ?></p>
+													</div>
+												</div>
+												<div class="tx-amount <?= $isIn ? 'text-success' : 'text-danger' ?>"><?= $isIn ? '+' : '-' ?><?= e(taka($t['amount'])) ?></div>
 											</div>
-											<div>
-												<h4 class="tx-title">Grocery Shopping</h4>
-												<p class="tx-meta">Food & Dining • 2 Mar, 2026</p>
-											</div>
-										</div>
-										<div class="tx-amount text-danger">-৳450</div>
-									</div>
-
-									<div class="transaction-card">
-										<div class="tx-left">
-											<div class="tx-icon" style="background:#ecfdf5; color:#16a34a;">
-												<i data-lucide="dollar-sign" aria-hidden="true"></i>
-											</div>
-											<div>
-												<h4 class="tx-title">Salary Deposit</h4>
-												<p class="tx-meta">Salary • 1 Mar, 2026</p>
-											</div>
-										</div>
-										<div class="tx-amount text-success">+৳5,000</div>
-									</div>
-
-									<div class="transaction-card">
-										<div class="tx-left">
-											<div class="tx-icon" style="background:#fef2f2; color:#b91c1c;">
-												<i data-lucide="plug" aria-hidden="true"></i>
-											</div>
-											<div>
-												<h4 class="tx-title">Electric Bill</h4>
-												<p class="tx-meta">Bills & Utilities • 28 Feb, 2026</p>
-											</div>
-										</div>
-										<div class="tx-amount text-danger">-৳320</div>
-									</div>
-
-									<div class="transaction-card">
-										<div class="tx-left">
-											<div class="tx-icon" style="background:#ecfdf5; color:#16a34a;">
-												<i data-lucide="briefcase" aria-hidden="true"></i>
-											</div>
-											<div>
-												<h4 class="tx-title">Freelance Work</h4>
-												<p class="tx-meta">Freelance • 25 Feb, 2026</p>
-											</div>
-										</div>
-										<div class="tx-amount text-success">+৳1,200</div>
-									</div>
+										<?php endforeach; ?>
+									<?php endif; ?>
 								</div>
 							</section>
 						</div>
