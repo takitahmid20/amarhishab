@@ -155,10 +155,56 @@ $success = flash_get('success');
 					</div>
 
 				</section>
+					<div class="overlay modal-overlay" id="edit-cashbook-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
+						<div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-cashbook-title">
+							<div class="modal-head">
+								<h2 class="modal-title" id="edit-cashbook-title">Edit Cashbook</h2>
+								<button class="icon-btn" type="button" data-modal-close aria-label="Close edit cashbook modal">
+									<i data-lucide="x" aria-hidden="true"></i>
+								</button>
+							</div>
+							<form class="modal-body" action="../actions/cashbook-update.php" method="post">
+								<?= csrf_field() ?>
+								<input type="hidden" name="id" data-edit-field="id" value="">
+								<label class="field">
+									<span class="label">Book Name</span>
+									<input class="input" type="text" name="name" data-edit-field="name" placeholder="Enter book name" required maxlength="60" />
+								</label>
+								<label class="field">
+									<span class="label">Description <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<input class="input" type="text" name="description" data-edit-field="description" placeholder="What is this book for?" maxlength="255" />
+								</label>
+								<label class="field">
+									<span class="label">Status</span>
+									<select class="select" name="status" data-edit-field="status">
+										<option value="live">Live</option>
+										<option value="review">Review</option>
+									</select>
+								</label>
+								<div class="modal-footer">
+									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
+									<button class="btn btn-primary btn-sm" type="submit">Save Changes</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
 			</main>
 		</div>
 	</div>
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
+	<script>
+		// Fill the edit modal from the clicked card's data-edit-* attributes.
+		document.querySelectorAll('[data-edit-id]').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				var form = document.querySelector('#edit-cashbook-modal form');
+				form.querySelector('[data-edit-field="id"]').value          = btn.getAttribute('data-edit-id');
+				form.querySelector('[data-edit-field="name"]').value        = btn.getAttribute('data-edit-name');
+				form.querySelector('[data-edit-field="description"]').value = btn.getAttribute('data-edit-description');
+				form.querySelector('[data-edit-field="status"]').value      = btn.getAttribute('data-edit-status');
+			});
+		});
+	</script>
 </body>
 </html>
