@@ -155,30 +155,18 @@ $books     = cashbooks_for_user($userId);
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>Food & Dining</td>
-										<td>42</td>
-										<td>৳ 9,280</td>
-										<td>32%</td>
-									</tr>
-									<tr>
-										<td>Transportation</td>
-										<td>30</td>
-										<td>৳ 5,964</td>
-										<td>21%</td>
-									</tr>
-									<tr>
-										<td>Bills & Utilities</td>
-										<td>12</td>
-										<td>৳ 5,112</td>
-										<td>18%</td>
-									</tr>
-									<tr>
-										<td>Shopping</td>
-										<td>18</td>
-										<td>৳ 3,976</td>
-										<td>14%</td>
-									</tr>
+									<?php if (empty($breakdown)): ?>
+										<tr><td colspan="4" class="reports-empty-row">No expenses in this period.</td></tr>
+									<?php else: ?>
+										<?php foreach ($breakdown as $row): ?>
+											<tr>
+												<td><?= e($row['name']) ?></td>
+												<td><?= (int) $row['txn_count'] ?></td>
+												<td><?= e(taka($row['spent'])) ?></td>
+												<td><?= (int) $row['share'] ?>%</td>
+											</tr>
+										<?php endforeach; ?>
+									<?php endif; ?>
 								</tbody>
 							</table>
 						</div>
@@ -197,10 +185,9 @@ $books     = cashbooks_for_user($userId);
 									<span class="label">Cashbook Scope</span>
 									<select class="select" name="cashbookScope">
 										<option value="all" selected>All Cashbooks</option>
-										<option value="b4">B4</option>
-										<option value="b3">B3</option>
-										<option value="b2">B2</option>
-										<option value="business-book">Business Book</option>
+										<?php foreach ($books as $b): ?>
+											<option value="<?= e($b['id']) ?>"><?= e($b['name']) ?></option>
+										<?php endforeach; ?>
 									</select>
 								</label>
 
