@@ -96,12 +96,10 @@ $books     = cashbooks_for_user($userId);
 								<p>Last 6 months</p>
 							</header>
 							<div class="chart-area">
-								<div class="bar" style="height: 58%"><span>Nov</span></div>
-								<div class="bar" style="height: 72%"><span>Dec</span></div>
-								<div class="bar" style="height: 61%"><span>Jan</span></div>
-								<div class="bar" style="height: 84%"><span>Feb</span></div>
-								<div class="bar" style="height: 76%"><span>Mar</span></div>
-								<div class="bar" style="height: 68%"><span>Apr</span></div>
+								<?php foreach ($trend as $m): ?>
+									<?php $h = (int) round($m['total'] / $maxTrend * 100); ?>
+									<div class="bar" style="height: <?= max($h, 2) ?>%" title="<?= e(taka($m['total'])) ?>"><span><?= e($m['label']) ?></span></div>
+								<?php endforeach; ?>
 							</div>
 						</article>
 						<article class="chart-card">
