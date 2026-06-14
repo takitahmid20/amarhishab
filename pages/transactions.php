@@ -244,7 +244,74 @@ $error     = flash_get('error');
 			</div>
 		</div>
 
+		<div class="overlay modal-overlay" id="tx-edit-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="tx-edit-title">
+				<div class="modal-head">
+					<h2 class="modal-title" id="tx-edit-title">Edit Transaction</h2>
+					<button class="icon-btn" type="button" data-modal-close aria-label="Close edit transaction modal">
+						<i data-lucide="x" aria-hidden="true"></i>
+					</button>
+				</div>
+				<form class="modal-body" action="../actions/transaction-update.php" method="post">
+					<?= csrf_field() ?>
+					<input type="hidden" name="id" data-tx-field="id" value="">
+					<label class="field">
+						<span class="label">Amount (৳)</span>
+						<input class="input" type="number" name="amount" data-tx-field="amount" min="0" step="0.01" required />
+					</label>
+					<label class="field">
+						<span class="label">Date</span>
+						<input class="input" type="date" name="date" data-tx-field="date" required />
+					</label>
+					<label class="field">
+						<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<select class="select" name="category_id" data-tx-field="category">
+							<option value="">No category</option>
+							<?php foreach ($categories as $cat): ?>
+								<option value="<?= e($cat['id']) ?>"><?= e($cat['name']) ?></option>
+							<?php endforeach; ?>
+						</select>
+					</label>
+					<label class="field">
+						<span class="label">Payment Mode</span>
+						<select class="select" name="mode" data-tx-field="mode">
+							<option value="cash">Cash</option>
+							<option value="bank">Bank</option>
+							<option value="mobile">Mobile</option>
+						</select>
+					</label>
+					<label class="field">
+						<span class="label">Bill <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<input class="input" type="text" name="bill" data-tx-field="bill" maxlength="120" />
+					</label>
+					<label class="field">
+						<span class="label">Details <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+						<input class="input" type="text" name="details" data-tx-field="details" maxlength="255" />
+					</label>
+					<div class="modal-footer">
+						<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
+						<button class="btn btn-primary btn-sm" type="submit">Save Changes</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
 		<script src="../js/components/modal.js"></script>
 		<script src="../js/app.js"></script>
+		<script>
+			// Fill the edit modal from the clicked row's data-tx-* attributes.
+			document.querySelectorAll('[data-tx-id]').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					var form = document.querySelector('#tx-edit-modal form');
+					form.querySelector('[data-tx-field="id"]').value       = btn.getAttribute('data-tx-id');
+					form.querySelector('[data-tx-field="amount"]').value   = btn.getAttribute('data-tx-amount');
+					form.querySelector('[data-tx-field="date"]').value     = btn.getAttribute('data-tx-date');
+					form.querySelector('[data-tx-field="category"]').value = btn.getAttribute('data-tx-category') || '';
+					form.querySelector('[data-tx-field="mode"]').value     = btn.getAttribute('data-tx-mode');
+					form.querySelector('[data-tx-field="bill"]').value     = btn.getAttribute('data-tx-bill') || '';
+					form.querySelector('[data-tx-field="details"]').value  = btn.getAttribute('data-tx-details') || '';
+				});
+			});
+		</script>
 </body>
 </html>
