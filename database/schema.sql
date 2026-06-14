@@ -6,13 +6,16 @@ CREATE DATABASE IF NOT EXISTS amarhishab
 	CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE amarhishab;
 
--- Drop in FK-safe order so the script is re-runnable during development.
+-- Drop existing tables so the script is re-runnable during development.
+-- FK checks are disabled here so drop order / stray legacy tables can't block it.
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS reminders;
 DROP TABLE IF EXISTS borrow_lend;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS budget_categories;
 DROP TABLE IF EXISTS cashbooks;
 DROP TABLE IF EXISTS users;
+SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE users (
 	id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
