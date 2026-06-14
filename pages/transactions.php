@@ -1,6 +1,15 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/cashbooks.php';
+require_once __DIR__ . '/../includes/transactions.php';
 require_login();
+
+$userId    = current_user()['id'];
+$books     = cashbooks_for_user($userId);
+$categories = categories_for_user($userId);
+$txns      = transactions_for_user($userId);
+$success   = flash_get('success');
+$error     = flash_get('error');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,107 +79,66 @@ require_login();
 						</div>
 					</div>
 
+					<?php if ($success !== ''): ?>
+						<p class="auth-success" role="status"><?= e($success) ?></p>
+					<?php endif; ?>
+					<?php if ($error !== ''): ?>
+						<p class="auth-error" role="alert"><?= e($error) ?></p>
+					<?php endif; ?>
+
 					<!-- Transaction List -->
 					<div class="tx-board surface">
 						<div class="tx-board-head">
 							<h2>All Transactions</h2>
-							<span class="tx-count" data-tx-count>4 records</span>
+							<span class="tx-count" data-tx-count><?= count($txns) ?> records</span>
 						</div>
 
 						<div class="tx-list" data-tx-list>
-
-							<article class="tx-item">
-								<div class="tx-item-left">
-									<div class="tx-icon tx-icon--pink">
-										<i data-lucide="shopping-cart" aria-hidden="true"></i>
-									</div>
-									<div class="tx-item-info">
-										<h4 class="tx-item-title">Grocery Shopping</h4>
-										<p class="tx-item-meta">Food & Dining · 2 Mar, 2026</p>
-									</div>
-								</div>
-								<div class="tx-item-right">
-									<span class="tx-amount tx-amount--negative">-৳ 450</span>
-									<div class="tx-item-actions">
-										<button class="icon-btn" title="Edit">
-											<i data-lucide="pencil" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn icon-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="tx-item">
-								<div class="tx-item-left">
-									<div class="tx-icon tx-icon--mint">
-										<i data-lucide="dollar-sign" aria-hidden="true"></i>
-									</div>
-									<div class="tx-item-info">
-										<h4 class="tx-item-title">Salary Deposit</h4>
-										<p class="tx-item-meta">Salary · 1 Mar, 2026</p>
-									</div>
-								</div>
-								<div class="tx-item-right">
-									<span class="tx-amount tx-amount--positive">+৳ 5,000</span>
-									<div class="tx-item-actions">
-										<button class="icon-btn" title="Edit">
-											<i data-lucide="pencil" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn icon-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="tx-item">
-								<div class="tx-item-left">
-									<div class="tx-icon tx-icon--cream">
-										<i data-lucide="plug" aria-hidden="true"></i>
-									</div>
-									<div class="tx-item-info">
-										<h4 class="tx-item-title">Electric Bill</h4>
-										<p class="tx-item-meta">Bills & Utilities · 28 Feb, 2026</p>
-									</div>
-								</div>
-								<div class="tx-item-right">
-									<span class="tx-amount tx-amount--negative">-৳ 320</span>
-									<div class="tx-item-actions">
-										<button class="icon-btn" title="Edit">
-											<i data-lucide="pencil" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn icon-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="tx-item">
-								<div class="tx-item-left">
-									<div class="tx-icon tx-icon--mint-soft">
-										<i data-lucide="briefcase" aria-hidden="true"></i>
-									</div>
-									<div class="tx-item-info">
-										<h4 class="tx-item-title">Freelance Work</h4>
-										<p class="tx-item-meta">Freelance · 25 Feb, 2026</p>
-									</div>
-								</div>
-								<div class="tx-item-right">
-									<span class="tx-amount tx-amount--positive">+৳ 1,200</span>
-									<div class="tx-item-actions">
-										<button class="icon-btn" title="Edit">
-											<i data-lucide="pencil" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn icon-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
+							<?php if (empty($txns)): ?>
+								<p class="tx-empty">No transactions yet. Add one to get started.</p>
+							<?php else: ?>
+								<?php foreach ($txns as $tx): ?>
+									<?php
+										$isIn  = $tx['direction'] === 'in';
+										$label = $tx['details'] ?: ($tx['bill'] ?: ($isIn ? 'Cash In' : 'Cash Out'));
+										$meta  = trim(($tx['category_name'] ?? '') . ($tx['category_name'] ? ' · ' : '') . $tx['cashbook_name'] . ' · ' . date('j M, Y', strtotime($tx['occurred_at'])));
+									?>
+									<article class="tx-item">
+										<div class="tx-item-left">
+											<div class="tx-icon <?= $isIn ? 'tx-icon--mint' : 'tx-icon--pink' ?>">
+												<i data-lucide="<?= $isIn ? 'arrow-down-left' : 'arrow-up-right' ?>" aria-hidden="true"></i>
+											</div>
+											<div class="tx-item-info">
+												<h4 class="tx-item-title"><?= e($label) ?></h4>
+												<p class="tx-item-meta"><?= e($meta) ?></p>
+											</div>
+										</div>
+										<div class="tx-item-right">
+											<span class="tx-amount <?= $isIn ? 'tx-amount--positive' : 'tx-amount--negative' ?>"><?= $isIn ? '+' : '-' ?><?= e(taka($tx['amount'])) ?></span>
+											<div class="tx-item-actions">
+												<button class="icon-btn" type="button" title="Edit"
+													data-modal-target="#tx-edit-modal"
+													data-tx-id="<?= e($tx['id']) ?>"
+													data-tx-amount="<?= e($tx['amount']) ?>"
+													data-tx-mode="<?= e($tx['mode']) ?>"
+													data-tx-category="<?= e($tx['category_id'] ?? '') ?>"
+													data-tx-bill="<?= e($tx['bill'] ?? '') ?>"
+													data-tx-details="<?= e($tx['details'] ?? '') ?>"
+													data-tx-date="<?= e(date('Y-m-d', strtotime($tx['occurred_at']))) ?>">
+													<i data-lucide="pencil" aria-hidden="true"></i>
+												</button>
+												<form action="../actions/transaction-delete.php" method="post" onsubmit="return confirm('Delete this transaction?');" style="display:inline">
+													<?= csrf_field() ?>
+													<input type="hidden" name="id" value="<?= e($tx['id']) ?>">
+													<button class="icon-btn icon-btn--danger" type="submit" title="Delete">
+														<i data-lucide="trash-2" aria-hidden="true"></i>
+													</button>
+												</form>
+											</div>
+										</div>
+									</article>
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</div>
 					</div>
 
@@ -250,7 +218,6 @@ require_login();
 		</div>
 
 		<script src="../js/components/modal.js"></script>
-		<script src="../js/modules/transactions/transactions.events.js"></script>
 		<script src="../js/app.js"></script>
 </body>
 </html>
