@@ -3,7 +3,8 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 if (is_logged_in()) {
 	redirect('./dashboard.php');
 }
-$error = flash_get('error');
+$error   = flash_get('error');
+$success = flash_get('success');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +25,9 @@ $error = flash_get('error');
 				<p class="auth-subtitle">Sign in to access your personal finance dashboard</p>
 			</header>
 
+			<?php if ($success !== ''): ?>
+				<p class="auth-success" role="status"><?= e($success) ?></p>
+			<?php endif; ?>
 			<?php if ($error !== ''): ?>
 				<p class="auth-error" role="alert"><?= e($error) ?></p>
 			<?php endif; ?>
