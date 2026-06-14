@@ -136,10 +136,15 @@ $success = flash_get('success');
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<form class="modal-body" data-cashbook-create-form>
+							<form class="modal-body" action="../actions/cashbook-create.php" method="post">
+								<?= csrf_field() ?>
 								<label class="field">
 									<span class="label">Book Name</span>
-									<input class="input" type="text" name="bookName" placeholder="Enter book name" required maxlength="60" autofocus />
+									<input class="input" type="text" name="name" placeholder="Enter book name" required maxlength="60" autofocus />
+								</label>
+								<label class="field">
+									<span class="label">Description <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<input class="input" type="text" name="description" placeholder="What is this book for?" maxlength="255" />
 								</label>
 								<div class="modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
