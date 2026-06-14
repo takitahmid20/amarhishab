@@ -1,6 +1,17 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/borrow_lend.php';
 require_login();
+
+$userId = current_user()['id'];
+$allowed = ['all', 'borrow', 'lend', 'pending'];
+$filterParam = $_GET['filter'] ?? 'all';
+$filter  = in_array($filterParam, $allowed, true) ? $filterParam : 'all';
+$records = borrow_lend_records($userId, $filter);
+$totals  = borrow_lend_totals($userId);
+
+$success = flash_get('success');
+$error   = flash_get('error');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,8 +50,8 @@ require_login();
 							</div>
 							<div class="bl-stat-body">
 								<p class="bl-stat-label">Total Borrowed</p>
-								<h2 class="bl-stat-amount bl-stat-amount--borrowed">৳ 500</h2>
-								<p class="bl-stat-sub">Money you owe · 2 pending</p>
+								<h2 class="bl-stat-amount bl-stat-amount--borrowed"><?= e(taka($totals['borrowed'])) ?></h2>
+								<p class="bl-stat-sub">Money you owe (unsettled)</p>
 							</div>
 						</div>
 						<div class="bl-stat-card surface">
@@ -49,8 +60,8 @@ require_login();
 							</div>
 							<div class="bl-stat-body">
 								<p class="bl-stat-label">Total Lent</p>
-								<h2 class="bl-stat-amount bl-stat-amount--lent">৳ 500</h2>
-								<p class="bl-stat-sub">Money owed to you · 1 cleared</p>
+								<h2 class="bl-stat-amount bl-stat-amount--lent"><?= e(taka($totals['lent'])) ?></h2>
+								<p class="bl-stat-sub">Money owed to you (unsettled)</p>
 							</div>
 						</div>
 					</div>
@@ -74,100 +85,79 @@ require_login();
 						</div>
 
 						<div class="bl-tabs">
-							<button class="bl-tab active" type="button" data-bl-filter="all">
-								All <span class="bl-tab-count">3</span>
-							</button>
-							<button class="bl-tab" type="button" data-bl-filter="borrowed">
-								Borrowed <span class="bl-tab-count">2</span>
-							</button>
-							<button class="bl-tab" type="button" data-bl-filter="lent">
-								Lent <span class="bl-tab-count">1</span>
-							</button>
-							<button class="bl-tab" type="button" data-bl-filter="pending">
-								Pending <span class="bl-tab-count">2</span>
-							</button>
+							<a class="bl-tab <?= $filter === 'all' ? 'active' : '' ?>" href="?filter=all">
+								All <span class="bl-tab-count"><?= (int) $totals['borrow_count'] + (int) $totals['lend_count'] ?></span>
+							</a>
+							<a class="bl-tab <?= $filter === 'borrow' ? 'active' : '' ?>" href="?filter=borrow">
+								Borrowed <span class="bl-tab-count"><?= (int) $totals['borrow_count'] ?></span>
+							</a>
+							<a class="bl-tab <?= $filter === 'lend' ? 'active' : '' ?>" href="?filter=lend">
+								Lent <span class="bl-tab-count"><?= (int) $totals['lend_count'] ?></span>
+							</a>
+							<a class="bl-tab <?= $filter === 'pending' ? 'active' : '' ?>" href="?filter=pending">
+								Pending <span class="bl-tab-count"><?= (int) $totals['pending_count'] ?></span>
+							</a>
 						</div>
 
+						<?php if ($success !== ''): ?>
+							<p class="auth-success" role="status"><?= e($success) ?></p>
+						<?php endif; ?>
+						<?php if ($error !== ''): ?>
+							<p class="auth-error" role="alert"><?= e($error) ?></p>
+						<?php endif; ?>
+
 						<div class="bl-list">
-
-							<div class="bl-list-item" data-type="borrowed" data-status="pending">
-								<div class="bl-item-left">
-									<div class="bl-avatar">K</div>
-									<div class="bl-item-info">
-										<h4 class="bl-item-name">Karim</h4>
-										<div class="bl-item-meta">
-											<span class="bl-item-type bl-item-type--borrowed">Borrowed</span>
-											<span class="bl-meta-dot">·</span>
-											<span class="bl-item-date">Apr 1, 2026</span>
-											<span class="bl-meta-dot">·</span>
-											<span class="badge badge-warning">Pending</span>
+							<?php if (empty($records)): ?>
+								<p class="bl-empty">No records here yet. Add one to start tracking.</p>
+							<?php else: ?>
+								<?php foreach ($records as $rec): ?>
+									<?php
+										$isBorrow = $rec['type'] === 'borrow';
+										$settled  = (int) $rec['is_settled'] === 1;
+										$initial  = strtoupper(mb_substr($rec['person'], 0, 1));
+									?>
+									<div class="bl-list-item" data-type="<?= $isBorrow ? 'borrowed' : 'lent' ?>" data-status="<?= $settled ? 'paid' : 'pending' ?>">
+										<div class="bl-item-left">
+											<div class="bl-avatar"><?= e($initial) ?></div>
+											<div class="bl-item-info">
+												<h4 class="bl-item-name"><?= e($rec['person']) ?></h4>
+												<div class="bl-item-meta">
+													<span class="bl-item-type bl-item-type--<?= $isBorrow ? 'borrowed' : 'lent' ?>"><?= $isBorrow ? 'Borrowed' : 'Lent' ?></span>
+													<span class="bl-meta-dot">·</span>
+													<span class="bl-item-date"><?= $rec['due_date'] ? e(date('M j, Y', strtotime($rec['due_date']))) : 'No due date' ?></span>
+													<span class="bl-meta-dot">·</span>
+													<span class="badge <?= $settled ? 'badge-success' : 'badge-warning' ?>"><?= $settled ? 'Settled' : 'Pending' ?></span>
+													<?php if ($rec['note']): ?>
+														<span class="bl-meta-dot">·</span>
+														<span class="bl-item-note"><?= e($rec['note']) ?></span>
+													<?php endif; ?>
+												</div>
+											</div>
+										</div>
+										<div class="bl-item-right">
+											<span class="bl-item-amount bl-item-amount--<?= $isBorrow ? 'borrowed' : 'lent' ?>"><?= e(taka($rec['amount'])) ?></span>
+											<div class="bl-item-actions">
+												<?php if (!$settled): ?>
+													<form action="../actions/borrow-lend-settle.php" method="post" style="display:inline">
+														<?= csrf_field() ?>
+														<input type="hidden" name="id" value="<?= e($rec['id']) ?>">
+														<button class="icon-btn" type="submit" title="Mark as settled" aria-label="Mark <?= e($rec['person']) ?> settled">
+															<i data-lucide="check" aria-hidden="true"></i>
+														</button>
+													</form>
+												<?php endif; ?>
+												<form action="../actions/borrow-lend-delete.php" method="post" onsubmit="return confirm('Delete this record?');" style="display:inline">
+													<?= csrf_field() ?>
+													<input type="hidden" name="id" value="<?= e($rec['id']) ?>">
+													<button class="icon-btn icon-btn--danger" type="submit" aria-label="Delete <?= e($rec['person']) ?>'s record">
+														<i data-lucide="trash-2" aria-hidden="true"></i>
+													</button>
+												</form>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="bl-item-right">
-									<span class="bl-item-amount bl-item-amount--borrowed">৳ 300</span>
-									<div class="bl-item-actions">
-										<button class="icon-btn" type="button" title="Mark as paid" aria-label="Mark Karim as paid">
-											<i data-lucide="check" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn icon-btn--danger" type="button" aria-label="Delete Karim's record">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</div>
-
-							<div class="bl-list-item" data-type="lent" data-status="paid">
-								<div class="bl-item-left">
-									<div class="bl-avatar">S</div>
-									<div class="bl-item-info">
-										<h4 class="bl-item-name">Sarah</h4>
-										<div class="bl-item-meta">
-											<span class="bl-item-type bl-item-type--lent">Lent</span>
-											<span class="bl-meta-dot">·</span>
-											<span class="bl-item-date">Mar 28, 2026</span>
-											<span class="bl-meta-dot">·</span>
-											<span class="badge badge-success">Paid</span>
-										</div>
-									</div>
-								</div>
-								<div class="bl-item-right">
-									<span class="bl-item-amount bl-item-amount--lent">৳ 500</span>
-									<div class="bl-item-actions">
-										<button class="icon-btn icon-btn--danger" type="button" aria-label="Delete Sarah's record">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</div>
-
-							<div class="bl-list-item" data-type="borrowed" data-status="pending">
-								<div class="bl-item-left">
-									<div class="bl-avatar">A</div>
-									<div class="bl-item-info">
-										<h4 class="bl-item-name">Ahmed</h4>
-										<div class="bl-item-meta">
-											<span class="bl-item-type bl-item-type--borrowed">Borrowed</span>
-											<span class="bl-meta-dot">·</span>
-											<span class="bl-item-date">Mar 25, 2026</span>
-											<span class="bl-meta-dot">·</span>
-											<span class="badge badge-warning">Pending</span>
-										</div>
-									</div>
-								</div>
-								<div class="bl-item-right">
-									<span class="bl-item-amount bl-item-amount--borrowed">৳ 200</span>
-									<div class="bl-item-actions">
-										<button class="icon-btn" type="button" aria-label="Mark Ahmed as paid">
-											<i data-lucide="check" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn icon-btn--danger" type="button" aria-label="Delete Ahmed's record">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</div>
-
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</div>
 					</div>
 
