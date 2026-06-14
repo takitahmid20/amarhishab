@@ -219,6 +219,5 @@
 
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
-	<script src="../js/modules/borrow-lend/borrowLend.events.js"></script>
 </body>
 </html>
