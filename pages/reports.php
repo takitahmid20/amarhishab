@@ -1,6 +1,20 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/reports.php';
+require_once __DIR__ . '/../includes/cashbooks.php';
 require_login();
+
+$userId = current_user()['id'];
+$periods = ['this_month' => 'This Month', 'last_month' => 'Last Month', 'last_3_months' => 'Last 3 Months', 'this_year' => 'This Year'];
+$period  = array_key_exists($_GET['period'] ?? '', $periods) ? $_GET['period'] : 'this_month';
+[$from, $to, $periodLabel] = report_period($period);
+
+$totals    = report_totals($userId, $from, $to);
+$trend     = monthly_expense_trend($userId, 6);
+$breakdown = category_breakdown($userId, $from, $to);
+$maxTrend  = max(array_map(fn($m) => $m['total'], $trend)) ?: 1;
+$palette   = ['#8257e5', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+$books     = cashbooks_for_user($userId);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,14 +41,13 @@ require_login();
 							<p>A minimal snapshot of spending, trends, and category performance.</p>
 						</div>
 						<div class="reports-hero-actions">
-							<label class="reports-filter-wrap" for="reports-period-filter">
-								<select id="reports-period-filter" class="select reports-period-filter">
-									<option>This Month</option>
-									<option>Last Month</option>
-									<option>Last 3 Months</option>
-									<option>This Year</option>
+							<form class="reports-filter-wrap" method="get" id="reports-period-form">
+								<select id="reports-period-filter" class="select reports-period-filter" name="period" onchange="this.form.submit()">
+									<?php foreach ($periods as $key => $label): ?>
+										<option value="<?= e($key) ?>" <?= $period === $key ? 'selected' : '' ?>><?= e($label) ?></option>
+									<?php endforeach; ?>
 								</select>
-							</label>
+							</form>
 							<button
 								class="btn btn-primary btn-sm reports-download-btn"
 								type="button"
@@ -55,24 +68,24 @@ require_login();
 								<span class="stat-title">Total Income</span>
 								<i data-lucide="trending-up" aria-hidden="true"></i>
 							</div>
-							<div class="stat-value">৳ 42,500</div>
-							<div class="stat-sub">All sources</div>
+							<div class="stat-value"><?= e(taka($totals['income'])) ?></div>
+							<div class="stat-sub"><?= e($periodLabel) ?></div>
 						</article>
 						<article class="stat-card">
 							<div class="stat-top">
 								<span class="stat-title">Total Expense</span>
 								<i data-lucide="trending-down" aria-hidden="true"></i>
 							</div>
-							<div class="stat-value" style="color:var(--color-danger)">৳ 28,400</div>
-							<div class="stat-sub">All categories</div>
+							<div class="stat-value" style="color:var(--color-danger)"><?= e(taka($totals['expense'])) ?></div>
+							<div class="stat-sub"><?= e($periodLabel) ?></div>
 						</article>
 						<article class="stat-card">
 							<div class="stat-top">
 								<span class="stat-title">Net Savings</span>
 								<i data-lucide="piggy-bank" aria-hidden="true"></i>
 							</div>
-							<div class="stat-value" style="color:var(--color-success)">৳ 14,100</div>
-							<div class="stat-sub">This period</div>
+							<div class="stat-value" style="color:<?= $totals['net'] >= 0 ? 'var(--color-success)' : 'var(--color-danger)' ?>"><?= e(taka($totals['net'])) ?></div>
+							<div class="stat-sub"><?= e($periodLabel) ?></div>
 						</article>
 					</section>
 
