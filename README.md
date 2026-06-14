@@ -97,3 +97,5 @@ php artisan serve
 ## Why the name?
 
 "Amar Hishab" means "My Account" in Bangla. Simple, direct, tells you exactly what it does.
+
+<!-- trial commit by takitahmid -->
