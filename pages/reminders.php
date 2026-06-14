@@ -237,29 +237,39 @@ $error   = flash_get('error');
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<form class="modal-body" data-add-reminder-form>
+							<form class="modal-body" action="../actions/reminder-create.php" method="post">
+								<?= csrf_field() ?>
 								<label class="field">
 									<span class="label">Title</span>
 									<input class="input" type="text" name="title" placeholder="e.g. Electricity Bill" required maxlength="80" autofocus />
 								</label>
 								<label class="field">
-									<span class="label">Amount (৳)</span>
-									<input class="input" type="number" name="amount" placeholder="0" min="0" required />
+									<span class="label">Amount (৳) <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<input class="input" type="number" name="amount" placeholder="0" min="0" step="0.01" />
 								</label>
 								<label class="field">
 									<span class="label">Due Date</span>
-									<input class="input" type="date" name="dueDate" required />
+									<input class="input" type="date" name="dueDate" value="<?= date('Y-m-d') ?>" required />
 								</label>
 								<label class="field">
-									<span class="label">Category</span>
-									<select class="select" name="category" required>
-										<option value="" disabled selected>Select category</option>
-										<option value="electricity">Electricity</option>
-										<option value="internet">Internet</option>
-										<option value="rent">Rent</option>
-										<option value="water">Water</option>
-										<option value="gas">Gas</option>
-										<option value="other">Other</option>
+									<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<select class="select" name="category">
+										<option value="">No category</option>
+										<option value="Electricity">Electricity</option>
+										<option value="Internet">Internet</option>
+										<option value="Rent">Rent</option>
+										<option value="Water">Water</option>
+										<option value="Gas">Gas</option>
+										<option value="Education">Education</option>
+										<option value="Other">Other</option>
+									</select>
+								</label>
+								<label class="field">
+									<span class="label">Repeat</span>
+									<select class="select" name="repeat">
+										<option value="none">Does not repeat</option>
+										<option value="weekly">Weekly</option>
+										<option value="monthly">Monthly</option>
 									</select>
 								</label>
 								<div class="modal-footer">
