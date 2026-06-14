@@ -1,11 +1,15 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/cashbooks.php';
+require_once __DIR__ . '/../includes/transactions.php';
 require_login();
 
 $userId   = current_user()['id'];
 $id       = (int) ($_GET['id'] ?? 0);
 $cashbook = $id > 0 ? find_cashbook($id, $userId) : null;
+$categories = categories_for_user($userId);
+$flashSuccess = flash_get('success');
+$flashError   = flash_get('error');
 
 if (!$cashbook) {
 	flash_set('error', 'Cashbook not found.');
@@ -75,6 +79,13 @@ $entryCount = count($entries);
 							</button>
 						</div>
 					</header>
+
+					<?php if ($flashSuccess !== ''): ?>
+						<p class="auth-success" role="status"><?= e($flashSuccess) ?></p>
+					<?php endif; ?>
+					<?php if ($flashError !== ''): ?>
+						<p class="auth-error" role="alert"><?= e($flashError) ?></p>
+					<?php endif; ?>
 
 					<section class="cashbook-filter-row surface" aria-label="Entry filters">
 						<label><select class="select"><option>Duration: All Time</option></select></label>
@@ -215,32 +226,42 @@ $entryCount = count($entries);
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<form class="modal-body cashbook-entry-form">
+							<form class="modal-body cashbook-entry-form" action="../actions/transaction-create.php" method="post">
+								<?= csrf_field() ?>
+								<input type="hidden" name="cashbook_id" value="<?= e($id) ?>">
+								<input type="hidden" name="direction" value="in">
 								<label class="field" for="cash-in-amount">
 									<span class="label">Money Value</span>
 									<input class="input" id="cash-in-amount" name="amount" type="number" min="0" step="0.01" placeholder="Enter amount" required />
 								</label>
 								<label class="field" for="cash-in-date">
 									<span class="label">Date</span>
-									<input class="input" id="cash-in-date" name="date" type="date" required />
+									<input class="input" id="cash-in-date" name="date" type="date" value="<?= date('Y-m-d') ?>" required />
 								</label>
 								<label class="field" for="cash-in-category">
-									<span class="label">Category</span>
-									<select class="select" id="cash-in-category" name="category" required>
-										<option value="" selected>Select category</option>
-										<option>Sales</option>
-										<option>Service</option>
-										<option>Investment</option>
-										<option>Other Income</option>
+									<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<select class="select" id="cash-in-category" name="category_id">
+										<option value="">No category</option>
+										<?php foreach ($categories as $cat): ?>
+											<option value="<?= e($cat['id']) ?>"><?= e($cat['name']) ?></option>
+										<?php endforeach; ?>
 									</select>
 								</label>
-								<label class="field" for="cash-in-attachment">
-									<span class="label">File Attach</span>
-									<input class="input-file" id="cash-in-attachment" name="attachment" type="file" />
+								<label class="field" for="cash-in-mode">
+									<span class="label">Payment Mode</span>
+									<select class="select" id="cash-in-mode" name="mode">
+										<option value="cash">Cash</option>
+										<option value="bank">Bank</option>
+										<option value="mobile">Mobile</option>
+									</select>
+								</label>
+								<label class="field" for="cash-in-details">
+									<span class="label">Details <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<input class="input" id="cash-in-details" name="details" type="text" placeholder="What was this for?" maxlength="255" />
 								</label>
 								<div class="modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-primary btn-sm" type="submit" data-modal-close>Save Cash In</button>
+									<button class="btn btn-primary btn-sm" type="submit">Save Cash In</button>
 								</div>
 							</form>
 						</div>
@@ -254,32 +275,46 @@ $entryCount = count($entries);
 									<i data-lucide="x" aria-hidden="true"></i>
 								</button>
 							</div>
-							<form class="modal-body cashbook-entry-form">
+							<form class="modal-body cashbook-entry-form" action="../actions/transaction-create.php" method="post">
+								<?= csrf_field() ?>
+								<input type="hidden" name="cashbook_id" value="<?= e($id) ?>">
+								<input type="hidden" name="direction" value="out">
 								<label class="field" for="cash-out-amount">
 									<span class="label">Money Value</span>
 									<input class="input" id="cash-out-amount" name="amount" type="number" min="0" step="0.01" placeholder="Enter amount" required />
 								</label>
 								<label class="field" for="cash-out-date">
 									<span class="label">Date</span>
-									<input class="input" id="cash-out-date" name="date" type="date" required />
+									<input class="input" id="cash-out-date" name="date" type="date" value="<?= date('Y-m-d') ?>" required />
 								</label>
 								<label class="field" for="cash-out-category">
-									<span class="label">Category</span>
-									<select class="select" id="cash-out-category" name="category" required>
-										<option value="" selected>Select category</option>
-										<option>Purchase</option>
-										<option>Salary</option>
-										<option>Bills</option>
-										<option>Other Expense</option>
+									<span class="label">Category <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<select class="select" id="cash-out-category" name="category_id">
+										<option value="">No category</option>
+										<?php foreach ($categories as $cat): ?>
+											<option value="<?= e($cat['id']) ?>"><?= e($cat['name']) ?></option>
+										<?php endforeach; ?>
 									</select>
 								</label>
-								<label class="field" for="cash-out-attachment">
-									<span class="label">File Attach</span>
-									<input class="input-file" id="cash-out-attachment" name="attachment" type="file" />
+								<label class="field" for="cash-out-mode">
+									<span class="label">Payment Mode</span>
+									<select class="select" id="cash-out-mode" name="mode">
+										<option value="cash">Cash</option>
+										<option value="bank">Bank</option>
+										<option value="mobile">Mobile</option>
+									</select>
+								</label>
+								<label class="field" for="cash-out-bill">
+									<span class="label">Bill <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<input class="input" id="cash-out-bill" name="bill" type="text" placeholder="e.g. Internet, Rent" maxlength="120" />
+								</label>
+								<label class="field" for="cash-out-details">
+									<span class="label">Details <span style="font-weight:400;color:var(--color-text-muted)">(optional)</span></span>
+									<input class="input" id="cash-out-details" name="details" type="text" placeholder="What was this for?" maxlength="255" />
 								</label>
 								<div class="modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-primary btn-sm" type="submit" data-modal-close>Save Cash Out</button>
+									<button class="btn btn-primary btn-sm" type="submit">Save Cash Out</button>
 								</div>
 							</form>
 						</div>
