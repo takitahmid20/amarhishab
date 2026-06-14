@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_login();
+$user = current_user();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,26 +13,6 @@ require_login();
 	<link rel="stylesheet" href="../styles/pages/dashboard.css" />
 	<link rel="stylesheet" href="../styles/pages/settings.css" />
 </head>
-
-<script src="../js/core/api.js"></script>
-<script src="../js/modules/auth/auth.service.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Load user data
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user && user.name) {
-            document.querySelector('input[name="name"]').value = user.name;
-            document.querySelector('input[name="email"]').value = user.email || '';
-            document.querySelector('.settings-avatar-name').textContent = user.name;
-            document.querySelector('.settings-avatar-email').textContent = user.email || '';
-        }
-
-        // Logout
-        document.getElementById('confirm-logout-btn').addEventListener('click', async function () {
-            await logout();
-        });
-    });
-</script>
 
 <body data-page-title="Settings">
 	<div class="dashboard-layout">
@@ -70,17 +51,17 @@ require_login();
 										<i data-lucide="user" aria-hidden="true"></i>
 									</div>
 									<div>
-										<p class="settings-avatar-name">Rakibul Islam</p>
-										<p class="settings-avatar-email">rakib@gmail.com</p>
+										<p class="settings-avatar-name"><?= e($user['name']) ?></p>
+										<p class="settings-avatar-email"><?= e($user['email']) ?></p>
 									</div>
 								</div>
 								<label class="field">
 									<span class="label">Full Name</span>
-									<input class="input" type="text" name="name" placeholder="Your full name" value="Rakibul Islam" />
+									<input class="input" type="text" name="name" placeholder="Your full name" value="<?= e($user['name']) ?>" />
 								</label>
 								<label class="field">
 									<span class="label">Email Address</span>
-									<input class="input" type="email" name="email" placeholder="your@email.com" value="rakib@gmail.com" />
+									<input class="input" type="email" name="email" placeholder="your@email.com" value="<?= e($user['email']) ?>" />
 								</label>
 								<div class="settings-form-footer">
 									<button class="btn btn-primary btn-sm" type="submit">
@@ -254,7 +235,7 @@ require_login();
 								<p class="settings-confirm-text">Are you sure you want to logout from AmarHishab?</p>
 								<div class="modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-primary btn-sm" type="button" id="confirm-logout-btn">Yes, Logout</button>
+									<a class="btn btn-primary btn-sm" href="../actions/logout.php" id="confirm-logout-btn">Yes, Logout</a>
 								</div>
 							</div>
 						</div>
@@ -265,15 +246,6 @@ require_login();
 		</div>
 	</div>
 	<script src="../js/components/modal.js"></script>
-	<script src="../js/core/api.js"></script>
-	<script src="../js/modules/auth/auth.service.js"></script>
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			document.getElementById('confirm-logout-btn').addEventListener('click', async function () {
-				await logout();
-			});
-		});
-	</script>
 	<script src="../js/app.js"></script>
 </body>
 </html>
