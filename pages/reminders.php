@@ -1,6 +1,25 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/reminders.php';
+require_once __DIR__ . '/../includes/budget.php';
 require_login();
+
+$userId  = current_user()['id'];
+$allowed = ['all', 'pending', 'paid', 'overdue'];
+$fp      = $_GET['filter'] ?? 'all';
+$filter  = in_array($fp, $allowed, true) ? $fp : 'all';
+
+$reminders = reminders_for_user($userId, $filter);
+$totals    = reminder_totals($userId);
+$today     = date('Y-m-d');
+
+// Budget alerts: categories at or above 75% of their limit.
+$alerts = array_filter(budget_categories_with_spent($userId), function ($c) {
+	return $c['limit_amount'] > 0 && ($c['spent'] / $c['limit_amount']) >= 0.75;
+});
+
+$success = flash_get('success');
+$error   = flash_get('error');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,21 +66,21 @@ require_login();
 								<p>Total Reminders</p>
 								<i data-lucide="bell" aria-hidden="true"></i>
 							</div>
-							<strong data-reminder-total>4</strong>
+							<strong data-reminder-total><?= (int) $totals['total'] ?></strong>
 						</article>
 						<article class="reminder-stat-card surface">
 							<div class="reminder-stat-head">
 								<p>Due Soon</p>
 								<i data-lucide="clock" aria-hidden="true"></i>
 							</div>
-							<strong class="reminder-stat-warning" data-reminder-due-soon>2</strong>
+							<strong class="reminder-stat-warning" data-reminder-due-soon><?= (int) $totals['due_soon'] ?></strong>
 						</article>
 						<article class="reminder-stat-card surface">
 							<div class="reminder-stat-head">
 								<p>Overdue</p>
 								<i data-lucide="alert-circle" aria-hidden="true"></i>
 							</div>
-							<strong class="reminder-stat-danger" data-reminder-overdue>1</strong>
+							<strong class="reminder-stat-danger" data-reminder-overdue><?= (int) $totals['overdue'] ?></strong>
 						</article>
 					</section>
 
@@ -73,12 +92,14 @@ require_login();
 								Bill Payment Reminders
 							</h2>
 							<div class="reminders-board-actions">
-								<select class="select reminders-filter" aria-label="Filter reminders">
-									<option value="all">All</option>
-									<option value="pending">Pending</option>
-									<option value="paid">Paid</option>
-									<option value="overdue">Overdue</option>
-								</select>
+								<form method="get" id="reminders-filter-form">
+									<select class="select reminders-filter" name="filter" aria-label="Filter reminders" onchange="this.form.submit()">
+										<option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>All</option>
+										<option value="pending" <?= $filter === 'pending' ? 'selected' : '' ?>>Pending</option>
+										<option value="paid" <?= $filter === 'paid' ? 'selected' : '' ?>>Paid</option>
+										<option value="overdue" <?= $filter === 'overdue' ? 'selected' : '' ?>>Overdue</option>
+									</select>
+								</form>
 								<button
 									class="btn btn-primary btn-sm"
 									type="button"
@@ -92,113 +113,74 @@ require_login();
 							</div>
 						</header>
 
+						<?php if ($success !== ''): ?>
+							<p class="auth-success" role="status"><?= e($success) ?></p>
+						<?php endif; ?>
+						<?php if ($error !== ''): ?>
+							<p class="auth-error" role="alert"><?= e($error) ?></p>
+						<?php endif; ?>
+
 						<div class="reminder-list">
-
-							<article class="reminder-item reminder-item--overdue">
-								<div class="reminder-item-icon reminder-item-icon--danger">
-									<i data-lucide="zap" aria-hidden="true"></i>
-								</div>
-								<div class="reminder-item-body">
-									<div class="reminder-item-top">
-										<strong class="reminder-item-title">Electricity Bill</strong>
-										<span class="reminder-badge reminder-badge--overdue">Overdue</span>
-									</div>
-									<p class="reminder-item-date">
-										<i data-lucide="calendar" aria-hidden="true"></i>
-										Due: 1 May 2026
-									</p>
-								</div>
-								<div class="reminder-item-right">
-									<strong class="reminder-item-amount">৳ 1,200</strong>
-									<div class="reminder-item-actions">
-										<button class="icon-btn reminder-action-btn" title="Mark as paid">
-											<i data-lucide="check-circle" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn reminder-action-btn reminder-action-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="reminder-item reminder-item--warning">
-								<div class="reminder-item-icon reminder-item-icon--warning">
-									<i data-lucide="wifi" aria-hidden="true"></i>
-								</div>
-								<div class="reminder-item-body">
-									<div class="reminder-item-top">
-										<strong class="reminder-item-title">Internet Bill</strong>
-										<span class="reminder-badge reminder-badge--warning">Due in 2 days</span>
-									</div>
-									<p class="reminder-item-date">
-										<i data-lucide="calendar" aria-hidden="true"></i>
-										Due: 11 May 2026
-									</p>
-								</div>
-								<div class="reminder-item-right">
-									<strong class="reminder-item-amount">৳ 800</strong>
-									<div class="reminder-item-actions">
-										<button class="icon-btn reminder-action-btn" title="Mark as paid">
-											<i data-lucide="check-circle" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn reminder-action-btn reminder-action-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="reminder-item">
-								<div class="reminder-item-icon">
-									<i data-lucide="home" aria-hidden="true"></i>
-								</div>
-								<div class="reminder-item-body">
-									<div class="reminder-item-top">
-										<strong class="reminder-item-title">House Rent</strong>
-										<span class="reminder-badge reminder-badge--pending">Pending</span>
-									</div>
-									<p class="reminder-item-date">
-										<i data-lucide="calendar" aria-hidden="true"></i>
-										Due: 20 May 2026
-									</p>
-								</div>
-								<div class="reminder-item-right">
-									<strong class="reminder-item-amount">৳ 12,000</strong>
-									<div class="reminder-item-actions">
-										<button class="icon-btn reminder-action-btn" title="Mark as paid">
-											<i data-lucide="check-circle" aria-hidden="true"></i>
-										</button>
-										<button class="icon-btn reminder-action-btn reminder-action-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="reminder-item reminder-item--paid">
-								<div class="reminder-item-icon reminder-item-icon--success">
-									<i data-lucide="droplets" aria-hidden="true"></i>
-								</div>
-								<div class="reminder-item-body">
-									<div class="reminder-item-top">
-										<strong class="reminder-item-title">Water Bill</strong>
-										<span class="reminder-badge reminder-badge--paid">Paid</span>
-									</div>
-									<p class="reminder-item-date">
-										<i data-lucide="calendar" aria-hidden="true"></i>
-										Paid: 5 May 2026
-									</p>
-								</div>
-								<div class="reminder-item-right">
-									<strong class="reminder-item-amount">৳ 350</strong>
-									<div class="reminder-item-actions">
-										<button class="icon-btn reminder-action-btn reminder-action-btn--danger" title="Delete">
-											<i data-lucide="trash-2" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
+							<?php if (empty($reminders)): ?>
+								<p class="reminder-empty">No reminders here. Add one to stay on top of bills.</p>
+							<?php else: ?>
+								<?php foreach ($reminders as $r): ?>
+									<?php
+										$done = (int) $r['is_done'] === 1;
+										if ($done) {
+											$itemMod = ' reminder-item--paid'; $iconMod = ' reminder-item-icon--success';
+											$badge = 'reminder-badge--paid'; $badgeText = 'Paid';
+										} elseif ($r['due_date'] < $today) {
+											$itemMod = ' reminder-item--overdue'; $iconMod = ' reminder-item-icon--danger';
+											$badge = 'reminder-badge--overdue'; $badgeText = 'Overdue';
+										} elseif ($r['due_date'] <= date('Y-m-d', strtotime('+7 days'))) {
+											$itemMod = ' reminder-item--warning'; $iconMod = ' reminder-item-icon--warning';
+											$badge = 'reminder-badge--warning'; $badgeText = 'Due soon';
+										} else {
+											$itemMod = ''; $iconMod = '';
+											$badge = 'reminder-badge--pending'; $badgeText = 'Pending';
+										}
+									?>
+									<article class="reminder-item<?= $itemMod ?>">
+										<div class="reminder-item-icon<?= $iconMod ?>">
+											<i data-lucide="bell" aria-hidden="true"></i>
+										</div>
+										<div class="reminder-item-body">
+											<div class="reminder-item-top">
+												<strong class="reminder-item-title"><?= e($r['title']) ?></strong>
+												<span class="reminder-badge <?= $badge ?>"><?= $badgeText ?></span>
+											</div>
+											<p class="reminder-item-date">
+												<i data-lucide="calendar" aria-hidden="true"></i>
+												Due: <?= e(date('j M Y', strtotime($r['due_date']))) ?>
+												<?php if ($r['category']): ?> · <?= e($r['category']) ?><?php endif; ?>
+												<?php if ($r['repeat_cycle'] !== 'none'): ?> · <?= e(ucfirst($r['repeat_cycle'])) ?><?php endif; ?>
+											</p>
+										</div>
+										<div class="reminder-item-right">
+											<strong class="reminder-item-amount"><?= $r['amount'] !== null ? e(taka($r['amount'])) : '—' ?></strong>
+											<div class="reminder-item-actions">
+												<?php if (!$done): ?>
+													<form action="../actions/reminder-done.php" method="post" style="display:inline">
+														<?= csrf_field() ?>
+														<input type="hidden" name="id" value="<?= e($r['id']) ?>">
+														<button class="icon-btn reminder-action-btn" type="submit" title="Mark as paid">
+															<i data-lucide="check-circle" aria-hidden="true"></i>
+														</button>
+													</form>
+												<?php endif; ?>
+												<form action="../actions/reminder-delete.php" method="post" onsubmit="return confirm('Delete this reminder?');" style="display:inline">
+													<?= csrf_field() ?>
+													<input type="hidden" name="id" value="<?= e($r['id']) ?>">
+													<button class="icon-btn reminder-action-btn reminder-action-btn--danger" type="submit" title="Delete">
+														<i data-lucide="trash-2" aria-hidden="true"></i>
+													</button>
+												</form>
+											</div>
+										</div>
+									</article>
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</div>
 					</section>
 
@@ -211,55 +193,38 @@ require_login();
 							</h2>
 						</header>
 						<div class="reminder-list">
-
-							<article class="reminder-item reminder-item--overdue">
-								<div class="reminder-item-icon reminder-item-icon--danger">
-									<i data-lucide="shopping-bag" aria-hidden="true"></i>
-								</div>
-								<div class="reminder-item-body">
-									<div class="reminder-item-top">
-										<strong class="reminder-item-title">Shopping Budget Exceeded</strong>
-										<span class="reminder-badge reminder-badge--overdue">Exceeded</span>
-									</div>
-									<p class="reminder-item-date">
-										<i data-lucide="trending-up" aria-hidden="true"></i>
-										Spent ৳ 950 of ৳ 800 limit
-									</p>
-								</div>
-								<div class="reminder-item-right">
-									<strong class="reminder-item-amount reminder-item-amount--danger">+৳ 150</strong>
-									<div class="reminder-item-actions">
-										<button class="icon-btn reminder-action-btn reminder-action-btn--danger" title="Dismiss">
-											<i data-lucide="x" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
-							<article class="reminder-item reminder-item--warning">
-								<div class="reminder-item-icon reminder-item-icon--warning">
-									<i data-lucide="receipt-text" aria-hidden="true"></i>
-								</div>
-								<div class="reminder-item-body">
-									<div class="reminder-item-top">
-										<strong class="reminder-item-title">Bills & Utilities Limit Alert</strong>
-										<span class="reminder-badge reminder-badge--warning">95% Used</span>
-									</div>
-									<p class="reminder-item-date">
-										<i data-lucide="trending-up" aria-hidden="true"></i>
-										Spent ৳ 950 of ৳ 1,000 limit
-									</p>
-								</div>
-								<div class="reminder-item-right">
-									<strong class="reminder-item-amount reminder-item-amount--warning">৳ 50 left</strong>
-									<div class="reminder-item-actions">
-										<button class="icon-btn reminder-action-btn reminder-action-btn--danger" title="Dismiss">
-											<i data-lucide="x" aria-hidden="true"></i>
-										</button>
-									</div>
-								</div>
-							</article>
-
+							<?php if (empty($alerts)): ?>
+								<p class="reminder-empty">No budget alerts. You're within your limits.</p>
+							<?php else: ?>
+								<?php foreach ($alerts as $a): ?>
+									<?php
+										$spent = (float) $a['spent'];
+										$limit = (float) $a['limit_amount'];
+										$over  = $spent > $limit;
+										$pct   = (int) round($spent / $limit * 100);
+									?>
+									<article class="reminder-item <?= $over ? 'reminder-item--overdue' : 'reminder-item--warning' ?>">
+										<div class="reminder-item-icon <?= $over ? 'reminder-item-icon--danger' : 'reminder-item-icon--warning' ?>">
+											<i data-lucide="trending-up" aria-hidden="true"></i>
+										</div>
+										<div class="reminder-item-body">
+											<div class="reminder-item-top">
+												<strong class="reminder-item-title"><?= e($a['name']) ?> <?= $over ? 'Budget Exceeded' : 'Limit Alert' ?></strong>
+												<span class="reminder-badge <?= $over ? 'reminder-badge--overdue' : 'reminder-badge--warning' ?>"><?= $over ? 'Exceeded' : $pct . '% Used' ?></span>
+											</div>
+											<p class="reminder-item-date">
+												<i data-lucide="trending-up" aria-hidden="true"></i>
+												Spent <?= e(taka($spent)) ?> of <?= e(taka($limit)) ?> limit
+											</p>
+										</div>
+										<div class="reminder-item-right">
+											<strong class="reminder-item-amount <?= $over ? 'reminder-item-amount--danger' : 'reminder-item-amount--warning' ?>">
+												<?= $over ? '+' . e(taka($spent - $limit)) : e(taka($limit - $spent)) . ' left' ?>
+											</strong>
+										</div>
+									</article>
+								<?php endforeach; ?>
+							<?php endif; ?>
 						</div>
 					</section>
 
