@@ -1,6 +1,26 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/cashbooks.php';
+require_once __DIR__ . '/../includes/budget.php';
 require_login();
+
+$userId   = current_user()['id'];
+$books    = cashbooks_for_user($userId);
+$bookFilter = (int) ($_GET['cashbook'] ?? 0);
+$cats     = budget_categories_with_spent($userId, $bookFilter ?: null);
+
+$totalBudget = 0.0;
+$totalSpent  = 0.0;
+foreach ($cats as $c) {
+	$totalBudget += (float) $c['limit_amount'];
+	$totalSpent  += (float) $c['spent'];
+}
+$remaining = $totalBudget - $totalSpent;
+
+$palette = ['#8257e5', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+$success = flash_get('success');
+$error   = flash_get('error');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +54,7 @@ require_login();
 								<p>Total Budget</p>
 								<i data-lucide="wallet" aria-hidden="true"></i>
 							</div>
-							<strong data-budget-total>৳ 5,300</strong>
+							<strong data-budget-total><?= e(taka($totalBudget)) ?></strong>
 						</article>
 
 						<article class="budget-stat-card surface">
@@ -42,7 +62,7 @@ require_login();
 								<p>Total Spent</p>
 								<i data-lucide="credit-card" aria-hidden="true"></i>
 							</div>
-							<strong class="budget-stat-danger" data-budget-spent>৳ 4,050</strong>
+							<strong class="budget-stat-danger" data-budget-spent><?= e(taka($totalSpent)) ?></strong>
 						</article>
 
 						<article class="budget-stat-card surface">
@@ -50,7 +70,7 @@ require_login();
 								<p>Remaining</p>
 								<i data-lucide="target" aria-hidden="true"></i>
 							</div>
-							<strong class="budget-stat-success" data-budget-remaining>৳ 1,250</strong>
+							<strong class="<?= $remaining < 0 ? 'budget-stat-danger' : 'budget-stat-success' ?>" data-budget-remaining><?= e(taka($remaining)) ?></strong>
 						</article>
 					</section>
 
@@ -58,15 +78,14 @@ require_login();
 						<header class="budget-board-head">
 							<h2>Budget by Category</h2>
 							<div class="budget-board-actions">
-								<label class="budget-filter-wrap" for="budget-cashbook-filter">
-									<select id="budget-cashbook-filter" class="select budget-cashbook-filter" data-budget-cashbook-filter>
-										<option value="all">All Cashbooks</option>
-										<option value="b4">B4</option>
-										<option value="b3">B3</option>
-										<option value="b2">B2</option>
-										<option value="business-book">Business Book</option>
+								<form class="budget-filter-wrap" method="get" id="budget-filter-form">
+									<select id="budget-cashbook-filter" class="select budget-cashbook-filter" name="cashbook" onchange="this.form.submit()">
+										<option value="0">All Cashbooks</option>
+										<?php foreach ($books as $book): ?>
+											<option value="<?= e($book['id']) ?>" <?= $bookFilter === (int) $book['id'] ? 'selected' : '' ?>><?= e($book['name']) ?></option>
+										<?php endforeach; ?>
 									</select>
-								</label>
+								</form>
 								<button
 									class="btn btn-primary btn-sm"
 									type="button"
@@ -80,12 +99,64 @@ require_login();
 							</div>
 						</header>
 
-						<div
-							class="budget-category-list"
-							data-component="budget-category-list"
-							data-source="../data/budget-categories.json"
-							data-source-fallback="#budget-categories-data"
-						></div>
+						<?php if ($success !== ''): ?>
+							<p class="auth-success" role="status"><?= e($success) ?></p>
+						<?php endif; ?>
+						<?php if ($error !== ''): ?>
+							<p class="auth-error" role="alert"><?= e($error) ?></p>
+						<?php endif; ?>
+
+						<div class="budget-category-list" data-component="budget-category-list">
+							<?php if (empty($cats)): ?>
+								<p class="budget-empty">No budget categories yet. Add one to start tracking limits.</p>
+							<?php else: ?>
+								<?php foreach ($cats as $i => $cat): ?>
+									<?php
+										$spent = (float) $cat['spent'];
+										$limit = (float) $cat['limit_amount'];
+										$usage = $limit > 0 ? (int) round(min(100, max(0, $spent / $limit * 100))) : 0;
+										$fill  = 'budget-category-fill';
+										if ($usage >= 90)      $fill .= ' budget-category-fill--danger';
+										elseif ($usage >= 75)  $fill .= ' budget-category-fill--warn';
+										$color = $cat['color'] ?: $palette[$i % count($palette)];
+										$icon  = $cat['icon'] ?: 'wallet';
+									?>
+									<article class="budget-category-item" data-budget-category-id="<?= e($cat['id']) ?>">
+										<div class="budget-category-top">
+											<div class="budget-category-label">
+												<span class="budget-category-icon" aria-hidden="true"><i data-lucide="<?= e($icon) ?>"></i></span>
+												<strong><?= e($cat['name']) ?></strong>
+											</div>
+											<div class="budget-category-meta">
+												<p class="budget-category-amount"><?= e(taka($spent)) ?> / <?= e(taka($limit)) ?> (<?= $usage ?>%)</p>
+												<div class="budget-category-actions">
+													<p class="budget-category-cashbook"><?= e($cat['cashbook_name'] ?? 'No cashbook') ?></p>
+													<button class="budget-category-delete" type="button"
+														data-modal-target="#edit-budget-category-modal"
+														data-cat-id="<?= e($cat['id']) ?>"
+														data-cat-name="<?= e($cat['name']) ?>"
+														data-cat-limit="<?= e($cat['limit_amount']) ?>"
+														data-cat-cashbook="<?= e($cat['cashbook_id'] ?? '') ?>"
+														aria-label="Edit <?= e($cat['name']) ?>">
+														<i data-lucide="pencil" aria-hidden="true"></i>
+													</button>
+													<form action="../actions/budget-delete.php" method="post" onsubmit="return confirm('Delete this category?');" style="display:inline">
+														<?= csrf_field() ?>
+														<input type="hidden" name="id" value="<?= e($cat['id']) ?>">
+														<button class="budget-category-delete" type="submit" aria-label="Delete <?= e($cat['name']) ?>">
+															<i data-lucide="trash-2" aria-hidden="true"></i>
+														</button>
+													</form>
+												</div>
+											</div>
+										</div>
+										<div class="budget-category-track">
+											<span class="<?= $fill ?>" style="width: <?= $usage ?>%; --category-color: <?= e($color) ?>;"></span>
+										</div>
+									</article>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</div>
 
 						<button
 							class="btn btn-outline btn-sm budget-custom-btn"
@@ -139,76 +210,11 @@ require_login();
 						</div>
 					</div>
 
-					<script id="budget-categories-data" type="application/json">
-						[
-							{
-								"id": "food-dining",
-								"name": "Food & Dining",
-								"icon": "utensils-crossed",
-								"spent": 1200,
-								"limit": 1500,
-								"color": "#8257e5",
-								"cashbookId": "b4",
-								"cashbookName": "B4"
-							},
-							{
-								"id": "transportation",
-								"name": "Transportation",
-								"icon": "car",
-								"spent": 800,
-								"limit": 1000,
-								"color": "#3b82f6",
-								"cashbookId": "b3",
-								"cashbookName": "B3"
-							},
-							{
-								"id": "entertainment",
-								"name": "Entertainment",
-								"icon": "clapperboard",
-								"spent": 300,
-								"limit": 500,
-								"color": "#10b981",
-								"cashbookId": "b4",
-								"cashbookName": "B4"
-							},
-							{
-								"id": "shopping",
-								"name": "Shopping",
-								"icon": "shopping-bag",
-								"spent": 600,
-								"limit": 800,
-								"color": "#f59e0b",
-								"cashbookId": "business-book",
-								"cashbookName": "Business Book"
-							},
-							{
-								"id": "bills-utilities",
-								"name": "Bills & Utilities",
-								"icon": "receipt-text",
-								"spent": 950,
-								"limit": 1000,
-								"color": "#ef4444",
-								"cashbookId": "b2",
-								"cashbookName": "B2"
-							},
-							{
-								"id": "healthcare",
-								"name": "Healthcare",
-								"icon": "heart-pulse",
-								"spent": 200,
-								"limit": 500,
-								"color": "#8b5cf6",
-								"cashbookId": "b3",
-								"cashbookName": "B3"
-							}
-						]
-					</script>
 				</section>
 			</main>
 		</div>
 	</div>
 	<script src="../js/components/modal.js"></script>
-	<script src="../js/components/budgetProgress.js"></script>
 	<script src="../js/app.js"></script>
 </body>
 </html>
