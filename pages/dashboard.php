@@ -1,6 +1,33 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/cashbooks.php';
+require_once __DIR__ . '/../includes/transactions.php';
+require_once __DIR__ . '/../includes/budget.php';
 require_login();
+
+$userId = current_user()['id'];
+$books  = cashbooks_for_user($userId);
+
+// Total balance across all cashbooks.
+$totalBalance = 0.0;
+foreach ($books as $b) {
+	$totalBalance += (float) $b['balance'];
+}
+
+// Income / expense for the current month.
+$monthStart = date('Y-m-01');
+$today      = date('Y-m-d');
+$monthTx    = transactions_for_user($userId, ['from' => $monthStart, 'to' => $today]);
+$incomeMonth = 0.0;
+$expenseMonth = 0.0;
+foreach ($monthTx as $t) {
+	if ($t['direction'] === 'in') $incomeMonth += (float) $t['amount'];
+	else                          $expenseMonth += (float) $t['amount'];
+}
+
+// Recent transactions + budget summary.
+$recent = array_slice(transactions_for_user($userId), 0, 5);
+$summaryCats = array_slice(budget_categories_with_spent($userId), 0, 4);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,20 +61,20 @@ require_login();
 							<div class="stat-top">
 								<div>
 									<p class="stat-title">Total Balance</p>
-									<p class="stat-value">৳ 5,430</p>
+									<p class="stat-value"><?= e(taka($totalBalance)) ?></p>
 								</div>
 								<div class="dashboard-stat-icon">
 									<i data-lucide="dollar-sign" aria-hidden="true"></i>
 								</div>
 							</div>
-							<p class="stat-sub stat-sub-success">+12.5% from last month</p>
+							<p class="stat-sub stat-sub-success">Across <?= count($books) ?> cashbook<?= count($books) === 1 ? '' : 's' ?></p>
 						</article>
 
 						<article class="stat-card surface">
 							<div class="stat-top">
 								<div>
 									<p class="stat-title">Income this Month</p>
-									<p class="stat-value">৳ 6,200</p>
+									<p class="stat-value"><?= e(taka($incomeMonth)) ?></p>
 								</div>
 								<div class="dashboard-stat-icon dashboard-stat-icon--mint">
 									<i data-lucide="trending-up" aria-hidden="true"></i>
@@ -59,13 +86,13 @@ require_login();
 							<div class="stat-top">
 								<div>
 									<p class="stat-title">Expenses this Month</p>
-									<p class="stat-value">৳ 770</p>
+									<p class="stat-value"><?= e(taka($expenseMonth)) ?></p>
 								</div>
 								<div class="dashboard-stat-icon dashboard-stat-icon--red">
 									<i data-lucide="trending-down" aria-hidden="true"></i>
 								</div>
 							</div>
-							<p class="stat-sub stat-sub-danger">-8.2% from last month</p>
+							<p class="stat-sub <?= ($incomeMonth - $expenseMonth) >= 0 ? 'stat-sub-success' : 'stat-sub-danger' ?>">Net <?= e(taka($incomeMonth - $expenseMonth)) ?> this month</p>
 						</article>
 					</div>
 
