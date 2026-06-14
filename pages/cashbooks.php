@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/../includes/cashbooks.php';
 require_login();
+
+$userId = current_user()['id'];
+$books  = cashbooks_for_user($userId);
+$error   = flash_get('error');
+$success = flash_get('success');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,15 +31,15 @@ require_login();
 						<div class="cashbooks-hero-main">
 							<div class="cashbooks-hero-copy">
 								<p class="cashbooks-eyebrow">Cashbook Control Center</p>
-								<h1>BanglaBusiness Workspace</h1>
-								<p class="cashbooks-hero-sub">Manage books and track updates from one branded command area.</p>
+								<h1>Your Cashbooks</h1>
+								<p class="cashbooks-hero-sub">Manage books and track updates from one place.</p>
 							</div>
 							<div class="cashbooks-hero-stats">
 								<div class="cashbooks-stat-pill">
 									<i data-lucide="book-copy" aria-hidden="true"></i>
 									<div>
-										<strong data-cashbooks-active-count>4 Active Books</strong>
-										<span>2 updated today</span>
+										<strong data-cashbooks-active-count><?= count($books) ?> Active Books</strong>
+										<span>Total cash tracked</span>
 									</div>
 								</div>
 							</div>
@@ -74,13 +80,52 @@ require_login();
 						</div>
 					</div>
 
+					<?php if ($success !== ''): ?>
+						<p class="auth-success" role="status"><?= e($success) ?></p>
+					<?php endif; ?>
+					<?php if ($error !== ''): ?>
+						<p class="auth-error" role="alert"><?= e($error) ?></p>
+					<?php endif; ?>
+
 					<div class="cashbooks-grid">
-						<section
-							class="cashbooks-stream"
-							data-component="cashbook-card-list"
-							data-source="../data/cashbooks.json"
-							data-source-fallback="#cashbooks-data"
-						></section>
+						<section class="cashbooks-stream" data-component="cashbook-card-list">
+							<?php if (empty($books)): ?>
+								<p class="cashbooks-empty">No cashbooks yet. Create your first one to get started.</p>
+							<?php else: ?>
+								<?php foreach ($books as $book): ?>
+									<?php $warn = $book['status'] === 'review' ? ' cashbook-health--warn' : ''; ?>
+									<article class="cashbook-card cashbook-card--book surface" data-cashbook-id="<?= e($book['id']) ?>">
+										<div class="cashbook-card-head">
+											<div class="cashbook-main">
+												<div class="cashbook-badge"><i data-lucide="book-copy" aria-hidden="true"></i></div>
+												<div>
+													<h3><?= e($book['name']) ?></h3>
+													<p>Created <?= e(time_ago($book['created_at'])) ?> · Balance <?= e(taka($book['balance'])) ?></p>
+												</div>
+											</div>
+											<span class="cashbook-health<?= $warn ?>"><?= $book['status'] === 'review' ? 'Review' : 'Live' ?></span>
+										</div>
+										<div class="cashbook-card-foot">
+											<div class="cashbook-actions">
+												<button class="cashbook-icon-btn" type="button"
+													data-modal-target="#edit-cashbook-modal"
+													data-edit-id="<?= e($book['id']) ?>"
+													data-edit-name="<?= e($book['name']) ?>"
+													data-edit-description="<?= e($book['description'] ?? '') ?>"
+													data-edit-status="<?= e($book['status']) ?>"
+													aria-label="Edit <?= e($book['name']) ?>"><i data-lucide="pencil" aria-hidden="true"></i></button>
+												<a class="cashbook-icon-btn" href="./cashbook-details.php?id=<?= e($book['id']) ?>" aria-label="Open <?= e($book['name']) ?>"><i data-lucide="external-link" aria-hidden="true"></i></a>
+												<form class="cashbook-delete-form" action="../actions/cashbook-delete.php" method="post" onsubmit="return confirm('Delete this cashbook and all its transactions?');">
+													<?= csrf_field() ?>
+													<input type="hidden" name="id" value="<?= e($book['id']) ?>">
+													<button class="cashbook-icon-btn cashbook-icon-btn--danger" type="submit" aria-label="Delete <?= e($book['name']) ?>"><i data-lucide="trash-2" aria-hidden="true"></i></button>
+												</form>
+											</div>
+										</div>
+									</article>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</section>
 					</div>
 
 					<div class="overlay modal-overlay" id="create-cashbook-modal" data-modal data-modal-close-overlay hidden aria-hidden="true">
@@ -104,34 +149,10 @@ require_login();
 						</div>
 					</div>
 
-					<script id="cashbooks-data" type="application/json">
-						[
-							{
-								"id": "b4",
-								"name": "B4",
-								"createdText": "Created about 1 hour ago",
-								"statusLabel": "Live"
-							},
-							{
-								"id": "b3",
-								"name": "B3",
-								"createdText": "Created about 1 hour ago",
-								"statusLabel": "Live"
-							},
-							{
-								"id": "b2",
-								"name": "B2",
-								"createdText": "Created about 1 hour ago",
-								"statusLabel": "Review",
-								"statusTone": "warn"
-							}
-						]
-					</script>
 				</section>
 			</main>
 		</div>
 	</div>
-	<script src="../js/components/cashbookCard.js"></script>
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
 </body>
