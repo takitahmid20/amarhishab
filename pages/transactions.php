@@ -13,6 +13,7 @@ $typeParam = $_GET['type'] ?? 'all';            // all | income | expense
 $catParam  = (int) ($_GET['category'] ?? 0);
 $fromParam = $_GET['from'] ?? '';
 $toParam   = $_GET['to'] ?? '';
+$searchParam = trim($_GET['search'] ?? '');
 
 $filters = [];
 if ($typeParam === 'income')  $filters['direction'] = 'in';
@@ -20,6 +21,7 @@ if ($typeParam === 'expense') $filters['direction'] = 'out';
 if ($catParam > 0)            $filters['category_id'] = $catParam;
 if ($fromParam !== '')        $filters['from'] = $fromParam;
 if ($toParam !== '')          $filters['to'] = $toParam;
+if ($searchParam !== '')      $filters['search'] = $searchParam;
 
 $txns      = transactions_for_user($userId, $filters);
 $hasFilters = $filters !== [];
@@ -67,6 +69,10 @@ $error     = flash_get('error');
 					<!-- Filters -->
 					<form class="tx-filters surface" id="tx-filter-form" method="get">
 						<div class="tx-filters-left">
+							<div class="input-wrap">
+								<i class="input-icon" data-lucide="search" aria-hidden="true"></i>
+								<input class="input" type="search" name="search" placeholder="Search details or bill..." value="<?= e($searchParam) ?>" />
+							</div>
 							<button
 								class="btn btn-outline btn-sm"
 								type="button"
