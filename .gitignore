@@ -1,2 +1,5 @@
 .DS_Store
 **/.DS_Store
+
+# Local config with DB credentials — never commit
+config/config.local.php
