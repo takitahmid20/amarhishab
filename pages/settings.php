@@ -93,7 +93,8 @@ $error   = flash_get('error');
 									<p>Update your account password</p>
 								</div>
 							</div>
-							<form class="settings-form" data-password-form>
+							<form class="settings-form" action="../actions/password-update.php" method="post">
+								<?= csrf_field() ?>
 								<label class="field">
 									<span class="label">Current Password</span>
 									<input class="input" type="password" name="current_password" placeholder="Enter current password" />
