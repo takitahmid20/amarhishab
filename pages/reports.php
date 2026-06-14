@@ -107,29 +107,35 @@ $books     = cashbooks_for_user($userId);
 								<h2>Category Breakdown</h2>
 								<p>Current month</p>
 							</header>
-							<div class="donut reports-donut" style="--donut-food:#8257e5;--donut-transport:#3b82f6;--donut-bills:#10b981;--donut-shopping:#f59e0b;--donut-other:#ef4444;background:conic-gradient(var(--donut-food) 0 32%,var(--donut-transport) 32% 53%,var(--donut-bills) 53% 71%,var(--donut-shopping) 71% 85%,var(--donut-other) 85% 100%);"></div>
-							<div class="legend">
-								<div class="legend-item">
-									<div class="legend-left"><span class="dot" style="background:#8257e5;"></span><span>Food & Dining</span></div>
-									<strong>32%</strong>
+							<?php
+								$top = array_slice($breakdown, 0, 5);
+								// Build the conic-gradient stops + legend from real shares.
+								$stops = [];
+								$cursor = 0;
+								foreach ($top as $i => $row) {
+									$color = $palette[$i % count($palette)];
+									$end   = $cursor + (float) $row['share'];
+									$stops[] = "$color {$cursor}% {$end}%";
+									$cursor  = $end;
+								}
+								if ($cursor < 100 && !empty($stops)) {
+									$stops[] = "#e5e7eb {$cursor}% 100%";
+								}
+								$gradient = empty($stops) ? '#e5e7eb 0 100%' : implode(',', $stops);
+							?>
+							<?php if (empty($top)): ?>
+								<p class="reports-empty">No expenses in this period.</p>
+							<?php else: ?>
+								<div class="donut reports-donut" style="background:conic-gradient(<?= $gradient ?>);"></div>
+								<div class="legend">
+									<?php foreach ($top as $i => $row): ?>
+										<div class="legend-item">
+											<div class="legend-left"><span class="dot" style="background:<?= $palette[$i % count($palette)] ?>;"></span><span><?= e($row['name']) ?></span></div>
+											<strong><?= (int) $row['share'] ?>%</strong>
+										</div>
+									<?php endforeach; ?>
 								</div>
-								<div class="legend-item">
-									<div class="legend-left"><span class="dot" style="background:#3b82f6;"></span><span>Transportation</span></div>
-									<strong>21%</strong>
-								</div>
-								<div class="legend-item">
-									<div class="legend-left"><span class="dot" style="background:#10b981;"></span><span>Bills & Utilities</span></div>
-									<strong>18%</strong>
-								</div>
-								<div class="legend-item">
-									<div class="legend-left"><span class="dot" style="background:#f59e0b;"></span><span>Shopping</span></div>
-									<strong>14%</strong>
-								</div>
-								<div class="legend-item">
-									<div class="legend-left"><span class="dot" style="background:#ef4444;"></span><span>Other</span></div>
-									<strong>15%</strong>
-								</div>
-							</div>
+							<?php endif; ?>
 						</article>
 					</section>
 
