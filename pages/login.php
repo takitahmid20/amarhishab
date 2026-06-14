@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../includes/bootstrap.php';
+if (is_logged_in()) {
+	redirect('./dashboard.php');
+}
+$error = flash_get('error');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +13,6 @@
 	<title>Login | AmarHishab</title>
 	<link rel="stylesheet" href="../styles/main.css" />
 </head>
-
-<script src="../js/core/api.js"></script>
-<script src="../js/modules/auth/auth.service.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('.auth-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email    = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const error    = await login(email, password);
-            if (error) alert(error);
-        });
-    });
-</script>
 
 <body class="auth-page">
 	<main class="auth-shell" aria-labelledby="signin-title">
@@ -31,12 +24,18 @@
 				<p class="auth-subtitle">Sign in to access your personal finance dashboard</p>
 			</header>
 
-			<form class="auth-form auth-form--tight" action="#" method="post">
+			<?php if ($error !== ''): ?>
+				<p class="auth-error" role="alert"><?= e($error) ?></p>
+			<?php endif; ?>
+
+			<form class="auth-form auth-form--tight" action="../actions/login.php" method="post">
+				<?= csrf_field() ?>
+
 				<label class="field" for="login-email">
 					<span class="label">Email Address</span>
 					<div class="input-wrap">
 						<i class="input-icon" data-lucide="mail" aria-hidden="true"></i>
-						<input id="login-email" class="input" type="email" placeholder="Enter your email" autocomplete="email" />
+						<input id="login-email" name="email" class="input" type="email" placeholder="Enter your email" autocomplete="email" value="<?= e(old('email')) ?>" required />
 					</div>
 				</label>
 
@@ -47,7 +46,7 @@
 					</span>
 					<div class="input-wrap">
 						<i class="input-icon" data-lucide="lock" aria-hidden="true"></i>
-						<input id="login-password" class="input" type="password" placeholder="Enter your password" autocomplete="current-password" />
+						<input id="login-password" name="password" class="input" type="password" placeholder="Enter your password" autocomplete="current-password" required />
 					</div>
 				</label>
 
@@ -62,6 +61,7 @@
 			</p>
 		</section>
 	</main>
+	<?php old_clear(); ?>
 	<script src="https://unpkg.com/lucide@latest"></script>
 	<script>
 		lucide.createIcons();
