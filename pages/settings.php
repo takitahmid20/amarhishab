@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_login();
 $user = current_user();
+$success = flash_get('success');
+$error   = flash_get('error');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +34,13 @@ $user = current_user();
 						</div>
 					</header>
 
+					<?php if ($success !== ''): ?>
+						<p class="auth-success" role="status"><?= e($success) ?></p>
+					<?php endif; ?>
+					<?php if ($error !== ''): ?>
+						<p class="auth-error" role="alert"><?= e($error) ?></p>
+					<?php endif; ?>
+
 					<div class="settings-grid">
 
 						<!-- Profile Section -->
@@ -45,7 +54,8 @@ $user = current_user();
 									<p>Update your personal information</p>
 								</div>
 							</div>
-							<form class="settings-form" data-profile-form>
+							<form class="settings-form" action="../actions/profile-update.php" method="post">
+								<?= csrf_field() ?>
 								<div class="settings-avatar-wrap">
 									<div class="settings-avatar">
 										<i data-lucide="user" aria-hidden="true"></i>
