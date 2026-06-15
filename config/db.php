@@ -41,11 +41,24 @@ function db(): PDO
 
 	$dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s', $host, $port, $name, $charset);
 
-	$pdo = new PDO($dsn, $user, $pass, [
+	$options = [
 		PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 		PDO::ATTR_EMULATE_PREPARES   => false,
-	]);
+	];
+
+	// Enable TLS when DB_SSL is truthy or config ['db']['ssl'] is set — required
+	// for managed cloud databases like Aiven (ssl-mode=REQUIRED).
+	$ssl = getenv('DB_SSL') !== false ? getenv('DB_SSL') : ($cfg['ssl'] ?? false);
+	if (filter_var($ssl, FILTER_VALIDATE_BOOLEAN)) {
+		$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+		$options[PDO::MYSQL_ATTR_SSL_CA] = getenv('DB_SSL_CA') ?: ($cfg['ssl_ca'] ?? null);
+		if (empty($options[PDO::MYSQL_ATTR_SSL_CA])) {
+			unset($options[PDO::MYSQL_ATTR_SSL_CA]);
+		}
+	}
+
+	$pdo = new PDO($dsn, $user, $pass, $options);
 
 	return $pdo;
 }
