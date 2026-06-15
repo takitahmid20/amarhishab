@@ -101,9 +101,10 @@ function build_finance_context(int $userId, string $userName): string
 
 /**
  * Ask Gemini a question grounded in the user's finance context.
+ * $history = prior turns [['role'=>'user'|'ai','content'=>...], ...] for follow-ups.
  * Returns ['ok' => bool, 'answer' => string].
  */
-function hisab_ai_ask(string $question, string $context): array
+function hisab_ai_ask(string $question, string $context, array $history = []): array
 {
 	$key = ai_key();
 	if ($key === '') {
@@ -117,9 +118,19 @@ function hisab_ai_ask(string $question, string $context): array
 		. "If the question is not about this user's personal finances, politely reply that you can only help with their AmarHishab finances. "
 		. "Never invent data that is not in the context.\n\n=== USER FINANCE DATA ===\n" . $context;
 
+	// Build multi-turn contents: prior history (last 10 turns) + new question.
+	$contents = [];
+	foreach (array_slice($history, -10) as $turn) {
+		$contents[] = [
+			'role'  => $turn['role'] === 'ai' ? 'model' : 'user',
+			'parts' => [['text' => (string) $turn['content']]],
+		];
+	}
+	$contents[] = ['role' => 'user', 'parts' => [['text' => $question]]];
+
 	$payload = json_encode([
 		'systemInstruction' => ['parts' => [['text' => $system]]],
-		'contents' => [['role' => 'user', 'parts' => [['text' => $question]]]],
+		'contents' => $contents,
 		'generationConfig' => ['temperature' => 0.3, 'maxOutputTokens' => 800],
 	]);
 
