@@ -202,12 +202,13 @@ $books     = cashbooks_for_user($userId);
 									</label>
 								</div>
 
-								<p class="reports-modal-note">Report options are ready. PDF generation will be connected in a later step.</p>
+								<p class="reports-modal-note">Print / Save as PDF uses your browser's native print engine, styled beautifully for export.</p>
 
 								<div class="modal-footer reports-modal-footer">
 									<button class="btn btn-outline btn-sm" type="button" data-modal-close>Cancel</button>
-									<button class="btn btn-primary btn-sm" type="button" data-modal-close>
-										<span>Generate PDF (Soon)</span>
+									<button class="btn btn-primary btn-sm" type="button" onclick="window.print()" data-modal-close>
+										<i data-lucide="printer" aria-hidden="true"></i>
+										<span>Print / Save PDF</span>
 									</button>
 								</div>
 							</form>
