@@ -88,6 +88,19 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 				return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			}
 
+			// Escape first (safe), then render a tiny markdown subset so symbols
+			// like ** never show raw.
+			function formatAi(raw) {
+				var s = escapeHtml(raw);
+				s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+				s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+				s = s.replace(/`(.+?)`/g, '$1');
+				s = s.replace(/^\s*[\-\*]\s+/gm, '• ');
+				s = s.replace(/^\s*#{1,6}\s*/gm, '');
+				s = s.replace(/\n/g, '<br>');
+				return s;
+			}
+
 			function addBubble(text, who) {
 				var msg = document.createElement('div');
 				msg.className = 'hisabai-msg hisabai-msg--' + who;
@@ -145,7 +158,7 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 				.then(function (r) { return r.json(); })
 				.then(function (data) {
 					typing.remove();
-					addBubble(escapeHtml(data.answer || 'No answer.'), 'ai');
+					addBubble(formatAi(data.answer || 'No answer.'), 'ai');
 				})
 				.catch(function () {
 					typing.remove();
