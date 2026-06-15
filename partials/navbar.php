@@ -1,3 +1,41 @@
+<?php
+/**
+ * Build notifications from real data: overdue/due-soon reminders and
+ * budget categories near or over their limit.
+ */
+$navNotifications = [];
+if (function_exists('current_user') && current_user()) {
+	require_once __DIR__ . '/../includes/reminders.php';
+	require_once __DIR__ . '/../includes/budget.php';
+	$navUid = current_user()['id'];
+
+	foreach (reminders_for_user($navUid, 'overdue') as $r) {
+		$navNotifications[] = [
+			'title' => 'Overdue: ' . $r['title'],
+			'meta'  => 'Was due ' . date('j M', strtotime($r['due_date'])),
+		];
+	}
+	$soonCutoff = date('Y-m-d', strtotime('+7 days'));
+	foreach (reminders_for_user($navUid, 'pending') as $r) {
+		if ($r['due_date'] <= $soonCutoff) {
+			$navNotifications[] = [
+				'title' => 'Due soon: ' . $r['title'],
+				'meta'  => 'Due ' . date('j M', strtotime($r['due_date'])),
+			];
+		}
+	}
+	foreach (budget_categories_with_spent($navUid) as $c) {
+		if ($c['limit_amount'] > 0 && ($c['spent'] / $c['limit_amount']) >= 0.9) {
+			$pct = (int) round($c['spent'] / $c['limit_amount'] * 100);
+			$navNotifications[] = [
+				'title' => 'Budget alert: ' . $c['name'],
+				'meta'  => $pct . '% of limit used',
+			];
+		}
+	}
+	$navNotifications = array_slice($navNotifications, 0, 6);
+}
+?>
 <header class="navbar app-topbar dashboard-topbar">
 	<div class="navbar-left">
 		<a class="navbar-brand-link" href="./dashboard.php" aria-label="AmarHishab dashboard">
@@ -28,30 +66,28 @@
 			<div class="navbar-notification-panel" data-notification-panel hidden aria-label="Notifications">
 				<div class="notification-panel-head">
 					<strong>Notifications</strong>
-					<span class="notification-pill">3 New</span>
+					<?php if (!empty($navNotifications)): ?>
+						<span class="notification-pill"><?= count($navNotifications) ?> New</span>
+					<?php endif; ?>
 				</div>
 				<div class="notification-list">
-					<div class="notification-item">
-						<div class="notification-dot"></div>
-						<div>
-							<p class="notification-title">Budget alert</p>
-							<p class="notification-meta">Food & Dining is at 80% this month.</p>
+					<?php if (empty($navNotifications)): ?>
+						<div class="notification-item">
+							<div>
+								<p class="notification-meta">You're all caught up.</p>
+							</div>
 						</div>
-					</div>
-					<div class="notification-item">
-						<div class="notification-dot"></div>
-						<div>
-							<p class="notification-title">New income added</p>
-							<p class="notification-meta">Salary deposit of ৳ 5,000 received.</p>
-						</div>
-					</div>
-					<div class="notification-item">
-						<div class="notification-dot"></div>
-						<div>
-							<p class="notification-title">Weekly report ready</p>
-							<p class="notification-meta">View your last 7 days summary.</p>
-						</div>
-					</div>
+					<?php else: ?>
+						<?php foreach ($navNotifications as $n): ?>
+							<div class="notification-item">
+								<div class="notification-dot"></div>
+								<div>
+									<p class="notification-title"><?= e($n['title']) ?></p>
+									<p class="notification-meta"><?= e($n['meta']) ?></p>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
