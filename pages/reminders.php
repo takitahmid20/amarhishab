@@ -92,6 +92,10 @@ $error   = flash_get('error');
 								Bill Payment Reminders
 							</h2>
 							<div class="reminders-board-actions">
+								<div class="input-wrap reminders-search-wrap" style="width: 160px;">
+									<i class="input-icon" data-lucide="search" aria-hidden="true" style="width: 14px; height: 14px;"></i>
+									<input id="reminder-search" class="input" type="text" placeholder="Search bills..." style="height: 36px; min-height: 36px; font-size: 13px; padding-left: 32px;" />
+								</div>
 								<form method="get" id="reminders-filter-form">
 									<select class="select reminders-filter" name="filter" aria-label="Filter reminders" onchange="this.form.submit()">
 										<option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>All</option>
@@ -141,7 +145,10 @@ $error   = flash_get('error');
 											$badge = 'reminder-badge--pending'; $badgeText = 'Pending';
 										}
 									?>
-									<article class="reminder-item<?= $itemMod ?>">
+									<article class="reminder-item<?= $itemMod ?>"
+										data-title="<?= e(strtolower($r['title'])) ?>"
+										data-category="<?= e(strtolower($r['category'] ?? '')) ?>"
+										data-amount="<?= (float)$r['amount'] ?>">
 										<div class="reminder-item-icon<?= $iconMod ?>">
 											<i data-lucide="bell" aria-hidden="true"></i>
 										</div>
