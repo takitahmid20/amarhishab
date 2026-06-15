@@ -18,6 +18,19 @@ if (!$cashbook) {
 
 $entries = cashbook_entries($id);
 
+$filterCategories = [];
+$filterModes      = [];
+foreach ($entries as $entry) {
+	if (!empty($entry['category_name'])) {
+		$filterCategories[$entry['category_name']] = true;
+	}
+	if (!empty($entry['mode'])) {
+		$filterModes[$entry['mode']] = true;
+	}
+}
+$filterCategories = array_keys($filterCategories);
+$filterModes      = array_keys($filterModes);
+
 // Running balance (entries are oldest-first), plus totals.
 $cashIn = 0.0;
 $cashOut = 0.0;
@@ -88,16 +101,43 @@ $entryCount = count($entries);
 					<?php endif; ?>
 
 					<section class="cashbook-filter-row surface" aria-label="Entry filters">
-						<label><select class="select"><option>Duration: All Time</option></select></label>
-						<label><select class="select"><option>Entry Type: All</option></select></label>
-						<label><select class="select"><option>Category: All</option></select></label>
-						<label><select class="select"><option>Payment Mode: All</option></select></label>
+						<label>
+							<select id="filter-duration" class="select">
+								<option value="all">Duration: All Time</option>
+								<option value="today">Today</option>
+								<option value="this-month">This Month</option>
+								<option value="this-year">This Year</option>
+							</select>
+						</label>
+						<label>
+							<select id="filter-direction" class="select">
+								<option value="all">Entry Type: All</option>
+								<option value="in">Cash In</option>
+								<option value="out">Cash Out</option>
+							</select>
+						</label>
+						<label>
+							<select id="filter-category" class="select">
+								<option value="all">Category: All</option>
+								<?php foreach ($filterCategories as $catName): ?>
+									<option value="<?= e(strtolower($catName)) ?>"><?= e($catName) ?></option>
+								<?php endforeach; ?>
+							</select>
+						</label>
+						<label>
+							<select id="filter-mode" class="select">
+								<option value="all">Payment Mode: All</option>
+								<?php foreach ($filterModes as $mName): ?>
+									<option value="<?= e(strtolower($mName)) ?>"><?= e(ucfirst($mName)) ?></option>
+								<?php endforeach; ?>
+							</select>
+						</label>
 					</section>
 
 					<section class="cashbook-search-row surface">
 						<div class="input-wrap cashbook-search-wrap">
 							<i class="input-icon" data-lucide="search" aria-hidden="true"></i>
-							<input class="input" type="text" placeholder="Search by details, bill, category, or amount..." />
+							<input id="ledger-search" class="input" type="text" placeholder="Search by details, bill, category, or amount..." />
 							<span class="cashbook-search-hint">/</span>
 						</div>
 
@@ -198,7 +238,14 @@ $entryCount = count($entries);
 												$amountClass = $isIn ? 'cell-amount cell-amount--in' : 'cell-amount cell-amount--out';
 												$sign = $isIn ? '+' : '-';
 											?>
-											<tr>
+											<tr class="ledger-row"
+												data-date="<?= date('Y-m-d', strtotime($entry['occurred_at'])) ?>"
+												data-direction="<?= e($entry['direction']) ?>"
+												data-category="<?= e(strtolower($entry['category_name'] ?: '')) ?>"
+												data-mode="<?= e(strtolower($entry['mode'])) ?>"
+												data-details="<?= e(strtolower($entry['details'] ?? '')) ?>"
+												data-bill="<?= e(strtolower($entry['bill'] ?? '')) ?>"
+												data-amount="<?= (float)$entry['amount'] ?>">
 												<td class="cell-check"><input type="checkbox" aria-label="Select entry" /></td>
 												<td>
 													<?= e(date('M j, Y', strtotime($entry['occurred_at']))) ?>
@@ -326,5 +373,123 @@ $entryCount = count($entries);
 	</div>
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
+	<script>
+		// Live filtering, searching, and summary card recalculation for Ledger Entries
+		(function () {
+			var searchInput = document.getElementById('ledger-search');
+			var durationSelect = document.getElementById('filter-duration');
+			var directionSelect = document.getElementById('filter-direction');
+			var categorySelect = document.getElementById('filter-category');
+			var modeSelect = document.getElementById('filter-mode');
+			var rows = Array.from(document.querySelectorAll('.ledger-row'));
+			var countLabel = document.querySelector('[data-entry-count-label]');
+			
+			var cashInCard = document.querySelector('[data-summary-cash-in]');
+			var cashOutCard = document.querySelector('[data-summary-cash-out]');
+			var netBalanceCard = document.querySelector('[data-summary-net-balance]');
+
+			function formatTaka(val) {
+				return '৳ ' + val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+			}
+
+			function updateLedger() {
+				var query = searchInput.value.toLowerCase().trim();
+				var duration = durationSelect.value;
+				var direction = directionSelect.value;
+				var category = categorySelect.value;
+				var mode = modeSelect.value;
+
+				var now = new Date();
+				var todayStr = now.toISOString().slice(0, 10);
+				
+				// Calculate start of current month
+				var currentYear = now.getFullYear();
+				var currentMonth = now.getMonth(); // 0-indexed
+				var thisMonthStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0');
+				var thisYearStr = String(currentYear);
+
+				var totalIn = 0;
+				var totalOut = 0;
+				var visibleCount = 0;
+
+				rows.forEach(function (row) {
+					var rDate = row.getAttribute('data-date') || '';
+					var rDir = row.getAttribute('data-direction') || '';
+					var rCat = row.getAttribute('data-category') || '';
+					var rMode = row.getAttribute('data-mode') || '';
+					var rDetails = row.getAttribute('data-details') || '';
+					var rBill = row.getAttribute('data-bill') || '';
+					var rAmount = parseFloat(row.getAttribute('data-amount')) || 0;
+
+					// Duration match
+					var matchesDuration = true;
+					if (duration === 'today') {
+						matchesDuration = (rDate === todayStr);
+					} else if (duration === 'this-month') {
+						matchesDuration = rDate.indexOf(thisMonthStr) === 0;
+					} else if (duration === 'this-year') {
+						matchesDuration = rDate.indexOf(thisYearStr) === 0;
+					}
+
+					// Direction match
+					var matchesDirection = (direction === 'all' || rDir === direction);
+
+					// Category match
+					var matchesCategory = (category === 'all' || rCat === category);
+
+					// Mode match
+					var matchesMode = (mode === 'all' || rMode === mode);
+
+					// Search query match
+					var matchesQuery = !query || 
+						rDetails.indexOf(query) !== -1 || 
+						rBill.indexOf(query) !== -1 || 
+						rCat.indexOf(query) !== -1 || 
+						rAmount.toString().indexOf(query) !== -1;
+
+					var isVisible = matchesDuration && matchesDirection && matchesCategory && matchesMode && matchesQuery;
+
+					if (isVisible) {
+						row.style.display = '';
+						visibleCount++;
+						if (rDir === 'in') {
+							totalIn += rAmount;
+						} else {
+							totalOut += rAmount;
+						}
+					} else {
+						row.style.display = 'none';
+					}
+				});
+
+				// Update summary totals
+				if (cashInCard) cashInCard.textContent = formatTaka(totalIn);
+				if (cashOutCard) cashOutCard.textContent = formatTaka(totalOut);
+				if (netBalanceCard) netBalanceCard.textContent = formatTaka(totalIn - totalOut);
+
+				// Update count label
+				if (countLabel) {
+					countLabel.textContent = 'Showing ' + visibleCount + ' ' + (visibleCount === 1 ? 'entry' : 'entries');
+				}
+			}
+
+			if (searchInput) searchInput.addEventListener('input', updateLedger);
+			if (durationSelect) durationSelect.addEventListener('change', updateLedger);
+			if (directionSelect) directionSelect.addEventListener('change', updateLedger);
+			if (categorySelect) categorySelect.addEventListener('change', updateLedger);
+			if (modeSelect) modeSelect.addEventListener('change', updateLedger);
+
+			// Support keyboard shortcut "/" to focus search
+			document.addEventListener('keydown', function (e) {
+				if (e.key === '/' && document.activeElement !== searchInput && 
+					document.activeElement.tagName !== 'INPUT' && 
+					document.activeElement.tagName !== 'SELECT' && 
+					document.activeElement.tagName !== 'TEXTAREA') {
+					e.preventDefault();
+					searchInput.focus();
+				}
+			});
+		})();
+	</script>
 </body>
 </html>
