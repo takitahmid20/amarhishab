@@ -22,7 +22,7 @@
 	width: var(--sidebar-width);
 	height: 100vh;
 	height: 100dvh;
-	padding: 14px;
+	padding: 24px 14px 16px;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
