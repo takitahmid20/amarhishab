@@ -1,5 +1,17 @@
 <?php $current = basename($_SERVER['PHP_SELF']); ?>
 <aside class="sidebar app-sidebar dashboard-sidebar">
+	<div class="sidebar-section sidebar-ai-section">
+		<a href="./hisab-ai.php" class="nav-ai<?= $current === 'hisab-ai.php' ? ' active' : '' ?>" aria-label="HisabAI — ask about your finances">
+			<span class="nav-ai-shine" aria-hidden="true"></span>
+			<span class="nav-ai-icon"><i data-lucide="sparkles" aria-hidden="true"></i></span>
+			<span class="nav-ai-text">
+				<strong>HisabAI</strong>
+				<small>Ask about your money</small>
+			</span>
+			<span class="nav-ai-badge">AI</span>
+		</a>
+	</div>
+
 	<div class="sidebar-section">
 		<div class="nav-group-title">Main</div>
 		<nav class="nav">
