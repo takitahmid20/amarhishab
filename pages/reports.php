@@ -105,7 +105,7 @@ $books     = cashbooks_for_user($userId);
 						<article class="chart-card">
 							<header class="reports-section-head">
 								<h2>Category Breakdown</h2>
-								<p>Current month</p>
+								<p><?= e($periodLabel) ?></p>
 							</header>
 							<?php
 								$top = array_slice($breakdown, 0, 5);
