@@ -20,8 +20,12 @@ $name       = post('name');
 $limit      = (float) post('limit');
 $cashbookId = (int) post('cashbook_id') ?: null;
 
-if ($id <= 0 || $name === '' || $limit <= 0) {
-	flash_set('error', 'A valid name and limit are required.');
+if ($id <= 0 || $name === '') {
+	flash_set('error', 'Category name is required.');
+	redirect('../pages/budget.php');
+}
+if ($limit < 0) {
+	flash_set('error', 'Budget limit cannot be negative.');
 	redirect('../pages/budget.php');
 }
 
