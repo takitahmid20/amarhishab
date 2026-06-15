@@ -135,7 +135,7 @@ $error   = flash_get('error');
 										<p>Switch between light and dark theme</p>
 									</div>
 									<label class="settings-toggle" aria-label="Toggle dark mode">
-										<input type="checkbox" name="dark_mode" />
+										<input type="checkbox" name="dark_mode" id="pref-dark-mode" />
 										<span class="settings-toggle-track"></span>
 									</label>
 								</div>
@@ -145,7 +145,7 @@ $error   = flash_get('error');
 										<strong>Currency</strong>
 										<p>Select your preferred currency</p>
 									</div>
-									<select class="select settings-currency-select" name="currency">
+									<select class="select settings-currency-select" name="currency" id="pref-currency">
 										<option value="BDT" selected>৳ BDT</option>
 										<option value="USD">$ USD</option>
 										<option value="EUR">€ EUR</option>
@@ -160,7 +160,7 @@ $error   = flash_get('error');
 										<p>Enable reminder notifications</p>
 									</div>
 									<label class="settings-toggle" aria-label="Toggle notifications">
-										<input type="checkbox" name="notifications" checked />
+										<input type="checkbox" name="notifications" id="pref-notifications" checked />
 										<span class="settings-toggle-track"></span>
 									</label>
 								</div>
@@ -259,5 +259,40 @@ $error   = flash_get('error');
 	</div>
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
+	<script>
+		(function () {
+			var darkModeToggle = document.getElementById('pref-dark-mode');
+			var notificationsToggle = document.getElementById('pref-notifications');
+			var currencySelect = document.getElementById('pref-currency');
+
+			if (darkModeToggle) {
+				darkModeToggle.checked = localStorage.getItem('dark_mode') === 'true';
+				darkModeToggle.addEventListener('change', function () {
+					var isDark = darkModeToggle.checked;
+					localStorage.setItem('dark_mode', isDark);
+					if (isDark) {
+						document.documentElement.setAttribute('data-theme', 'dark');
+					} else {
+						document.documentElement.removeAttribute('data-theme');
+					}
+				});
+			}
+
+			if (notificationsToggle) {
+				notificationsToggle.checked = localStorage.getItem('notifications') !== 'false';
+				notificationsToggle.addEventListener('change', function () {
+					localStorage.setItem('notifications', notificationsToggle.checked);
+				});
+			}
+
+			if (currencySelect) {
+				var curr = localStorage.getItem('currency');
+				if (curr) currencySelect.value = curr;
+				currencySelect.addEventListener('change', function () {
+					localStorage.setItem('currency', currencySelect.value);
+				});
+			}
+		})();
+	</script>
 </body>
 </html>

@@ -71,7 +71,7 @@ $error     = flash_get('error');
 						<div class="tx-filters-left">
 							<div class="input-wrap">
 								<i class="input-icon" data-lucide="search" aria-hidden="true"></i>
-								<input class="input" type="search" name="search" placeholder="Search details or bill..." value="<?= e($searchParam) ?>" />
+								<input id="tx-search" class="input" type="search" name="search" placeholder="Search details or bill..." value="<?= e($searchParam) ?>" />
 							</div>
 							<button
 								class="btn btn-outline btn-sm"
@@ -128,7 +128,12 @@ $error     = flash_get('error');
 										$label = $tx['details'] ?: ($tx['bill'] ?: ($isIn ? 'Cash In' : 'Cash Out'));
 										$meta  = trim(($tx['category_name'] ?? '') . ($tx['category_name'] ? ' · ' : '') . $tx['cashbook_name'] . ' · ' . date('j M, Y', strtotime($tx['occurred_at'])));
 									?>
-									<article class="tx-item">
+									<article class="tx-item"
+										data-details="<?= e(strtolower($tx['details'] ?? '')) ?>"
+										data-bill="<?= e(strtolower($tx['bill'] ?? '')) ?>"
+										data-category="<?= e(strtolower($tx['category_name'] ?? '')) ?>"
+										data-cashbook="<?= e(strtolower($tx['cashbook_name'] ?? '')) ?>"
+										data-amount="<?= (float)$tx['amount'] ?>">
 										<div class="tx-item-left">
 											<div class="tx-icon <?= $isIn ? 'tx-icon--mint' : 'tx-icon--pink' ?>">
 												<i data-lucide="<?= $isIn ? 'arrow-down-left' : 'arrow-up-right' ?>" aria-hidden="true"></i>
@@ -337,6 +342,57 @@ $error     = flash_get('error');
 					form.querySelector('[data-tx-field="details"]').value  = btn.getAttribute('data-tx-details') || '';
 				});
 			});
+
+			// Instant client-side search logic
+			(function () {
+				var searchInput = document.getElementById('tx-search');
+				var items = Array.from(document.querySelectorAll('.tx-item'));
+				var countLabel = document.querySelector('[data-tx-count]');
+
+				if (searchInput) {
+					searchInput.addEventListener('input', function () {
+						var query = searchInput.value.toLowerCase().trim();
+						var visibleCount = 0;
+
+						items.forEach(function (item) {
+							var details = item.getAttribute('data-details') || '';
+							var bill = item.getAttribute('data-bill') || '';
+							var cat = item.getAttribute('data-category') || '';
+							var book = item.getAttribute('data-cashbook') || '';
+							var amount = item.getAttribute('data-amount') || '';
+
+							var matches = !query || 
+								details.indexOf(query) !== -1 || 
+								bill.indexOf(query) !== -1 || 
+								cat.indexOf(query) !== -1 || 
+								book.indexOf(query) !== -1 || 
+								amount.indexOf(query) !== -1;
+
+							if (matches) {
+								item.style.display = '';
+								visibleCount++;
+							} else {
+								item.style.display = 'none';
+							}
+						});
+
+						if (countLabel) {
+							countLabel.textContent = visibleCount + ' ' + (visibleCount === 1 ? 'record' : 'records');
+						}
+					});
+
+					// Hotkey '/' to focus search
+					document.addEventListener('keydown', function (e) {
+						if (e.key === '/' && document.activeElement !== searchInput && 
+							document.activeElement.tagName !== 'INPUT' && 
+							document.activeElement.tagName !== 'SELECT' && 
+							document.activeElement.tagName !== 'TEXTAREA') {
+							e.preventDefault();
+							searchInput.focus();
+						}
+					});
+				}
+			})();
 		</script>
 </body>
 </html>

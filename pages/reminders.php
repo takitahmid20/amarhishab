@@ -92,6 +92,10 @@ $error   = flash_get('error');
 								Bill Payment Reminders
 							</h2>
 							<div class="reminders-board-actions">
+								<div class="input-wrap reminders-search-wrap" style="width: 160px;">
+									<i class="input-icon" data-lucide="search" aria-hidden="true" style="width: 14px; height: 14px;"></i>
+									<input id="reminder-search" class="input" type="text" placeholder="Search bills..." style="height: 36px; min-height: 36px; font-size: 13px; padding-left: 32px;" />
+								</div>
 								<form method="get" id="reminders-filter-form">
 									<select class="select reminders-filter" name="filter" aria-label="Filter reminders" onchange="this.form.submit()">
 										<option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>All</option>
@@ -120,7 +124,7 @@ $error   = flash_get('error');
 							<p class="auth-error" role="alert"><?= e($error) ?></p>
 						<?php endif; ?>
 
-						<div class="reminder-list">
+						<div class="reminder-list" data-bill-list>
 							<?php if (empty($reminders)): ?>
 								<p class="reminder-empty">No reminders here. Add one to stay on top of bills.</p>
 							<?php else: ?>
@@ -141,7 +145,10 @@ $error   = flash_get('error');
 											$badge = 'reminder-badge--pending'; $badgeText = 'Pending';
 										}
 									?>
-									<article class="reminder-item<?= $itemMod ?>">
+									<article class="reminder-item<?= $itemMod ?>"
+										data-title="<?= e(strtolower($r['title'])) ?>"
+										data-category="<?= e(strtolower($r['category'] ?? '')) ?>"
+										data-amount="<?= (float)$r['amount'] ?>">
 										<div class="reminder-item-icon<?= $iconMod ?>">
 											<i data-lucide="bell" aria-hidden="true"></i>
 										</div>
@@ -286,5 +293,53 @@ $error   = flash_get('error');
 	</div>
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
+	<script>
+		// Client-side instant search logic for Reminders
+		(function () {
+			var searchInput = document.getElementById('reminder-search');
+			var items = Array.from(document.querySelectorAll('[data-bill-list] .reminder-item'));
+			var countLabel = document.querySelector('[data-reminder-total]');
+
+			if (searchInput) {
+				searchInput.addEventListener('input', function () {
+					var query = searchInput.value.toLowerCase().trim();
+					var visibleCount = 0;
+
+					items.forEach(function (item) {
+						var title = item.getAttribute('data-title') || '';
+						var cat = item.getAttribute('data-category') || '';
+						var amount = item.getAttribute('data-amount') || '';
+
+						var matches = !query || 
+							title.indexOf(query) !== -1 || 
+							cat.indexOf(query) !== -1 || 
+							amount.indexOf(query) !== -1;
+
+						if (matches) {
+							item.style.display = '';
+							visibleCount++;
+						} else {
+							item.style.display = 'none';
+						}
+					});
+
+					if (countLabel) {
+						countLabel.textContent = visibleCount;
+					}
+				});
+
+				// Hotkey '/' to focus search
+				document.addEventListener('keydown', function (e) {
+					if (e.key === '/' && document.activeElement !== searchInput && 
+						document.activeElement.tagName !== 'INPUT' && 
+						document.activeElement.tagName !== 'SELECT' && 
+						document.activeElement.tagName !== 'TEXTAREA') {
+						e.preventDefault();
+						searchInput.focus();
+					}
+				});
+			}
+		})();
+	</script>
 </body>
 </html>

@@ -62,15 +62,15 @@ $success = flash_get('success');
 					<div class="cashbooks-controls surface">
 						<div class="input-wrap cashbooks-search">
 							<i class="input-icon" data-lucide="search" aria-hidden="true"></i>
-							<input class="input" type="text" placeholder="Search books, owners, tags..." />
+							<input id="cashbook-search" class="input" type="text" placeholder="Search books by name or description..." />
 						</div>
 
 						<div class="cashbooks-control-actions">
 							<label class="cashbooks-sort-wrap">
-								<select class="select">
-									<option>Last Updated</option>
-									<option>Name A-Z</option>
-									<option>Recently Created</option>
+								<select id="cashbook-sort" class="select">
+									<option value="created-desc">Recently Created</option>
+									<option value="name-asc">Name A-Z</option>
+									<option value="balance-desc">Highest Balance</option>
 								</select>
 							</label>
 							<button class="btn btn-outline btn-sm" type="button">
@@ -94,7 +94,7 @@ $success = flash_get('success');
 							<?php else: ?>
 								<?php foreach ($books as $book): ?>
 									<?php $warn = $book['status'] === 'review' ? ' cashbook-health--warn' : ''; ?>
-									<article class="cashbook-card cashbook-card--book surface" data-cashbook-id="<?= e($book['id']) ?>">
+									<article class="cashbook-card cashbook-card--book surface" data-cashbook-id="<?= e($book['id']) ?>" data-name="<?= e(strtolower($book['name'])) ?>" data-description="<?= e(strtolower($book['description'] ?? '')) ?>" data-created="<?= strtotime($book['created_at']) ?>" data-balance="<?= (float)$book['balance'] ?>">
 										<div class="cashbook-card-head">
 											<div class="cashbook-main">
 												<div class="cashbook-badge"><i data-lucide="book-copy" aria-hidden="true"></i></div>
@@ -205,6 +205,56 @@ $success = flash_get('success');
 				form.querySelector('[data-edit-field="status"]').value      = btn.getAttribute('data-edit-status');
 			});
 		});
+
+		// Search and Sort client-side logic
+		(function () {
+			var searchInput = document.getElementById('cashbook-search');
+			var sortSelect = document.getElementById('cashbook-sort');
+			var cardsContainer = document.querySelector('[data-component="cashbook-card-list"]');
+			
+			if (searchInput && sortSelect && cardsContainer) {
+				var cards = Array.from(cardsContainer.querySelectorAll('.cashbook-card'));
+
+				function filterAndSort() {
+					var query = searchInput.value.toLowerCase().trim();
+					var sortBy = sortSelect.value;
+
+					// Filter cards
+					cards.forEach(function (card) {
+						var name = card.getAttribute('data-name') || '';
+						var desc = card.getAttribute('data-description') || '';
+						var matches = name.indexOf(query) !== -1 || desc.indexOf(query) !== -1;
+						card.style.display = matches ? '' : 'none';
+					});
+
+					// Sort cards
+					var sorted = cards.slice().sort(function (a, b) {
+						if (sortBy === 'name-asc') {
+							var nameA = a.getAttribute('data-name') || '';
+							var nameB = b.getAttribute('data-name') || '';
+							return nameA.localeCompare(nameB);
+						} else if (sortBy === 'balance-desc') {
+							var balA = parseFloat(a.getAttribute('data-balance')) || 0;
+							var balB = parseFloat(b.getAttribute('data-balance')) || 0;
+							return balB - balA;
+						} else {
+							// Default / Recently Created
+							var timeA = parseInt(a.getAttribute('data-created')) || 0;
+							var timeB = parseInt(b.getAttribute('data-created')) || 0;
+							return timeB - timeA;
+						}
+					});
+
+					// Re-append to container
+					sorted.forEach(function (card) {
+						cardsContainer.appendChild(card);
+					});
+				}
+
+				searchInput.addEventListener('input', filterAndSort);
+				sortSelect.addEventListener('change', filterAndSort);
+			}
+		})();
 	</script>
 </body>
 </html>
