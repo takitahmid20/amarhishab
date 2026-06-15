@@ -29,12 +29,20 @@ if (!$stmt->fetch()) {
 	redirect('../pages/forgot-password.php');
 }
 
+$existingReset = $_SESSION['pwreset'] ?? null;
+if ($existingReset && (time() - ($existingReset['created_at'] ?? 0)) < 60) {
+	flash_set('error', 'Please wait 60 seconds before requesting another code.');
+	redirect('../pages/forgot-password.php');
+}
+
 $otp = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
 $_SESSION['pwreset'] = [
-	'email'    => $email,
-	'otp'      => $otp,
-	'expires'  => time() + 600, // 10 minutes
-	'verified' => false,
+	'email'      => $email,
+	'otp'        => $otp,
+	'expires'    => time() + 600, // 10 minutes
+	'created_at' => time(),
+	'attempts'   => 0,
+	'verified'   => false,
 ];
 
 old_clear();
