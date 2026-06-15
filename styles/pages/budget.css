@@ -263,6 +263,35 @@
 	stroke-width: 2;
 }
 
+.budget-category-edit {
+	border: 1px solid rgba(130, 87, 229, 0.25);
+	background: #fff;
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	display: inline-grid;
+	place-items: center;
+	color: var(--color-brand-700);
+	cursor: pointer;
+	transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+}
+
+.budget-category-edit:hover {
+	background: rgba(130, 87, 229, 0.08);
+	border-color: rgba(130, 87, 229, 0.4);
+}
+
+.budget-category-edit:active {
+	transform: translateY(1px);
+}
+
+.budget-category-edit i,
+.budget-category-edit svg {
+	width: 14px;
+	height: 14px;
+	stroke-width: 2;
+}
+
 .budget-category-track {
 	position: relative;
 	height: 8px;

@@ -131,7 +131,7 @@ $error   = flash_get('error');
 												<p class="budget-category-amount"><?= e(taka($spent)) ?> / <?= e(taka($limit)) ?> (<?= $usage ?>%)</p>
 												<div class="budget-category-actions">
 													<p class="budget-category-cashbook"><?= e($cat['cashbook_name'] ?? 'No cashbook') ?></p>
-													<button class="budget-category-delete" type="button"
+													<button class="budget-category-edit" type="button"
 														data-modal-target="#edit-budget-category-modal"
 														data-cat-id="<?= e($cat['id']) ?>"
 														data-cat-name="<?= e($cat['name']) ?>"
