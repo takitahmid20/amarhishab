@@ -1,0 +1,157 @@
+<?php
+/**
+ * HisabAI — builds a finance context for the logged-in user and asks Gemini.
+ * Only the current user's data is ever sent, and the model is instructed to
+ * answer strictly about their AmarHishab finances.
+ */
+
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/cashbooks.php';
+require_once __DIR__ . '/transactions.php';
+require_once __DIR__ . '/budget.php';
+require_once __DIR__ . '/borrow_lend.php';
+require_once __DIR__ . '/reminders.php';
+
+/** Resolve the Gemini API key (env wins, then config). */
+function ai_key(): string
+{
+	$k = getenv('GEMINI_API_KEY');
+	return $k !== false && $k !== '' ? $k : (app_config()['ai']['key'] ?? '');
+}
+
+/** Resolve the model name. */
+function ai_model(): string
+{
+	$m = getenv('GEMINI_MODEL');
+	return $m !== false && $m !== '' ? $m : (app_config()['ai']['model'] ?? 'gemini-2.5-flash');
+}
+
+/** Build a compact, readable finance snapshot for one user. */
+function build_finance_context(int $userId, string $userName): string
+{
+	$books = cashbooks_for_user($userId);
+	$totalBalance = 0.0;
+	foreach ($books as $b) {
+		$totalBalance += (float) $b['balance'];
+	}
+
+	$monthStart = date('Y-m-01');
+	$today      = date('Y-m-d');
+	$monthTx    = transactions_for_user($userId, ['from' => $monthStart, 'to' => $today]);
+	$income = 0.0;
+	$expense = 0.0;
+	foreach ($monthTx as $t) {
+		if ($t['direction'] === 'in') $income += (float) $t['amount'];
+		else                         $expense += (float) $t['amount'];
+	}
+
+	$recent = array_slice(transactions_for_user($userId), 0, 20);
+	$cats   = budget_categories_with_spent($userId);
+	$blTot  = borrow_lend_totals($userId);
+	$bl     = borrow_lend_records($userId, 'pending');
+	$rem    = reminders_for_user($userId, 'all');
+
+	$lines = [];
+	$lines[] = "User: {$userName}. All amounts are in Bangladeshi Taka (Tk). Today is {$today}.";
+	$lines[] = "";
+	$lines[] = "TOTAL BALANCE (all cashbooks): Tk " . number_format($totalBalance);
+	$lines[] = "THIS MONTH: income Tk " . number_format($income) . ", expense Tk " . number_format($expense) . ", net Tk " . number_format($income - $expense);
+
+	$lines[] = "";
+	$lines[] = "CASHBOOKS:";
+	foreach ($books as $b) {
+		$lines[] = "- {$b['name']}: balance Tk " . number_format($b['balance'])
+			. " (in Tk " . number_format($b['cash_in']) . ", out Tk " . number_format($b['cash_out']) . "), status {$b['status']}";
+	}
+
+	$lines[] = "";
+	$lines[] = "BUDGET CATEGORIES (spent / limit this period):";
+	foreach ($cats as $c) {
+		$pct = $c['limit_amount'] > 0 ? round($c['spent'] / $c['limit_amount'] * 100) : 0;
+		$lines[] = "- {$c['name']}: Tk " . number_format($c['spent']) . " / Tk " . number_format($c['limit_amount']) . " ({$pct}%)";
+	}
+
+	$lines[] = "";
+	$lines[] = "BORROW/LEND: you owe (borrowed, unsettled) Tk " . number_format($blTot['borrowed'])
+		. "; owed to you (lent, unsettled) Tk " . number_format($blTot['lent']) . ".";
+	foreach ($bl as $r) {
+		$lines[] = "- " . ($r['type'] === 'borrow' ? 'You owe ' : 'Owed to you by ') . $r['person']
+			. ": Tk " . number_format($r['amount']) . ($r['due_date'] ? " due {$r['due_date']}" : "");
+	}
+
+	$lines[] = "";
+	$lines[] = "REMINDERS:";
+	foreach ($rem as $r) {
+		$status = $r['is_done'] ? 'paid' : ($r['due_date'] < $today ? 'overdue' : 'pending');
+		$lines[] = "- {$r['title']}" . ($r['amount'] !== null ? " Tk " . number_format($r['amount']) : "")
+			. " due {$r['due_date']} ({$status})";
+	}
+
+	$lines[] = "";
+	$lines[] = "RECENT TRANSACTIONS (newest first):";
+	foreach ($recent as $t) {
+		$dir = $t['direction'] === 'in' ? '+' : '-';
+		$label = $t['details'] ?: ($t['bill'] ?: ($t['direction'] === 'in' ? 'income' : 'expense'));
+		$lines[] = "- " . date('j M', strtotime($t['occurred_at'])) . " {$dir}Tk " . number_format($t['amount'])
+			. " | {$label} | " . ($t['category_name'] ?: 'uncategorized') . " | {$t['cashbook_name']}";
+	}
+
+	return implode("\n", $lines);
+}
+
+/**
+ * Ask Gemini a question grounded in the user's finance context.
+ * Returns ['ok' => bool, 'answer' => string].
+ */
+function hisab_ai_ask(string $question, string $context): array
+{
+	$key = ai_key();
+	if ($key === '') {
+		return ['ok' => false, 'answer' => 'AI is not configured yet.'];
+	}
+
+	$system = "You are HisabAI, the finance assistant inside the AmarHishab money-tracking app. "
+		. "Answer ONLY using the user's finance data provided below. Amounts are in Bangladeshi Taka — write them as 'Tk 1,200'. "
+		. "Be concise, friendly and specific, and use the actual numbers. "
+		. "If the question is not about this user's personal finances, politely reply that you can only help with their AmarHishab finances. "
+		. "Never invent data that is not in the context.\n\n=== USER FINANCE DATA ===\n" . $context;
+
+	$payload = json_encode([
+		'systemInstruction' => ['parts' => [['text' => $system]]],
+		'contents' => [['role' => 'user', 'parts' => [['text' => $question]]]],
+		'generationConfig' => ['temperature' => 0.3, 'maxOutputTokens' => 800],
+	]);
+
+	$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode(ai_model())
+		. ':generateContent?key=' . urlencode($key);
+
+	$ch = curl_init($url);
+	curl_setopt_array($ch, [
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POST           => true,
+		CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+		CURLOPT_POSTFIELDS     => $payload,
+		CURLOPT_TIMEOUT        => 30,
+	]);
+	$resp = curl_exec($ch);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	$err  = curl_error($ch);
+	curl_close($ch);
+
+	if ($resp === false) {
+		return ['ok' => false, 'answer' => 'Could not reach the AI service. (' . $err . ')'];
+	}
+
+	$data = json_decode($resp, true);
+	if ($code !== 200) {
+		$msg = $data['error']['message'] ?? ('HTTP ' . $code);
+		return ['ok' => false, 'answer' => 'AI error: ' . $msg];
+	}
+
+	$text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+	if ($text === '') {
+		return ['ok' => false, 'answer' => "I couldn't generate an answer for that. Try rephrasing."];
+	}
+
+	return ['ok' => true, 'answer' => trim($text)];
+}

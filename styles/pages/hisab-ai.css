@@ -255,3 +255,17 @@
 	.hisabai-msg { max-width: 92%; }
 	.hisabai-suggestions { padding-left: 0; }
 }
+
+/* status dot = online (green), typing indicator */
+.hisabai-status-dot { background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3); }
+
+.hisabai-typing { display: inline-flex; gap: 4px; align-items: center; height: 18px; }
+.hisabai-typing span {
+	width: 6px; height: 6px; border-radius: 50%;
+	background: var(--color-text-muted);
+	opacity: 0.5;
+	animation: hisabai-bounce 1.2s infinite ease-in-out;
+}
+.hisabai-typing span:nth-child(2) { animation-delay: 0.15s; }
+.hisabai-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes hisabai-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }

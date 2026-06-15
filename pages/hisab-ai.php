@@ -35,7 +35,7 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 								<p>Your personal finance assistant — ask anything about your money.</p>
 							</div>
 						</div>
-						<span class="hisabai-status"><span class="hisabai-status-dot"></span>Coming soon</span>
+						<span class="hisabai-status"><span class="hisabai-status-dot"></span>Online</span>
 					</header>
 
 					<!-- Conversation -->
@@ -59,7 +59,7 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 					</div>
 
 					<!-- Composer -->
-					<form class="hisabai-composer" data-hisabai-form>
+					<form class="hisabai-composer" data-hisabai-form data-csrf="<?= e(csrf_token()) ?>">
 						<div class="hisabai-input-wrap">
 							<i class="hisabai-input-icon" data-lucide="message-circle" aria-hidden="true"></i>
 							<textarea class="hisabai-input" rows="1" placeholder="Ask HisabAI about your finances..." data-hisabai-input></textarea>
@@ -67,7 +67,7 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 								<i data-lucide="arrow-up" aria-hidden="true"></i>
 							</button>
 						</div>
-						<p class="hisabai-disclaimer">HisabAI is in design preview — answers aren't connected yet.</p>
+						<p class="hisabai-disclaimer">HisabAI answers from your AmarHishab data. It can make mistakes — double-check important numbers.</p>
 					</form>
 
 				</section>
@@ -84,6 +84,10 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 			var form  = document.querySelector('[data-hisabai-form]');
 			var input = document.querySelector('[data-hisabai-input]');
 
+			function escapeHtml(s) {
+				return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			}
+
 			function addBubble(text, who) {
 				var msg = document.createElement('div');
 				msg.className = 'hisabai-msg hisabai-msg--' + who;
@@ -96,6 +100,18 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 				chat.appendChild(msg);
 				chat.scrollTop = chat.scrollHeight;
 				if (window.lucide) lucide.createIcons();
+				return msg;
+			}
+
+			function addTyping() {
+				var msg = document.createElement('div');
+				msg.className = 'hisabai-msg hisabai-msg--ai';
+				msg.innerHTML = '<span class="hisabai-msg-avatar" aria-hidden="true"><i data-lucide="sparkles"></i></span>'
+					+ '<div class="hisabai-bubble"><span class="hisabai-typing"><span></span><span></span><span></span></span></div>';
+				chat.appendChild(msg);
+				chat.scrollTop = chat.scrollHeight;
+				if (window.lucide) lucide.createIcons();
+				return msg;
 			}
 
 			document.querySelectorAll('[data-hisabai-suggestions] .hisabai-chip').forEach(function (chip) {
@@ -105,15 +121,37 @@ $firstName = explode(' ', trim($user['name']))[0] ?? 'there';
 				});
 			});
 
+			var busy = false;
 			form.addEventListener('submit', function (e) {
 				e.preventDefault();
+				if (busy) return;
 				var text = input.value.trim();
 				if (!text) return;
-				addBubble(text.replace(/</g, '&lt;'), 'user');
+				addBubble(escapeHtml(text), 'user');
 				input.value = '';
-				setTimeout(function () {
-					addBubble("I'm not connected yet — this is a design preview. Soon I'll read your finance data and answer this.", 'ai');
-				}, 400);
+				input.style.height = 'auto';
+				busy = true;
+				var typing = addTyping();
+
+				var body = new URLSearchParams();
+				body.set('question', text);
+				body.set('_csrf', form.getAttribute('data-csrf'));
+
+				fetch('../actions/hisab-ai-ask.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: body.toString()
+				})
+				.then(function (r) { return r.json(); })
+				.then(function (data) {
+					typing.remove();
+					addBubble(escapeHtml(data.answer || 'No answer.'), 'ai');
+				})
+				.catch(function () {
+					typing.remove();
+					addBubble('Something went wrong reaching HisabAI. Please try again.', 'ai');
+				})
+				.finally(function () { busy = false; });
 			});
 
 			// auto-grow textarea

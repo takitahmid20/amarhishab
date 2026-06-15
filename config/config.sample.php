@@ -19,4 +19,10 @@ return [
 		'name'     => 'AmarHishab',
 		'base_url' => 'http://localhost/amarhishab',
 	],
+	// HisabAI — Google Gemini API key (https://aistudio.google.com/app/apikey).
+	// Can also be supplied via the GEMINI_API_KEY environment variable.
+	'ai' => [
+		'key'   => '',
+		'model' => 'gemini-2.5-flash',
+	],
 ];
