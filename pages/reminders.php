@@ -124,7 +124,7 @@ $error   = flash_get('error');
 							<p class="auth-error" role="alert"><?= e($error) ?></p>
 						<?php endif; ?>
 
-						<div class="reminder-list">
+						<div class="reminder-list" data-bill-list>
 							<?php if (empty($reminders)): ?>
 								<p class="reminder-empty">No reminders here. Add one to stay on top of bills.</p>
 							<?php else: ?>
@@ -297,7 +297,7 @@ $error   = flash_get('error');
 		// Client-side instant search logic for Reminders
 		(function () {
 			var searchInput = document.getElementById('reminder-search');
-			var items = Array.from(document.querySelectorAll('.reminder-list .reminder-item'));
+			var items = Array.from(document.querySelectorAll('[data-bill-list] .reminder-item'));
 			var countLabel = document.querySelector('[data-reminder-total]');
 
 			if (searchInput) {
