@@ -324,8 +324,9 @@
 
 /* ── HisabAI nav item (distinct, gradient, animated) ───────────────── */
 .sidebar-ai-section {
+	margin-top: auto;
 	border-top: none;
-	padding-top: 0;
+	padding-top: 4px;
 }
 
 .sidebar .nav-ai {
