@@ -293,5 +293,53 @@ $error   = flash_get('error');
 	</div>
 	<script src="../js/components/modal.js"></script>
 	<script src="../js/app.js"></script>
+	<script>
+		// Client-side instant search logic for Reminders
+		(function () {
+			var searchInput = document.getElementById('reminder-search');
+			var items = Array.from(document.querySelectorAll('.reminder-list .reminder-item'));
+			var countLabel = document.querySelector('[data-reminder-total]');
+
+			if (searchInput) {
+				searchInput.addEventListener('input', function () {
+					var query = searchInput.value.toLowerCase().trim();
+					var visibleCount = 0;
+
+					items.forEach(function (item) {
+						var title = item.getAttribute('data-title') || '';
+						var cat = item.getAttribute('data-category') || '';
+						var amount = item.getAttribute('data-amount') || '';
+
+						var matches = !query || 
+							title.indexOf(query) !== -1 || 
+							cat.indexOf(query) !== -1 || 
+							amount.indexOf(query) !== -1;
+
+						if (matches) {
+							item.style.display = '';
+							visibleCount++;
+						} else {
+							item.style.display = 'none';
+						}
+					});
+
+					if (countLabel) {
+						countLabel.textContent = visibleCount;
+					}
+				});
+
+				// Hotkey '/' to focus search
+				document.addEventListener('keydown', function (e) {
+					if (e.key === '/' && document.activeElement !== searchInput && 
+						document.activeElement.tagName !== 'INPUT' && 
+						document.activeElement.tagName !== 'SELECT' && 
+						document.activeElement.tagName !== 'TEXTAREA') {
+						e.preventDefault();
+						searchInput.focus();
+					}
+				});
+			}
+		})();
+	</script>
 </body>
 </html>
