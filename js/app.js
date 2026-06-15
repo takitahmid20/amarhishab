@@ -1,3 +1,11 @@
+(function () {
+	if (localStorage.getItem("dark_mode") === "true") {
+		document.documentElement.setAttribute("data-theme", "dark");
+	} else {
+		document.documentElement.removeAttribute("data-theme");
+	}
+})();
+
 function normalizePath(pathname) {
 	if (!pathname) {
 		return "/";
