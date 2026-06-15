@@ -6,6 +6,7 @@
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/cashbooks.php';
 require_once __DIR__ . '/../includes/transactions.php';
+require_once __DIR__ . '/../includes/budget.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -38,6 +39,11 @@ if ($returnTo === 'transactions') {
 if (!find_cashbook($cashbookId, $userId)) {
 	flash_set('error', 'Cashbook not found.');
 	redirect('../pages/cashbooks.php');
+}
+
+if ($categoryId && !find_category($categoryId, $userId)) {
+	flash_set('error', 'Category not found.');
+	redirect($back);
 }
 
 if ($amount <= 0) {

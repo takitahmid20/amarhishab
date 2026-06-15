@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/transactions.php';
+require_once __DIR__ . '/../includes/budget.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -30,6 +31,11 @@ if ($id <= 0 || $amount <= 0) {
 
 if (!find_transaction($id, $userId)) {
 	flash_set('error', 'Transaction not found.');
+	redirect('../pages/transactions.php');
+}
+
+if ($categoryId && !find_category($categoryId, $userId)) {
+	flash_set('error', 'Category not found.');
 	redirect('../pages/transactions.php');
 }
 
