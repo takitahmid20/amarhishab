@@ -59,7 +59,9 @@ function transactions_for_user(int $userId, array $filters = []): array
 		$params[] = $filters['to'] . ' 23:59:59';
 	}
 	if (!empty($filters['search'])) {
-		$where[] = '(t.details LIKE ? OR t.bill LIKE ?)';
+		$where[] = '(t.details LIKE ? OR t.bill LIKE ? OR bc.name LIKE ? OR c.name LIKE ?)';
+		$params[] = '%' . $filters['search'] . '%';
+		$params[] = '%' . $filters['search'] . '%';
 		$params[] = '%' . $filters['search'] . '%';
 		$params[] = '%' . $filters['search'] . '%';
 	}
