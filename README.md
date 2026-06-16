@@ -110,3 +110,7 @@ Demo login (after seeding): `demo@amarhishab.test` / `password123`.
 ## Why the name?
 
 "Amar Hishab" means "My Account" in Bangla. Simple, direct, tells you exactly what it does.
+
+---
+
+© 2026 AmarHishab — Taki Tahmid. All rights reserved.
