@@ -134,36 +134,62 @@ function hisab_ai_ask(string $question, string $context, array $history = []): a
 		'generationConfig' => ['temperature' => 0.3, 'maxOutputTokens' => 800],
 	]);
 
-	$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode(ai_model())
-		. ':generateContent?key=' . urlencode($key);
+	// Try the configured model, then other free models — each free model has
+	// its own quota, so a fallback often succeeds when one is rate-limited.
+	$candidates = array_values(array_unique([
+		ai_model(),
+		'gemini-2.5-flash',
+		'gemini-2.5-flash-lite',
+		'gemini-2.0-flash',
+		'gemini-2.0-flash-lite',
+	]));
 
-	$ch = curl_init($url);
-	curl_setopt_array($ch, [
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_POST           => true,
-		CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
-		CURLOPT_POSTFIELDS     => $payload,
-		CURLOPT_TIMEOUT        => 30,
-	]);
-	$resp = curl_exec($ch);
-	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	$err  = curl_error($ch);
-	curl_close($ch);
+	$rateLimited = false;
+	$lastErr = '';
+	foreach ($candidates as $model) {
+		$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model)
+			. ':generateContent?key=' . urlencode($key);
 
-	if ($resp === false) {
-		return ['ok' => false, 'answer' => 'Could not reach the AI service. (' . $err . ')'];
+		$ch = curl_init($url);
+		curl_setopt_array($ch, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_POST           => true,
+			CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+			CURLOPT_POSTFIELDS     => $payload,
+			CURLOPT_TIMEOUT        => 30,
+		]);
+		$resp = curl_exec($ch);
+		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$err  = curl_error($ch);
+		curl_close($ch);
+
+		if ($resp === false) {
+			$lastErr = $err;
+			continue;
+		}
+
+		$data = json_decode($resp, true);
+
+		if ($code === 200) {
+			$text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+			if ($text !== '') {
+				return ['ok' => true, 'answer' => trim($text)];
+			}
+			continue;
+		}
+
+		if ($code === 429) {
+			$rateLimited = true; // try next free model
+			continue;
+		}
+
+		// Other errors (404 model, etc.) — try the next candidate.
+		$lastErr = $data['error']['message'] ?? ('HTTP ' . $code);
 	}
 
-	$data = json_decode($resp, true);
-	if ($code !== 200) {
-		$msg = $data['error']['message'] ?? ('HTTP ' . $code);
-		return ['ok' => false, 'answer' => 'AI error: ' . $msg];
+	if ($rateLimited) {
+		return ['ok' => false, 'answer' => "HisabAI is busy right now (free usage limit reached). Please try again in a minute."];
 	}
 
-	$text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-	if ($text === '') {
-		return ['ok' => false, 'answer' => "I couldn't generate an answer for that. Try rephrasing."];
-	}
-
-	return ['ok' => true, 'answer' => trim($text)];
+	return ['ok' => false, 'answer' => "I couldn't reach HisabAI just now. Please try again shortly."];
 }
