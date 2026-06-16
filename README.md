@@ -1,6 +1,10 @@
 # AmarHishab
 
+### 🌐 Live: http://www.amarhishab.dev.bd/
+
 **Smart cashbook and expense tracking for students & young adults in Bangladesh.**
+
+> Demo login — **demo@amarhishab.test** / **password123**
 
 ---
 
@@ -22,6 +26,7 @@ So I made this.
 - **Borrow / Lend tracking** — Remember who owes you and what you owe others.
 - **Bill reminders** — Never miss an internet bill or tuition installment again.
 - **Simple reporting** — See where your money goes without digging through data.
+- **HisabAI** — Ask questions about your own finances in plain language ("How much did I spend this month?") and get answers grounded in your data.
 
 ---
 
@@ -35,6 +40,9 @@ plain PHP that talk to MySQL directly and render HTML.
 - **HTML + CSS** with a custom design-token system
 - **Vanilla JavaScript** for small interactions (modals, charts, scroll reveal)
 - **Lucide** icons
+- **HisabAI** powered by the **Google Gemini** API (free tier), grounded in the user's own finance data
+
+Deployed on a DigitalOcean droplet (Apache + PHP + MySQL).
 
 ---
 
@@ -52,6 +60,7 @@ amarhishab/
 │   ├── borrow-lend.php
 │   ├── reminders.php
 │   ├── reports.php
+│   ├── hisab-ai.php        # HisabAI chat
 │   ├── settings.php
 │   ├── login.php
 │   ├── signup.php
@@ -71,10 +80,10 @@ amarhishab/
 
 ## Status
 
-Work in progress, being rebuilt from a static prototype into a real
-server-rendered PHP app. The landing page (`index.php`) and shared shell
-(navbar / sidebar via PHP includes) are in place; pages are being wired to
-MySQL one feature at a time.
+Live and deployed. Full auth (signup / login / OTP password reset),
+cashbooks, transactions, budgets, borrow/lend, reminders, dashboard,
+reports, settings, and the HisabAI assistant — all server-rendered from
+MySQL, per-user scoped and CSRF-protected.
 
 ---
 
@@ -90,7 +99,8 @@ Built for **XAMPP** (Apache + MySQL).
    mysql -u root < database/seed.sql   # optional demo data
    ```
 4. Copy `config/config.sample.php` to `config/config.local.php` and set your
-   MySQL credentials (XAMPP default: user `root`, empty password).
+   MySQL credentials (XAMPP default: user `root`, empty password). For HisabAI,
+   add a free Google Gemini API key in the `ai` section (or `GEMINI_API_KEY` env).
 5. Open `http://localhost/amarhishab/` in a browser.
 
 Demo login (after seeding): `demo@amarhishab.test` / `password123`.
