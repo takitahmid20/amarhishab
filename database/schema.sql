@@ -9,6 +9,8 @@ USE amarhishab;
 -- Drop existing tables so the script is re-runnable during development.
 -- FK checks are disabled here so drop order / stray legacy tables can't block it.
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS ai_messages;
+DROP TABLE IF EXISTS ai_chats;
 DROP TABLE IF EXISTS reminders;
 DROP TABLE IF EXISTS borrow_lend;
 DROP TABLE IF EXISTS transactions;

@@ -15,8 +15,32 @@ csrf_check();
 
 $id = (int) post('id');
 if ($id > 0) {
-	$updated = set_reminder_done($id, current_user()['id'], true);
-	flash_set($updated ? 'success' : 'error', $updated ? 'Marked as paid.' : 'Reminder not found.');
+	$userId = current_user()['id'];
+	$reminder = find_reminder($id, $userId);
+	if ($reminder) {
+		$updated = set_reminder_done($id, $userId, true);
+		if ($updated && $reminder['repeat_cycle'] !== 'none') {
+			$nextDueDate = null;
+			if ($reminder['repeat_cycle'] === 'weekly') {
+				$nextDueDate = date('Y-m-d', strtotime('+1 week', strtotime($reminder['due_date'])));
+			} elseif ($reminder['repeat_cycle'] === 'monthly') {
+				$nextDueDate = date('Y-m-d', strtotime('+1 month', strtotime($reminder['due_date'])));
+			}
+			if ($nextDueDate) {
+				create_reminder(
+					$userId,
+					$reminder['title'],
+					$reminder['category'],
+					$reminder['amount'] !== null ? (float) $reminder['amount'] : null,
+					$nextDueDate,
+					$reminder['repeat_cycle']
+				);
+			}
+		}
+		flash_set($updated ? 'success' : 'error', $updated ? 'Marked as paid.' : 'Reminder not found.');
+	} else {
+		flash_set('error', 'Reminder not found.');
+	}
 }
 
 redirect('../pages/reminders.php');

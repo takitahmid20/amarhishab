@@ -17,11 +17,14 @@ services:
     volumes:
       - .:/var/www/html
     environment:
-      DB_HOST: db
-      DB_PORT: "3306"
-      DB_NAME: amarhishab
-      DB_USER: root
-      DB_PASS: root
+      # Defaults target the local `db` service; override via a gitignored .env
+      # (e.g. to point at a managed cloud DB like Aiven with DB_SSL=1).
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-amarhishab}
+      DB_USER: ${DB_USER:-root}
+      DB_PASS: ${DB_PASS:-root}
+      DB_SSL: ${DB_SSL:-0}
     depends_on:
       db:
         condition: service_healthy

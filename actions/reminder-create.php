@@ -25,6 +25,17 @@ if ($title === '' || $dueDate === '') {
 	redirect('../pages/reminders.php');
 }
 
+if ($amount !== '' && (!is_numeric($amount) || (float) $amount < 0)) {
+	flash_set('error', 'Amount must be a valid non-negative number.');
+	redirect('../pages/reminders.php');
+}
+
+$d = DateTime::createFromFormat('Y-m-d', $dueDate);
+if (!$d || $d->format('Y-m-d') !== $dueDate) {
+	flash_set('error', 'Please enter a valid date in YYYY-MM-DD format.');
+	redirect('../pages/reminders.php');
+}
+
 create_reminder(
 	$userId,
 	$title,

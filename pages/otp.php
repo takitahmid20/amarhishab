@@ -70,6 +70,17 @@ $success = flash_get('success');
 			input.addEventListener('keydown', function (e) {
 				if (e.key === 'Backspace' && input.value === '' && i > 0) all[i - 1].focus();
 			});
+			// Support pasting full 4-digit code
+			input.addEventListener('paste', function (e) {
+				e.preventDefault();
+				var pastedData = (e.clipboardData || window.clipboardData).getData('text').trim();
+				if (pastedData.length === 4 && /^\d+$/.test(pastedData)) {
+					for (var j = 0; j < 4; j++) {
+						all[j].value = pastedData[j];
+					}
+					all[3].focus();
+				}
+			});
 		});
 	</script>
 </body>

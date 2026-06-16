@@ -23,6 +23,7 @@ function budget_categories_with_spent(int $userId, ?int $cashbookId = null): arr
 				COALESCE((
 					SELECT SUM(t.amount) FROM transactions t
 					WHERE t.category_id = bc.id AND t.direction = \'out\'
+					  AND t.occurred_at BETWEEN DATE_FORMAT(CURDATE(), \'%Y-%m-01 00:00:00\') AND DATE_FORMAT(LAST_DAY(CURDATE()), \'%Y-%m-%d 23:59:59\')
 				), 0) AS spent
 			FROM budget_categories bc
 			LEFT JOIN cashbooks c ON c.id = bc.cashbook_id

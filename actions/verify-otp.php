@@ -26,6 +26,12 @@ if (time() > ($reset['expires'] ?? 0)) {
 $entered = post('d1') . post('d2') . post('d3') . post('d4');
 
 if (!hash_equals($reset['otp'], $entered)) {
+	$_SESSION['pwreset']['attempts'] = ($_SESSION['pwreset']['attempts'] ?? 0) + 1;
+	if ($_SESSION['pwreset']['attempts'] >= 3) {
+		unset($_SESSION['pwreset']);
+		flash_set('error', 'Too many incorrect attempts. Please request a new code.');
+		redirect('../pages/forgot-password.php');
+	}
 	flash_set('error', 'Incorrect code. Please try again.');
 	redirect('../pages/otp.php');
 }
